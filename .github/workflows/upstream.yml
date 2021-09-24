@@ -1,0 +1,292 @@
+#
+# This is free software, lisence use MIT.
+# 
+# 
+# <https://github.com/kiddin9/openwrt-packages>
+#
+
+name: Merge-upstream
+on:
+  push:
+    paths:
+      - '.github/workflows/upstream.yml'
+      - 'diy/**'
+  schedule:
+    - cron: 0 */12 * * *
+  watch:
+    types: started
+  repository_dispatch:
+
+jobs:
+  merge:
+    if: github.event.repository.owner.id == github.event.sender.id
+    runs-on: Ubuntu-20.04
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@main
+      with:
+        fetch-depth: 0
+
+    - name: Set git identity
+      run : |
+        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config --global user.name "github-actions[bot]"
+        sudo timedatectl set-timezone "Asia/Shanghai"
+
+    - name: Syn upstream
+      run: |
+        git rm -r --cache * >/dev/null 2>&1 &
+        rm -rf `find ./* -maxdepth 0 -type d ! -name "diy"` >/dev/null 2>&1
+        
+        function git_sparse_clone() (
+          branch="$1" rurl="$2" localdir="$3" && shift 3
+          git clone -b $branch --depth 1 --filter=blob:none --sparse $rurl $localdir
+          cd $localdir
+          git sparse-checkout init --cone
+          git sparse-checkout set $@
+          mv -n $@ ../
+          cd ..
+          rm -rf $localdir
+          )
+        function mvdir() {
+        mv -n `find $1/* -maxdepth 0 -type d` ./
+        rm -rf $1
+        }
+        (
+        git clone --depth 1 https://github.com/kiddin9/my-packages && mvdir my-packages
+        git clone --depth 1 https://github.com/kiddin9/openwrt-bypass && mvdir openwrt-bypass
+        git clone --depth 1 https://github.com/kiddin9/luci-app-dnsfilter
+        git clone --depth 1 https://github.com/kiddin9/aria2
+        git clone --depth 1 https://github.com/kiddin9/luci-app-eqos
+        git clone --depth 1 https://github.com/kiddin9/luci-app-baidupcs-web
+        git clone --depth 1 https://github.com/kiddin9/luci-theme-edge
+        git clone --depth 1 https://github.com/kiddin9/qBittorrent-Enhanced-Edition
+        git clone --depth 1 https://github.com/kiddin9/autoshare && mvdir autoshare
+        git clone --depth 1 https://github.com/kiddin9/openwrt-openvpn && mvdir openwrt-openvpn
+        git clone --depth 1 https://github.com/kiddin9/luci-app-xlnetacc
+        git clone --depth 1 https://github.com/kiddin9/openwrt-amule-dlp && mvdir openwrt-amule-dlp
+        ) &
+        (
+        git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall
+        git clone --depth 1 https://github.com/Lienol/openwrt-package
+        git clone --depth 1 https://github.com/BoringCat/luci-app-mentohust
+        git clone --depth 1 https://github.com/KyleRicardo/MentoHUST-OpenWrt-ipk
+        git clone --depth 1 https://github.com/rufengsuixing/luci-app-autoipsetadder
+        git clone --depth 1 https://github.com/NateLol/luci-app-beardropper
+        git clone --depth 1 https://github.com/riverscn/openwrt-iptvhelper && mvdir openwrt-iptvhelper
+        git clone --depth 1 https://github.com/project-lede/luci-app-godproxy
+        git clone --depth 1 https://github.com/BoringCat/luci-app-minieap
+        git clone --depth 1 https://github.com/rufengsuixing/luci-app-onliner
+        git clone --depth 1 https://github.com/tty228/luci-app-serverchan
+        git clone --depth 1 https://github.com/4IceG/luci-app-sms-tool smstool && mvdir smstool
+        git clone --depth 1 https://github.com/rufengsuixing/luci-app-usb3disable
+        git clone --depth 1 https://github.com/silime/luci-app-xunlei
+        git clone --depth 1 https://github.com/ysc3839/luci-proto-minieap
+        ) &
+        (
+        git clone --depth 1 https://github.com/zzsj0928/luci-app-pushbot
+        git clone --depth 1 https://github.com/shanglanxin/luci-app-homebridge
+        git clone --depth 1 https://github.com/jerrykuku/luci-theme-argon
+        git clone --depth 1 https://github.com/jerrykuku/luci-app-argon-config
+        git clone --depth 1 https://github.com/jerrykuku/luci-app-vssr
+        git clone --depth 1 https://github.com/jerrykuku/luci-app-ttnode
+        git clone --depth 1 https://github.com/jefferymvp/luci-app-koolproxyR
+        git clone --depth 1 https://github.com/peter-tank/luci-app-dnscrypt-proxy2
+        git clone --depth 1 https://github.com/sirpdboy/luci-app-advanced
+        git clone --depth 1 https://github.com/sirpdboy/luci-app-netdata
+        git clone --depth 1 https://github.com/sirpdboy/luci-app-poweroffdevice
+        git clone --depth 1 https://github.com/sirpdboy/luci-app-autotimeset
+        git clone --depth 1 https://github.com/wolandmaster/luci-app-rtorrent
+        git clone --depth 1 https://github.com/jerrykuku/luci-app-jd-dailybonus
+        git clone --depth 1 https://github.com/NateLol/luci-app-oled
+        ) &
+        (
+        git clone --depth 1 https://github.com/destan19/OpenAppFilter && mvdir OpenAppFilter
+        git clone --depth 1 https://github.com/esirplayground/luci-app-poweroff
+        git clone --depth 1 https://github.com/lvqier/luci-app-dnsmasq-ipset
+        git clone --depth 1 https://github.com/small-5/ddns-scripts-dnspod
+        git clone --depth 1 https://github.com/small-5/ddns-scripts-aliyun
+        git clone --depth 1 https://github.com/walkingsky/luci-wifidog luci-app-wifidog
+        git clone --depth 1 https://github.com/peter-tank/luci-app-autorepeater
+        git clone --depth 1 https://github.com/CCnut/feed-netkeeper && mvdir feed-netkeeper
+        git clone --depth 1 https://github.com/brvphoenix/luci-app-wrtbwmon wrtbwmon1 && mvdir wrtbwmon1
+        git clone --depth 1 https://github.com/brvphoenix/wrtbwmon wrtbwmon2 && mvdir wrtbwmon2
+        git clone --depth 1 https://github.com/linkease/ddnsto-openwrt && mvdir ddnsto-openwrt
+        git clone --depth 1 https://github.com/sensec/luci-app-udp2raw
+        git clone --depth 1 https://github.com/LGA1150/openwrt-sysuh3c && mvdir openwrt-sysuh3c
+        git clone --depth 1 https://github.com/gdck/luci-app-cupsd cupsd1 && mv -n cupsd1/luci-app-cupsd cupsd1/cups/cups ./ ; rm -rf cupsd1
+        ) &
+        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean ledelean &
+        (
+        svn export https://github.com/Lienol/openwrt/trunk/package/lean/luci-app-autoreboot
+        svn export https://github.com/fw876/helloworld/trunk/luci-app-ssr-plus
+        svn export https://github.com/Tencent-Cloud-Plugins/tencentcloud-openwrt-plugin-ddns/trunk/tencentcloud_ddns luci-app-tencentddns
+        svn export https://github.com/coolsnowwolf/lede/trunk/package/network/services/shellsync
+        svn export https://github.com/coolsnowwolf/packages/trunk/net/miniupnpd
+        svn export https://github.com/coolsnowwolf/packages/trunk/net/mwan3
+        svn export https://github.com/x-wrt/packages/trunk/net/nft-qos
+        svn export https://github.com/x-wrt/luci/trunk/applications/luci-app-nft-qos
+        svn export https://github.com/vernesong/OpenClash/trunk/luci-app-openclash
+        svn export https://github.com/lisaac/luci-app-dockerman/trunk/applications/luci-app-dockerman
+        ) &
+        (
+        svn export https://github.com/doushang/luci-app-shortcutmenu/trunk/luci-app-shortcutmenu
+        svn export https://github.com/sundaqiang/openwrt-packages/trunk/luci-app-services-wolplus
+        svn export https://github.com/Ysurac/openmptcprouter-feeds/trunk/luci-app-iperf
+        svn export https://github.com/sirpdboy/netspeedtest/trunk/luci-app-netspeedtest
+        svn export https://github.com/messense/aliyundrive-webdav/trunk/openwrt aliyundrive && mvdir aliyundrive
+        ) &
+        (
+        git_sparse_clone openwrt-21.02 "https://github.com/openwrt/luci" "opluci" applications/luci-app-aria2 \
+        applications/luci-app-ddns applications/luci-app-https-dns-proxy applications/luci-app-acme \
+        applications/luci-app-ksmbd applications/luci-app-samba4
+        
+        git_sparse_clone master "https://github.com/openwrt/packages" "oppackages" net/https-dns-proxy \
+        net/openvpn utils/cgroupfs-mount net/ariang net/xray-core
+        ) &
+        (
+        git_sparse_clone master "https://github.com/x-wrt/com.x-wrt" "x-wrt" natflow luci-app-wizard luci-app-macvlan
+        
+        git_sparse_clone openwrt-21.02 "https://github.com/immortalwrt/immortalwrt" "immwrt" package/kernel/mt7601u-ap package/kernel/mtk-eip93 \
+        package/kernel/r8152 package/kernel/r8168 package/kernel/rtl8188eu package/kernel/rtl8812au-ac package/kernel/rtl8192eu \
+        package/kernel/rtl8821cu package/kernel/rtl88x2bu
+        ) &
+        
+        git_sparse_clone master "https://github.com/immortalwrt/packages" "immpkgs" net/adguardhome net/mwol net/nps net/verysync net/sub-web \
+        net/subconverter net/ngrokc net/oscam net/njitclient net/scutclient net/gost net/gowebdav \
+        admin/bpytop libs/jpcre2 libs/wxbase libs/rapidjson libs/libcron libs/quickjspp libs/toml11 \
+        utils/cpulimit utils/filebrowser utils/phicomm-k3screenctrl multimedia/gmediarender multimedia/UnblockNeteaseMusic-Go
+
+        svn export --force https://github.com/immortalwrt/luci/trunk/applications
+
+        for ipk in $(ls applications); do
+        	if [[ $ipk != "luci-app-transmission" && $(ls -l applications/$ipk/po | wc -l) -gt 3 ]]; then
+        		rm -rf applications/$ipk
+        	fi
+        done
+
+    - name: Delete duplicated packages
+      run: |
+        shopt -s extglob
+        mv -n openwrt-passwall/* ./ ; rm -Rf openwrt-passwall
+        mv -n applications/!(luci-app-turboacc) ./ ; rm -Rf applications
+        mv -n ledelean/* ./ ; rm -Rf ledelean
+        mv -n openwrt-package/* ./ ; rm -Rf openwrt-package
+        rm -Rf */.git qt5 openwrt-{chinadns*,simple-obfs,v2ray-plugin,dnsforwarder} subweb wget autosamba frp \
+        mt-drivers coremark npc luci-app-{flowoffload,sfe,appfilter,advancedsetting,softethervpn,chinadns,docker,smstool,cifs-mount,cifsd} \
+        fcgiwrap ddns-scripts_{aliyun,dnspod} ipv6-helper ChinaDNS luci-theme-netgear csstidy samba4 UnblockNeteaseMusicGo
+        mv mt/drivers mt/mt-drivers
+        cp -Rf mt/* ./ && rm -Rf mt
+
+    - name: Apply patches
+      run: |
+        sed -i "s/\r//g" open-app-filter/src/appfilter_ubus.c
+        find "diy/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 -E --forward --no-backup-if-mismatch"
+
+    - name: SSH connection to Actions
+      uses: kiddin9/debugger-action@master
+      if: 1 == 0
+
+    - name: Modify
+      run: |
+        shopt -s extglob
+        (
+        function latest() {
+          (curl -gs -H 'Content-Type: application/json' \
+             -H "Authorization: Bearer ${{ secrets.REPO_TOKEN }}" \
+             -X POST -d '{ "query": "query {repository(owner: \"'"$1"'\", name: \"'"$2"'\"){refs(refPrefix:\"refs/tags/\",last:1,orderBy:{field:TAG_COMMIT_DATE,direction:ASC}){edges{node{name target{commitUrl}}}}defaultBranchRef{target{...on Commit {oid}}}}}"}' https://api.github.com/graphql)
+        }
+        for pkg in $(ls !(luci-*|natflow|ps3netsrv|rblibtorrent|shadowsocksr-libev|n2n_v2|rtl8821cu)/Makefile); do
+          repo="$(grep PKG_SOURCE_URL $pkg | grep github | cut -f 4-5 -d '/' | sed -e 's/.git//' | grep -E '[0-9a-zA-Z_-]+$')" || true
+          if [ "$repo" ]; then
+            owner="$(echo $repo | cut -f 1 -d '/')"
+            name="$(echo $repo | cut -f 2 -d '/')"
+            latest="$(latest $owner $name)"
+            sed -i "s/PKG_SOURCE_VERSION:=.*/PKG_SOURCE_VERSION:=$(echo $latest | jq -r '.data.repository.defaultBranchRef.target.oid')/" $pkg || true
+            over="$(grep -E PKG_VERSION:=.*$ $pkg | cut -f 2 -d '=' | sed -e 's/^\(v\|release-\)//' | grep -E "[0-9]")" || true
+            if [ "$over" ]; then
+              ver="$(echo $latest | jq -r '.data.repository.refs.edges[-1].node.name' | sed -e 's/^\(v\|release-\)//' | grep -E "^[^()]*$" | grep -E "[0-9]")" || true
+              # [ "$ver" ] || ver="$(git ls-remote --tags git://github.com/$repo | cut -d/ -f3- | sort -t. -nk1,3 | awk '/^[^{]*$/{version=$1}END{print version}' | grep -o -E "[0-9].*")" || true
+              echo "$repo-$over-$ver"
+              if [ "$ver" ]; then
+                function version_lt() { test "$(echo "$@" | tr " " "\n" | sort -rV | head -n 1)" != "$1"; }
+                if version_lt "$over" "$ver"; then
+                  sed -i -e "s/PKG_SOURCE_VERSION:=.*/PKG_SOURCE_VERSION:=$(echo $latest | jq -r '.data.repository.refs.edges[-1].node.target.commitUrl' | cut -f 7 -d /)/" \
+                         -e "s/PKG_VERSION:=.*/PKG_VERSION:=$ver/" $pkg || true
+                fi || true
+              fi
+            fi
+          fi
+        done
+        touch /tmp/ok
+        ) &
+        (
+        bash diy/create_acl_for_luci.sh -a >/dev/null 2>&1 || true
+        bash diy/convert_translation.sh -a >/dev/null 2>&1 || true
+        
+        cp -rf diy/.packages/* ./ || true
+        #sed -i 's?"http://" + window.location.hostname?window.location.protocol + "//" + window.location.hostname?g' `find luci-app*/luasrc/view/ -maxdepth 2 -name "*.htm"`
+        rm -f miniupnpd/patches/106-spam-syslog-ignoring.patch
+        rm -f rclone/patches/010-change-default-config-path.patch
+        sed -i "/minisign:minisign/d" luci-app-dnscrypt-proxy2/Makefile
+        sed -i 's/+libstdcpp/+libstdcpp +zlib/' ngrokc/Makefile
+        # sed -i 's/+docker-ce/+dockerd \\\n\t+docker \\\n\t+cgroupfs-mount/' luci-app-dockerman/Makefile
+        sed -i '/\/etc\/config\/AdGuardHome/a /etc/AdGuardHome.yaml' luci-app-adguardhome/Makefile
+        sed -i 's/+rclone\( \|$\)/+rclone +fuse-utils\1/g' luci-app-rclone/Makefile
+        sed -i 's/+libcap /+libcap +libcap-bin /' luci-app-openclash/Makefile
+        sed -i 's/+ddns-scripts/+ddns-scripts +ddns-scripts-aliyun +ddns-scripts-dnspod/' luci-app-ddns/Makefile
+        sed -i 's/+aria2/+aria2 +ariang/' luci-app-aria2/Makefile
+        sed -i 's/+acme\( \|$\)/+acme +acme-dnsapi\1/' luci-app-acme/Makefile
+        sed -i 's/\(+ksmbd-server\)/\1 +autoshare-ksmbd/' luci-app-ksmbd/Makefile
+        sed -i 's/\(+samba4-server\)/\1 +autoshare-samba/' luci-app-samba4/Makefile
+        sed -i 's/\(+luci-compat\)/\1 +luci-theme-argon/' luci-app-argon-config/Makefile
+        sed -i 's/+vsftpd$/+vsftpd-alt/' luci-app-vsftpd/Makefile
+        
+        sed -i \
+          -e 's?include \.\./\.\./\(lang\|devel\)?include $(TOPDIR)/feeds/packages/\1?' \
+          -e "s/\(PKG_HASH\|PKG_MD5SUM\|PKG_MIRROR_HASH\):=.*/\1:=skip/" \
+          -e 's?\.\./\.\./luci.mk?$(TOPDIR)/feeds/luci/luci.mk?' \
+          -e 's/ca-certificates/ca-bundle/' \
+          */Makefile
+        ) &
+        
+        for pkg in $(find -maxdepth 1 -type d -name "luci-*" ! -name "luci-app-dockerman" ! -name "luci-app-frpc" ! -name "luci-app-frps"); do
+          if [ "$(grep "luci.mk" $pkg/Makefile)" ]; then
+            sed -i '/\(PKG_VERSION\|PKG_RELEASE\):=/d' $pkg/Makefile
+          fi
+        done
+
+        for pkg in $(ls -d */); do
+          if [ "$(grep "PKG_RELEASE" $pkg/Makefile)" ]; then
+            sed -i "s/PKG_RELEASE:=.*/PKG_RELEASE:=$(git rev-list --count master $pkg)/" $pkg/Makefile || true
+          fi
+        done
+        
+        while [ ! -f /tmp/ok ]; do
+            echo "wait"
+          sleep 1
+        done
+      
+    - name: Apply
+      run: |
+        Emoji=("🎉" "🤞" "✨" "🎁" "🎈" "🎄" "🎨" "💋" "🍓" "🍕" "🍉" "💐" "🌴" "🚀" "🛸" "🗽" "⛅" "🌈" "🔥" "⛄" "🐶" "🏅" "🦄" "🐤")
+        git add .
+        git commit -m "${Emoji[$[$RANDOM % ${#Emoji[@]}]]} Sync $(date +%Y-%m-%d" "%H:%M:%S)" || true
+        for pkg in $(git diff-tree --no-commit-id --name-only HEAD); do
+          if [ "$(grep "PKG_RELEASE" $pkg/Makefile)" ]; then
+            sed -i "s/PKG_RELEASE:=.*/PKG_RELEASE:=$(git rev-list --count master $pkg)/" $pkg/Makefile || true
+          fi
+        done
+        git reset --soft HEAD^
+        git add .
+        git commit -m "${Emoji[$[$RANDOM % ${#Emoji[@]}]]} Sync $(date +%Y-%m-%d" "%H:%M:%S)" || true
+        git push
+
+    - name: Delete workflow runs
+      uses: Mattraks/delete-workflow-runs@main
+      continue-on-error: true
+      with:
+        retain_days: 1
+        keep_minimum_runs: 3
+

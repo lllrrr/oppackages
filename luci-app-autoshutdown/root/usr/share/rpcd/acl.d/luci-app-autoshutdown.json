@@ -1,0 +1,11 @@
+{
+	"luci-app-autoshutdown": {
+		"description": "Grant UCI access for luci-app-autoshutdown",
+		"read": {
+			"uci": [ "autoshutdown" ]
+		},
+		"write": {
+			"uci": [ "autoshutdown" ]
+		}
+	}
+}

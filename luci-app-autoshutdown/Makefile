@@ -9,6 +9,8 @@ PKG_NAME:=luci-app-poweroff
 LUCI_TITLE:=LuCI support for Scheduled Shutdown
 LUCI_DEPENDS:=+luci
 LUCI_PKGARCH:=all
+PKG_VERSION:=1.0.1
+PKG_RELEASE:=
 
 include $(TOPDIR)/feeds/luci/luci.mk
 

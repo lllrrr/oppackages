@@ -9,5 +9,7 @@ LUCI_TITLE:=Open App Filter Module
 LUCI_PKGARCH:=all
 LUCI_DEPENDS:=+kmod-oaf +appfilter
 PKG_NAME:=luci-app-oaf
+PKG_VERSION:=5.0
+PKG_RELEASE:=
 include $(TOPDIR)/feeds/luci/luci.mk
 # call BuildPackage - OpenWrt buildroot signature

@@ -8,6 +8,8 @@ include $(TOPDIR)/rules.mk
 LUCI_TITLE:=LuCI support for PPPoE Relay
 LUCI_DEPENDS:=+rp-pppoe-common +rp-pppoe-relay
 LUCI_PKGARCH:=all
+PKG_VERSION:=1
+PKG_RELEASE:=
 
 include $(TOPDIR)/feeds/luci/luci.mk
 

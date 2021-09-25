@@ -38,7 +38,9 @@ jobs:
       run: |
         git rm -r --cache * >/dev/null 2>&1 &
         rm -rf `find ./* -maxdepth 0 -type d ! -name "diy"` >/dev/null 2>&1
-        
+        function git_clone() (
+          git clone --depth 1 $1 $2 || true
+        )
         function git_sparse_clone() (
           branch="$1" rurl="$2" localdir="$3" && shift 3
           git clone -b $branch --depth 1 --filter=blob:none --sparse $rurl $localdir
@@ -167,6 +169,37 @@ jobs:
     - name: Modify
       run: |
         shopt -s extglob
+        (
+        function latest() {
+          (curl -gs -H 'Content-Type: application/json' \
+             -H "Authorization: Bearer ${{ secrets.REPO_TOKEN }}" \
+             -X POST -d '{ "query": "query {repository(owner: \"'"$1"'\", name: \"'"$2"'\"){refs(refPrefix:\"refs/tags/\",last:1,orderBy:{field:TAG_COMMIT_DATE,direction:ASC}){edges{node{name target{commitUrl}}}}defaultBranchRef{target{...on Commit {oid}}}}}"}' https://api.github.com/graphql)
+        }
+        for pkg in $(ls !(luci-*|natflow|ps3netsrv|rblibtorrent|shadowsocksr-libev|n2n_v2|rtl8821cu)/Makefile); do
+          repo="$(grep PKG_SOURCE_URL $pkg | grep github | cut -f 4-5 -d '/' | sed -e 's/.git//' | grep -E '[0-9a-zA-Z_-]+$')" || true
+          if [ "$repo" ]; then
+            owner="$(echo $repo | cut -f 1 -d '/')"
+            name="$(echo $repo | cut -f 2 -d '/')"
+            latest="$(latest $owner $name)"
+            sed -i "s/PKG_SOURCE_VERSION:=.*/PKG_SOURCE_VERSION:=$(echo $latest | jq -r '.data.repository.defaultBranchRef.target.oid')/" $pkg || true
+            over="$(grep -E PKG_VERSION:=.*$ $pkg | cut -f 2 -d '=' | sed -e 's/^\(v\|release-\)//' | grep -E "[0-9]")" || true
+            if [ "$over" ]; then
+              ver="$(echo $latest | jq -r '.data.repository.refs.edges[-1].node.name' | sed -e 's/^\(v\|release-\)//' | grep -E "^[^()]*$" | grep -E "[0-9]")" || true
+              # [ "$ver" ] || ver="$(git ls-remote --tags git://github.com/$repo | cut -d/ -f3- | sort -t. -nk1,3 | awk '/^[^{]*$/{version=$1}END{print version}' | grep -o -E "[0-9].*")" || true
+              echo "$repo-$over-$ver"
+              if [ "$ver" ]; then
+                function version_lt() { test "$(echo "$@" | tr " " "\n" | sort -rV | head -n 1)" != "$1"; }
+                if version_lt "$over" "$ver"; then
+                  sed -i -e "s/PKG_SOURCE_VERSION:=.*/PKG_SOURCE_VERSION:=$(echo $latest | jq -r '.data.repository.refs.edges[-1].node.target.commitUrl' | cut -f 7 -d /)/" \
+                         -e "s/PKG_VERSION:=.*/PKG_VERSION:=$ver/" $pkg || true
+                fi || true
+              fi
+            fi
+          fi
+        done
+        touch /tmp/ok
+        ) &
+        (
         bash diy/create_acl_for_luci.sh -a >/dev/null 2>&1 || true
         bash diy/convert_translation.sh -a >/dev/null 2>&1 || true
         
@@ -193,10 +226,10 @@ jobs:
         #  fi
         #done
         
-        #while [ ! -f /tmp/ok ]; do
-        #    echo "wait"
-        #  sleep 1
-        #done
+        while [ ! -f /tmp/ok ]; do
+            echo "wait"
+          sleep 1
+        done
       
     - name: Apply
       run: |
@@ -214,4 +247,3 @@ jobs:
       with:
         retain_days: 1
         keep_minimum_runs: 3
-

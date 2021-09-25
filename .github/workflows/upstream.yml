@@ -57,20 +57,24 @@ jobs:
         git clone --depth 1 https://github.com/kiddin9/openwrt-bypass && mvdir openwrt-bypass
         git clone --depth 1 https://github.com/kiddin9/luci-app-dnsfilter
         git clone --depth 1 https://github.com/kiddin9/luci-theme-edge
+        git clone --depth 1 https://github.com/tuanqing/install-program
+        git clone --depth 1 https://github.com/tuanqing/mknop
         ) &
         (
         git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall
         git clone --depth 1 https://github.com/Lienol/openwrt-package
+        git clone --depth 1 https://github.com/small-5/luci-app-adblock-plus
+        git clone --depth 1 https://github.com/tty228/luci-app-serverchan
+        git clone --depth 1 https://github.com/zzsj0928/luci-app-pushbot
+        git clone --depth 1 https://github.com/ITdesk01/jd_openwrt_script
         git clone --depth 1 https://github.com/rufengsuixing/luci-app-autoipsetadder
         git clone --depth 1 https://github.com/rufengsuixing/luci-app-onliner
         git clone --depth 1 https://github.com/rufengsuixing/luci-app-zerotier
         git clone --depth 1 https://github.com/rufengsuixing/luci-app-syncdial
         git clone --depth 1 https://github.com/rufengsuixing/luci-app-onliner
-        git clone --depth 1 https://github.com/rufengsuixing/luci-app-usb3disable
-        git clone --depth 1 https://github.com/tty228/luci-app-serverchan        
+        git clone --depth 1 https://github.com/rufengsuixing/luci-app-usb3disable        
         ) &
         (
-        git clone --depth 1 https://github.com/zzsj0928/luci-app-pushbot
         git clone --depth 1 https://github.com/jerrykuku/luci-theme-argon
         git clone --depth 1 https://github.com/jerrykuku/luci-app-argon-config
         git clone --depth 1 https://github.com/jerrykuku/luci-app-vssr
@@ -80,14 +84,15 @@ jobs:
         git clone --depth 1 https://github.com/sirpdboy/luci-app-netdata
         git clone --depth 1 https://github.com/sirpdboy/luci-app-poweroffdevice
         git clone --depth 1 https://github.com/sirpdboy/luci-app-autotimeset
-        git clone --depth 1 https://github.com/ITdesk01/jd_openwrt_script
         ) &
         (
         git clone --depth 1 https://github.com/destan19/OpenAppFilter && mvdir OpenAppFilter
         git clone --depth 1 https://github.com/NateLol/luci-app-beardropper
+        git clone --depth 1 https://github.com/immortalwrt/luci-app-unblockneteasemusic
+        git clone --depth 1 https://github.com/peter-tank/luci-app-fullconenat
+        git clone --depth 1 https://github.com/llccd/openwrt-fullconenat
         git clone --depth 1 https://github.com/esirplayground/luci-app-poweroff
         git clone --depth 1 https://github.com/lvqier/luci-app-dnsmasq-ipset
-        git clone --depth 1 https://github.com/small-5/luci-app-adblock-plus
         git clone --depth 1 https://github.com/walkingsky/luci-wifidog luci-app-wifidog
         git clone --depth 1 https://github.com/peter-tank/luci-app-autorepeater
         git clone --depth 1 https://github.com/linkease/ddnsto-openwrt && mvdir ddnsto-openwrt
@@ -95,8 +100,29 @@ jobs:
         git clone --depth 1 https://github.com/dazhaolear/luci-app-autorebootnew
         ) &
         #svn export https://github.com/coolsnowwolf/lede/trunk/package/lean ledelean &
+        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/adbyby
+        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-adbyby-plus
+        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-docker
+        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/frp
+        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-filetransfer
+        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-frpc
+        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-frps
+        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-ipsec-vpnd
+        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-qbittorrent
+        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-usb-printer
+        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/qBittorrent
+        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/qBittorrent-static
+        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/qtbase
+        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/qttools
+        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/rblibtorrent
+        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/redsocks2
+        #svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/srelay
+        #svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/tcpping
         (
-        #svn export https://github.com/Lienol/openwrt/trunk/package/lean/luci-app-autoreboot
+        svn export https://github.com/Lienol/openwrt/trunk/package/lean/luci-app-autoreboot
+        svn export https://github.com/lienol/openwrt-luci/trunk/themes/luci-theme-argon-dark-mod
+        svn export https://github.com/lienol/openwrt-luci/trunk/themes/luci-theme-argon-light-mod
+        svn export https://github.com/lienol/openwrt-luci/trunk/themes/luci-theme-bootstrap-mod
         svn export https://github.com/fw876/helloworld/trunk/luci-app-ssr-plus
         svn export https://github.com/Tencent-Cloud-Plugins/tencentcloud-openwrt-plugin-ddns/trunk/tencentcloud_ddns luci-app-tencentddns
         #svn export https://github.com/coolsnowwolf/lede/trunk/package/network/services/shellsync
@@ -141,7 +167,6 @@ jobs:
     - name: Modify
       run: |
         shopt -s extglob
-        (
         bash diy/create_acl_for_luci.sh -a >/dev/null 2>&1 || true
         bash diy/convert_translation.sh -a >/dev/null 2>&1 || true
         
@@ -155,7 +180,6 @@ jobs:
           -e 's?\.\./\.\./luci.mk?$(TOPDIR)/feeds/luci/luci.mk?' \
           #-e 's/ca-certificates/ca-bundle/' \
           */Makefile
-        ) &
         
         #for pkg in $(find -maxdepth 1 -type d -name "luci-*" ! -name "luci-app-dockerman" ! -name "luci-app-frpc" ! -name "luci-app-frps"); do
         #  if [ "$(grep "luci.mk" $pkg/Makefile)" ]; then

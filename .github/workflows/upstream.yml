@@ -127,7 +127,7 @@ jobs:
         rm -Rf */.git qt5 openwrt-{chinadns*,simple-obfs,v2ray-plugin,dnsforwarder} subweb wget autosamba \
         mt-drivers coremark npc luci-app-{flowoffload,sfe,appfilter,advancedsetting,softethervpn,chinadns,smstool,cifs-mount,cifsd} \
         fcgiwrap ddns-scripts_{aliyun,dnspod} ipv6-helper ChinaDNS luci-theme-netgear csstidy samba4 UnblockNeteaseMusic* k3*
-        mv mt/drivers mt/mt-drivers
+        #mv mt/drivers mt/mt-drivers
 
     - name: Apply patches
       run: |

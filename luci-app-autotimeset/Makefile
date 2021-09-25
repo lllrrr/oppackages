@@ -7,7 +7,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=luci-app-autotimeset
 PKG_VERSION:=1.4
-PKG_RELEASE:=
+PKG_RELEASE:=20210320
 
 define Package/$(PKG_NAME)
   SECTION:=LuCI

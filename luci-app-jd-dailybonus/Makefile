@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=luci-app-jd-dailybonus
 PKG_VERSION:=1.0.5
-PKG_RELEASE:=
+PKG_RELEASE:=20210316
 
 PKG_MAINTAINER:=jerrykuku <jerrykuku@qq.com>
 

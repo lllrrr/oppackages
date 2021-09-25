@@ -30,7 +30,7 @@ endif
 
 PKG_NAME:=verysync
 PKG_VERSION:=v2.8.2
-PKG_RELEASE:=
+PKG_RELEASE:=1
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-linux-$(PKG_ARCH_VERYSYNC)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://dl.verysync.com/releases/$(PKG_VERSION)/

@@ -7,7 +7,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=luci-app-cowbping
 PKG_VERSION=v1.6
-PKG_RELEASE:=
+PKG_RELEASE:=v1.6-202105025
 
 include $(INCLUDE_DIR)/package.mk
 

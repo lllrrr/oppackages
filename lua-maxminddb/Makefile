@@ -7,7 +7,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lua-maxminddb
 PKG_VERSION:=0.2
-PKG_RELEASE:=
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/fabled/lua-maxminddb.git

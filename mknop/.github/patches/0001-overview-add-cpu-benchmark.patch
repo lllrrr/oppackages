@@ -1,0 +1,13 @@
+diff --git a/modules/luci-mod-admin-full/luasrc/view/admin_status/index_arm.htm b/modules/luci-mod-admin-full/luasrc/view/admin_status/index_arm.htm
+index e92c663..e3889ae 100644
+--- a/modules/luci-mod-admin-full/luasrc/view/admin_status/index_arm.htm
++++ b/modules/luci-mod-admin-full/luasrc/view/admin_status/index_arm.htm
+@@ -381,7 +381,7 @@
+ 
+ 	<div class="table" width="100%">
+ 		<div class="tr"><div class="td left" width="33%"><%:Hostname%></div><div class="td left"><%=luci.sys.hostname() or "?"%></div></div>
+-		<div class="tr"><div class="td left" width="33%"><%:Model%></div><div class="td left"><%=pcdata(boardinfo.model or "?")%></div></div>
++		<div class="tr"><div class="td left" width="33%"><%:Model%></div><div class="td left"><%=pcdata(boardinfo.model or "?")%> <%=luci.sys.exec("cat /etc/bench.log")%></div></div>
+ 		<div class="tr"><div class="td left" width="33%"><%:Architecture%></div><div class="td left" id="cpuinfo"></div></div>
+ 		<div class="tr"><div class="td left" width="33%"><%:Firmware Version%></div><div class="td left">
+ 			<%=pcdata(ver.distname)%> <%=pcdata(ver.distversion)%> /

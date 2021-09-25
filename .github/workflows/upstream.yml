@@ -61,7 +61,7 @@ jobs:
         git clone --depth 1 https://github.com/kiddin9/luci-theme-edge
         git clone --depth 1 https://github.com/tuanqing/install-program
         git clone --depth 1 https://github.com/tuanqing/mknop
-        git clone -b main https://github.com/ITdesk01/JD_Script/tree/main
+        git clone -b main --depth 1 https://github.com/ITdesk01/JD_Script
         ) &
         (
         git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall

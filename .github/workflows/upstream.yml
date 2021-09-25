@@ -94,7 +94,7 @@ jobs:
         git clone --depth 1 https://github.com/wujunze/luci-app-autoshutdown
         git clone --depth 1 https://github.com/dazhaolear/luci-app-autorebootnew
         ) &
-        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean ledelean &
+        #svn export https://github.com/coolsnowwolf/lede/trunk/package/lean ledelean &
         (
         #svn export https://github.com/Lienol/openwrt/trunk/package/lean/luci-app-autoreboot
         svn export https://github.com/fw876/helloworld/trunk/luci-app-ssr-plus
@@ -123,7 +123,7 @@ jobs:
         shopt -s extglob
         mv -n openwrt-passwall/* ./ ; rm -Rf openwrt-passwall
         mv -n openwrt-package/* ./ ; rm -Rf openwrt-package
-        mv -n ledelean/* ./ ; rm -Rf ledelean
+        #mv -n ledelean/* ./ ; rm -Rf ledelean
         rm -Rf */.git qt5 openwrt-{chinadns*,simple-obfs,v2ray-plugin,dnsforwarder} subweb wget autosamba \
         mt-drivers coremark npc luci-app-{flowoffload,sfe,appfilter,advancedsetting,softethervpn,chinadns,smstool,cifs-mount,cifsd} \
         fcgiwrap ddns-scripts_{aliyun,dnspod} ipv6-helper ChinaDNS luci-theme-netgear csstidy samba4 UnblockNeteaseMusic* k3*

@@ -233,7 +233,6 @@ done
 #JDHelloWorld
 cat >$dir_file/config/tmp/JDHelloWorld_script.txt <<EOF
 	jd_joy_new.js			#宠汪汪二代目
-	jd_big_winner.js		#翻翻乐
 EOF
 
 for script_name in `cat $dir_file/config/tmp/JDHelloWorld_script.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -272,13 +271,10 @@ cat >$dir_file/config/tmp/smiek2221_url.txt <<EOF
 	gua_opencard24.js		#开卡默认不运行
 	gua_opencard25.js		#开卡默认不运行
 	gua_opencard26.js		#开卡默认不运行
-	gua_opencard30.js		#开卡默认不运行
-	gua_opencard34.js		#开卡默认不运行
-	gua_opencard35.js		#开卡默认不运行
 	gua_opencard36.js		#开卡默认不运行
 	gua_opencard37.js		#开卡默认不运行
-	gua_opencard38.js		#开卡默认不运行
 	gua_opencard39.js		#开卡默认不运行
+	gua_opencard40.js		#开卡默认不运行
 	gua_UnknownTask3.js		#寻找内容鉴赏官
 EOF
 
@@ -328,6 +324,7 @@ cat >$dir_file/config/tmp/zero205_url.txt <<EOF
 	jd_jump.js			#跳跳乐瓜分京豆
 	jd_qqxing.js			#QQ星系牧场
 	jd_get_share_code.js		#获取jd所有助力码脚本
+	jd_ttpt.js			#天天拼图
 EOF
 
 for script_name in `cat $dir_file/config/tmp/zero205_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -380,8 +377,6 @@ yuannian1112_url="https://raw.githubusercontent.com/yuannian1112/jd_scripts/main
 cat >$dir_file/config/tmp/yuannian1112_url.txt <<EOF
 	jd_plantBean.js			#种豆得豆
 	jd_dwapp.js			#积分换话费
-	#jd_star_shop.js			#明星小店
-	jd_film_museum.js 		#动人影像馆
 	jd_qycl.js			#企有此礼
 EOF
 
@@ -428,6 +423,7 @@ ccwav_url="https://raw.githubusercontent.com/ccwav/QLScript/main"
 cat >$dir_file/config/tmp/ccwav_url.txt <<EOF
 	jd_bean_change.js		#资产变化强化版by-ccwav
 	jd_priceProtect_Mod.js		#价保脚本
+	ZY_big_winner_Mod.js		#翻翻乐
 EOF
 
 for script_name in `cat $dir_file/config/tmp/ccwav_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -483,6 +479,12 @@ EOF
 
 #删掉过期脚本
 cat >/tmp/del_js.txt <<EOF
+	jd_film_museum.js 		#动人影像馆
+	jd_big_winner.js		#翻翻乐
+	gua_opencard30.js		#开卡默认不运行
+	gua_opencard34.js		#开卡默认不运行
+	gua_opencard35.js		#开卡默认不运行
+	gua_opencard38.js		#开卡默认不运行
 	gua_opencard31.js		#开卡默认不运行
 	jd_priceProtectRewrite.js		#价保脚本需要抓token
 	jd_fansa.js			#超店会员福利社
@@ -556,6 +558,7 @@ cat >/tmp/jd_tmp/ccr_run <<EOF
 	jd_cfd_mooncake.js		#京喜财富岛合成月饼
 	gua_carnivalcity.js		#京东手机狂欢城活动
 	jd_ddworld.js			#东东世界
+	zy_ddwj.js			#东东玩家
 EOF
 	for i in `cat /tmp/jd_tmp/ccr_run | grep -v "#.*js" | awk '{print $1}'`
 	do
@@ -600,7 +603,6 @@ cat >/tmp/jd_tmp/run_0 <<EOF
 	jd_unsubscribe.js 		#取关店铺，没时间要求
 	jd_ljd_xh.js			#领京豆
 	jd_ddworld.js			#东东世界
-	zy_ddwj.js			#东东玩家
 	jd_mofang.js			#集魔方
 EOF
 	echo -e "$green run_0$start_script_time $white"
@@ -667,7 +669,7 @@ EOF
 
 run_01() {
 cat >/tmp/jd_tmp/run_01 <<EOF
-	jd_big_winner.js		#翻翻乐
+	ZY_big_winner_Mod.js		#翻翻乐
 	jd_plantBean.js 		#种豆得豆，没时间要求，一个小时收一次瓶子
 	long_super_redrain.js		#整点红包雨
 	jd_cfd_mooncake.js		#京喜财富岛合成月饼
@@ -738,9 +740,9 @@ cat >/tmp/jd_tmp/run_06_18 <<EOF
 	jd_goodMorning.js		#早起福利
 	jd_nzmh.js			#新一期女装盲盒
 	jd_dwapp.js			#积分换话费
-	jd_film_museum.js 		#动人影像馆
 	jd_qycl.js			#企有此礼
 	jd_mf.js			#集魔方
+	jd_ttpt.js			#天天拼图
 EOF
 	echo -e "$green run_06_18$start_script_time $white"
 

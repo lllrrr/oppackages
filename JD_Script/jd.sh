@@ -86,7 +86,7 @@ export guaopencard_draw="true"
 export FS_LEVEL="card开卡+加购"
 
 task() {
-	cron_version="3.65"
+	cron_version="3.66"
 	if [[ `grep -o "JD_Script的定时任务$cron_version" $cron_file |wc -l` == "0" ]]; then
 		echo "不存在计划任务开始设置"
 		task_delete
@@ -126,6 +126,7 @@ cat >>/etc/crontabs/root <<EOF
 59 23,7,15 * * * sleep 50 && $dir_file/jd.sh run_jd_joy_reward >/tmp/jd_joy_reward.log	#汪汪兑换积分#100#
 45 23 * * * $dir_file/jd.sh kill_ccr #杀掉所有并发进程，为零点准备#100#
 46 23 * * * rm -rf /tmp/*.log #删掉所有log文件，为零点准备#100#
+20 * * * * $dir_file/jd.sh ss_if >/tmp/ss_if.log #每20分钟检测一下github#100#
 ###########100##########请将其他定时任务放到底下###############
 #**********这里是backnas定时任务#100#******************************#
 45 11,20 * * * $dir_file/jd.sh backnas  >/tmp/jd_backnas.log 2>&1 #每4个小时备份一次script,如果没有填写参数不会运行#100#
@@ -261,18 +262,12 @@ done
 #smiek2221
 smiek2221_url="https://raw.githubusercontent.com/smiek2221/scripts/master"
 cat >$dir_file/config/tmp/smiek2221_url.txt <<EOF
-	#gua_wealth_island.js 		#财富岛新版
-	jd_necklace.js  		#点点券
-	ZooFaker_Necklace.js 		#点点券依赖文件
 	jd_joy_steal.js			#宠汪汪偷好友积分与狗粮
 	gua_MMdou.js                    #赚京豆MM豆
 	gua_ddgame.js			#东东游戏
-	gua_carnivalcity.js		#京东手机狂欢城活动
 	gua_opencard24.js		#开卡默认不运行
-	gua_opencard25.js		#开卡默认不运行
 	gua_opencard26.js		#开卡默认不运行
 	gua_opencard36.js		#开卡默认不运行
-	gua_opencard37.js		#开卡默认不运行
 	gua_opencard39.js		#开卡默认不运行
 	gua_opencard40.js		#开卡默认不运行
 	gua_UnknownTask3.js		#寻找内容鉴赏官
@@ -320,8 +315,6 @@ cat >$dir_file/config/tmp/zero205_url.txt <<EOF
 	jd_superBrand.js		#特物Z|万物皆可国创
 	jd_try.js 			#京东试用（默认不启用）
 	jd_nzmh.js			#新一期女装盲盒
-	#jd_connoisseur.js		#内容鉴赏官
-	jd_jump.js			#跳跳乐瓜分京豆
 	jd_qqxing.js			#QQ星系牧场
 	jd_get_share_code.js		#获取jd所有助力码脚本
 	jd_ttpt.js			#天天拼图
@@ -393,7 +386,7 @@ done
 star261_url="https://raw.githubusercontent.com/star261/jd/main/scripts"
 cat >$dir_file/config/tmp/star261_url.txt <<EOF
 	jd_jxmc.js			#惊喜牧场(先将新手任务做完，再执行本脚本，不然会出现未知错误)
-	jd_star_shop.js			#明星小店
+	jd_beauty_twelfth.js		#美妆周年庆
 EOF
 
 for script_name in `cat $dir_file/config/tmp/star261_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -429,8 +422,8 @@ EOF
 for script_name in `cat $dir_file/config/tmp/ccwav_url.txt | grep -v "#.*js" | awk '{print $1}'`
 do
 	url="$ccwav_url"
-	wget $ccwav_url/$script_name -O $dir_file_js/$script_name
-	update_if
+	#wget $ccwav_url/$script_name -O $dir_file_js/$script_name
+	#update_if
 done
 
 #Tsukasa007
@@ -478,16 +471,13 @@ EOF
 
 #删掉过期脚本
 cat >/tmp/del_js.txt <<EOF
-	zy_ddwj.js			#东东玩家
-	jd_film_museum.js 		#动人影像馆
-	jd_big_winner.js		#翻翻乐
-	gua_opencard30.js		#开卡默认不运行
-	gua_opencard34.js		#开卡默认不运行
-	gua_opencard35.js		#开卡默认不运行
-	gua_opencard38.js		#开卡默认不运行
-	gua_opencard31.js		#开卡默认不运行
-	jd_priceProtectRewrite.js		#价保脚本需要抓token
-	jd_fansa.js			#超店会员福利社
+	gua_opencard25.js		#开卡默认不运行
+	gua_opencard37.js		#开卡默认不运行
+	jd_necklace.js  		#点点券
+	ZooFaker_Necklace.js 		#点点券依赖文件
+	jd_star_shop.js			#明星小店
+	jd_jump.js			#跳跳乐瓜分京豆
+	gua_carnivalcity.js		#京东手机狂欢城活动
 EOF
 
 for script_name in `cat /tmp/del_js.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -505,7 +495,7 @@ done
 	fi
 	chmod 755 $dir_file_js/*
 	kill_index
-	#index_js
+	index_js
 	additional_settings
 	concurrent_js_update
 	source /etc/profile
@@ -525,11 +515,11 @@ update_if() {
 			if [ $? -eq 0 ]; then
 				num=$(expr $num - 1)
 			else
-				if [ $eeror_num -ge 10 ];then
-					echo "下载$eeror_num次都失败，跳过这个下载"
+				if [ $eeror_num -ge 5 ];then
+					echo ">> $yellow$script_name$white下载$eeror_num次都失败，跳过这个下载"
 					num=$(expr $num - 1)
 				else
-					echo -e "下载失败,尝试第$eeror_num次下载"
+					echo -e ">> $yellow$script_name$white下载失败,尝试第$eeror_num次下载"
 					eeror_num=$(expr $eeror_num + 1)
 				fi
 			fi
@@ -553,10 +543,8 @@ cat >/tmp/jd_tmp/ccr_run <<EOF
 	jd_connoisseur.js		#内容鉴赏官
 	gua_UnknownTask3.js		#寻找内容鉴赏官
 	jd_superBrand.js		#特物Z|万物皆可国创
-	jd_star_shop.js			#明星小店
 	jd_jdzz.js			#京东赚赚长期活动
 	jd_cfd_mooncake.js		#京喜财富岛合成月饼
-	gua_carnivalcity.js		#京东手机狂欢城活动
 	jd_ddworld.js			#东东世界
 EOF
 	for i in `cat /tmp/jd_tmp/ccr_run | grep -v "#.*js" | awk '{print $1}'`
@@ -603,6 +591,7 @@ cat >/tmp/jd_tmp/run_0 <<EOF
 	jd_ljd_xh.js			#领京豆
 	jd_ddworld.js			#东东世界
 	jd_mofang.js			#集魔方
+	jd_beauty_twelfth.js		#美妆周年庆
 EOF
 	echo -e "$green run_0$start_script_time $white"
 
@@ -704,7 +693,6 @@ run_03() {
 #这里不会并发
 cat >/tmp/jd_tmp/run_03 <<EOF
 	jd_joy_new.js 			#jd宠汪汪，零点开始，11.30-15:00 17-21点可以领狗粮
-	jd_necklace.js  		#点点券 大佬0,20领一次先扔这里后面再改
 	jd_speed.js 			#天天加速 3小时运行一次，打卡时间间隔是6小时
 	jd_health.js			#健康社区
 	jd_mohe.js			#5G超级盲盒
@@ -785,7 +773,6 @@ EOF
 run_08_12_16() {
 cat >/tmp/jd_tmp/run_08_12_16 <<EOF
 	jd_syj.js 			#赚京豆
-	jd_jump.js			#跳跳乐瓜分京豆
 EOF
 	echo -e "$green run_08_12_16$start_script_time $white"
 
@@ -2898,14 +2885,7 @@ system_variable() {
 		fi
 	fi
 
-	#index_js
-	index_if=$(ps -ww | grep "index.js" | grep -v grep | awk '{print $1}')
-	if [ ! "$index_if" ];then
-		echo ""
-	else
-		kill -9 $index_if
-	fi
-	index_num="$yellow 8.网页扫码功能已关闭，看后面情况再开放$white"
+	index_js
 
 	#农场萌宠关闭通知
 	close_notification
@@ -2937,6 +2917,31 @@ kill_index() {
 		echo "终止网页扫码功能，重新执行sh \$jd 就可以恢复"
 		kill -9 $i
 	done
+}
+
+
+ss_if() {
+	echo -e "$green开启检测github是否联通，请稍等。。$white"
+	ping -c 2 github.com > /dev/null 2>&1
+	if [[ $? -eq 0 ]]; then
+		echo "github正常访问，不做任何操作"
+	else
+		ss_pid=$(ps -ww | grep "ssrplus" | grep -v grep | awk '{print $1}')
+		if [ $ss_pid == "2" ];then
+			echo "后台有ss进程，不做处理"
+		else
+			echo "无法ping通Github,重新加载ss进程"
+			/etc/init.d/shadowsocksr stop
+			/etc/init.d/shadowsocksr start
+			echo "重启进程完成"
+			ping -c 2 github.com > /dev/null 2>&1
+			if [[ $? -eq 0 ]]; then
+				echo -e "$green github正常访问，不做任何操作$white"
+			else
+				echo -e "$red依旧无法访问github,请检查网络问题$white"
+			fi
+		fi
+	fi
 }
 
 
@@ -3018,7 +3023,7 @@ else
 		run_0|run_01|run_06_18|run_10_15_20|run_02|run_03|opencard|run_08_12_16|run_07|run_030|run_020)
 		concurrent_js_if
 		;;
-		system_variable|update|update_script|task|jx|additional_settings|jd_sharecode|ds_setup|checklog|that_day|stop_script|script_black|script_name|backnas|npm_install|checktool|concurrent_js_clean|if_ps|getcookie|addcookie|delcookie|check_cookie_push|python_install|concurrent_js_update|kill_index|run_jd_cash|run_jd_blueCoin|run_jd_joy_reward|del_expired_cookie|jd_try)
+		system_variable|update|update_script|task|jx|additional_settings|jd_sharecode|ds_setup|checklog|that_day|stop_script|script_black|script_name|backnas|npm_install|checktool|concurrent_js_clean|if_ps|getcookie|addcookie|delcookie|check_cookie_push|python_install|concurrent_js_update|kill_index|run_jd_cash|run_jd_blueCoin|run_jd_joy_reward|del_expired_cookie|jd_try|ss_if)
 		$action1
 		;;
 		kill_ccr)
@@ -3037,7 +3042,7 @@ else
 		run_0|run_01|run_06_18|run_10_15_20|run_02|run_03|opencard|run_08_12_16|run_07|run_030|run_020)
 		concurrent_js_if
 		;;
-		system_variable|update|update_script|task|jx|additional_settings|jd_sharecode|ds_setup|checklog|that_day|stop_script|script_black|script_name|backnas|npm_install|checktool|concurrent_js_clean|if_ps|getcookie|addcookie|delcookie|check_cookie_push|python_install|concurrent_js_update|kill_index|run_jd_cash|run_jd_blueCoin|run_jd_joy_reward|del_expired_cookie|jd_try)
+		system_variable|update|update_script|task|jx|additional_settings|jd_sharecode|ds_setup|checklog|that_day|stop_script|script_black|script_name|backnas|npm_install|checktool|concurrent_js_clean|if_ps|getcookie|addcookie|delcookie|check_cookie_push|python_install|concurrent_js_update|kill_index|run_jd_cash|run_jd_blueCoin|run_jd_joy_reward|del_expired_cookie|jd_try|ss_if)
 		$action2
 		;;
 		kill_ccr)

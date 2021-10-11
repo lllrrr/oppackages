@@ -112,6 +112,7 @@ jobs:
         svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-docker
         svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/frp
         svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-filetransfer
+        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-lib-fs
         svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-frpc
         svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-frps
         svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-ipsec-vpnd

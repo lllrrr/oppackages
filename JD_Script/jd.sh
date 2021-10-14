@@ -264,7 +264,6 @@ smiek2221_url="https://raw.githubusercontent.com/smiek2221/scripts/master"
 cat >$dir_file/config/tmp/smiek2221_url.txt <<EOF
 	jd_joy_steal.js			#宠汪汪偷好友积分与狗粮
 	gua_MMdou.js                    #赚京豆MM豆
-	gua_ddgame.js			#东东游戏
 	gua_opencard39.js		#开卡默认不运行
 	gua_opencard41.js		#开卡默认不运行
 	gua_opencard42.js		#开卡默认不运行
@@ -390,8 +389,6 @@ cat >$dir_file/config/tmp/star261_url.txt <<EOF
 	jd_beauty_twelfth.js		#美妆周年庆
 	jd_haier.js			#海尔京东超级品牌日
 	jd_yijia.js			#一加
-	jd_honour.js			#荣耀新品传送挑战
-	jd_lucky_egg.js			#幸运扭蛋
 EOF
 
 for script_name in `cat $dir_file/config/tmp/star261_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -420,15 +417,14 @@ done
 ccwav_url="https://raw.githubusercontent.com/ccwav/QLScript2/main"
 cat >$dir_file/config/tmp/ccwav_url.txt <<EOF
 	jd_bean_change.js		#资产变化强化版by-ccwav
-	#jd_priceProtect_Mod.js		#价保脚本
 	jd_big_winner_Mod.js		#翻翻乐
 EOF
 
 for script_name in `cat $dir_file/config/tmp/ccwav_url.txt | grep -v "#.*js" | awk '{print $1}'`
 do
 	url="$ccwav_url"
-	#wget $ccwav_url/$script_name -O $dir_file_js/$script_name
-	#update_if
+	wget $ccwav_url/$script_name -O $dir_file_js/$script_name
+	update_if
 done
 
 #Tsukasa007
@@ -458,7 +454,6 @@ done
 cat >>$dir_file/config/collect_script.txt <<EOF
 	gua_UnknownTask2.js		#关注频道、抽奖(默认不运行)
 	jd_dianjing.js			#电竞经理
-	#jd_bean_change_new.js 		#资产变动强化版
 	star_dreamFactory_tuan.js 	#京喜开团　star261脚本
 	jd_OpenCard.py 			#开卡程序
 	jd_getFollowGift.py 		#关注有礼
@@ -596,7 +591,6 @@ cat >/tmp/jd_tmp/run_0 <<EOF
 	jd_beauty_twelfth.js		#美妆周年庆
 	jd_haier.js			#海尔京东超级品牌日
 	jd_yijia.js			#一加
-	jd_lucky_egg.js			#幸运扭蛋
 EOF
 	echo -e "$green run_0$start_script_time $white"
 
@@ -682,7 +676,6 @@ run_02() {
 cat >/tmp/jd_tmp/run_02 <<EOF
 	jd_joy.js			#宠汪汪
 	jd_moneyTree.js 		#摇钱树
-	jd_honour.js			#荣耀新品传送挑战
 EOF
 	echo -e "$green run_02$start_script_time $white"
 
@@ -705,7 +698,6 @@ cat >/tmp/jd_tmp/run_03 <<EOF
 	jd_dianjing.js			#电竞经理
 	jd_joy_park_help.js 		#汪汪乐园助力
 	jd_qqxing.js			#QQ星系牧场
-	gua_ddgame.js			#东东游戏
 EOF
 	echo -e "$green run_03$start_script_time $white"
 

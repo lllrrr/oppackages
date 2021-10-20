@@ -44,7 +44,14 @@ tsnode="/usr/bin/ts-node"
 python3="/usr/bin/python3"
 sys_model=$(cat /tmp/sysinfo/model | awk -v i="+" '{print $1i$2i$3i$4}')
 uname_version=$(uname -a | awk -v i="+" '{print $1i $2i $3}')
-wan_ip=$(ubus call network.interface.wan status | grep \"address\" | grep -oE '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}')
+
+#给强迫症的福利
+wan_ip=$(cat /etc/config/network | grep "wan")
+if [ ! $wan_ip ];then
+	wan_ip="找不到Wan IP"
+else
+	wan_ip=$(ubus call network.interface.wan status | grep \"address\" | grep -oE '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}')
+fi
 
 #Server酱
 wrap="%0D%0A%0D%0A" #Server酱换行
@@ -265,8 +272,6 @@ cat >$dir_file/config/tmp/smiek2221_url.txt <<EOF
 	jd_joy_steal.js			#宠汪汪偷好友积分与狗粮
 	gua_MMdou.js                    #赚京豆MM豆
 	gua_opencard39.js		#开卡默认不运行
-	gua_opencard41.js		#开卡默认不运行
-	gua_opencard42.js		#开卡默认不运行
 	gua_opencard43.js		#开卡默认不运行
 	gua_UnknownTask3.js		#寻找内容鉴赏官
 EOF
@@ -449,6 +454,7 @@ do
 done
 
 cat >>$dir_file/config/collect_script.txt <<EOF
+	gua_city.js			#城城分现金
 	gua_UnknownTask2.js		#关注频道、抽奖(默认不运行)
 	jd_dianjing.js			#电竞经理
 	star_dreamFactory_tuan.js 	#京喜开团　star261脚本
@@ -468,12 +474,8 @@ EOF
 
 #删掉过期脚本
 cat >/tmp/del_js.txt <<EOF
-	jd_opencard_LiHuiGuoQing_9-28_10-8_enc.js		#礼惠国庆 大牌欢乐购,开卡默认不运行
-	jd_big_winner_Mod.js		#翻翻乐
-	jd_yijia.js			#一加
-	jd_haier.js			#海尔京东超级品牌日
-	jd_beauty_twelfth.js		#美妆周年庆
-	jd_industrial_task.js		#京东工业品任务
+	gua_opencard41.js		#开卡默认不运行
+	gua_opencard42.js
 EOF
 
 for script_name in `cat /tmp/del_js.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -556,6 +558,7 @@ cat >/tmp/jd_tmp/concurrent_js_run_07 <<EOF
         jd_jxlhb.js			#京喜领红包
 	jd_redPacket.js			#京东全民开红包(活动入口：京东APP首页-领券-锦鲤红包)
 	jd_dreamFactory.js 		#京喜工厂
+	gua_city.js			#城城分现金
 EOF
 	for i in `cat /tmp/jd_tmp/concurrent_js_run_07 | grep -v "#.*js" | awk '{print $1}'`
 	do
@@ -1631,7 +1634,7 @@ checklog() {
 
 #检测当天更新情况并推送
 that_day() {
-	wget https://raw.githubusercontent.com/ITdesk01/JD_Script/master/README.md > /dev/null 2>&1
+	wget https://raw.githubusercontent.com/ITdesk01/JD_Script/master/README.md -O /tmp/test_README.md
 	if [[ $? -eq 0 ]]; then
 		cd $dir_file
 		git fetch
@@ -2374,7 +2377,7 @@ additional_settings() {
 	done
 
 	#京喜工厂
-	new_dreamFactory="4HL35B_v85-TsEGQbQTfFg==@q3X6tiRYVGYuAO4OD1-Fcg==@Gkf3Upy3YwQn2K3kO1hFFg==@1s8ZZnxD6DVDyjdEUu-zXA==@MrEZ6KupbLvOQ_2LDf_xgQ==@jwk7hHoEWAsvQyBkNrBS1Q==@iqAUAWEQx86GvVthAu7-jQ=="
+	new_dreamFactory="4HL35B_v85-TsEGQbQTfFg==@q3X6tiRYVGYuAO4OD1-Fcg==@Gkf3Upy3YwQn2K3kO1hFFg==@1s8ZZnxD6DVDyjdEUu-zXA==@MrEZ6KupbLvOQ_2LDf_xgQ==@jwk7hHoEWAsvQyBkNrBS1Q==@iqAUAWEQx86GvVthAu7-jQ==@ga_4DMiCZm_RqninySPJQw==@0_XIjHNNfhz2vahAPsORWg=="
 	zuoyou_20190516_df="oWcboKZa9XxTSWd28tCEPA==@sboe5PFeXgL2EWpxucrKYw==@rm-j1efPyFU50GBjacgEsw==@tZXnazfKhM0mZd2UGPWeCA==@9aUfCEmRqRW9fK7-P-eGnQ==@4yiyXPAaB_ReMPQy-st4AQ==@MmOfTa6Z79J9XRZA4roX1A==@rlJZquhGZTvDFksbDMhs2Q==@DriN9xUWha-XqE0cN3u7Fg==@krMPYOnVbZAAkZJiSz5cUw=="
 	Javon_20201224_df="qXsC2yNWiylHJjOrjebXgQ==@P2nGgK6JgLtCqJBeQJ0f27XXLQwYAFHrKmA2siZTuj8=@LTyKtCPGU6v0uv-n1GSwfQ=="
 	Javon_20201224_random_df="P2nGgK6JgLtCqJBeQJ0f27XXLQwYAFHrKmA2siZTuj8=@Y4r32JTAKNBpMoCXvBf7oA==@KDhTwFSjylKffc2V7dp5HQ==@UdTgtWxsEwypwH1v6GETfA==@LTyKtCPGU6v0uv-n1GSwfQ==@JuMHWNtZt4Ny_0ltvG6Ipg==@WnaDbsWYwImvOD1CpkeVWA==@Z2t6d_X8aMYIp7IwTnuNyA==@1Oob_S4cfK2z2gApmzRBgw==@BsCgeeTl_H2x5JQKGte6ow==@y7KhVRopnOwB1qFo2vIefg==@zS1ivJY43UFvaqOUiFijZQ==@USNexnDxgdW3h1M84IA8hQ==@QcxX97p7yNgImbEEZVEcyw==@N3AXGi-1Gt51bwdrCo76-Q=="
@@ -2628,9 +2631,6 @@ additional_settings() {
 		sed -i "$healthcode_rows a \ '$new_health_set', " $dir_file_js/jd_health.js
 		js_amount=$(($js_amount - 1))
 	done
-
-	#财富岛合成月饼
-	sed -i "s/cfd.json/cfd1.json/g" $dir_file_js/jd_cfd_mooncake.js
 }
 
 if [ ! `cat /tmp/github.txt` == "ITdesk01" ];then 
@@ -2945,7 +2945,7 @@ kill_index() {
 
 ss_if() {
 	echo -e "$green开启检测github是否联通，请稍等。。$white"
-	wget https://raw.githubusercontent.com/ITdesk01/JD_Script/master/README.md > /dev/null 2>&1
+	wget https://raw.githubusercontent.com/ITdesk01/JD_Script/master/README.md -O /tmp/test_README.md
 	if [[ $? -eq 0 ]]; then
 		echo "github正常访问，不做任何操作"
 	else
@@ -2957,7 +2957,7 @@ ss_if() {
 			/etc/init.d/shadowsocksr stop
 			/etc/init.d/shadowsocksr start
 			echo "重启进程完成"
-			wget https://raw.githubusercontent.com/ITdesk01/JD_Script/master/README.md > /dev/null 2>&1
+			wget https://raw.githubusercontent.com/ITdesk01/JD_Script/master/README.md -O /tmp/test_README.md
 			if [[ $? -eq 0 ]]; then
 				echo -e "$green github正常访问，不做任何操作$white"
 			else

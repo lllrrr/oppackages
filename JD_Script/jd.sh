@@ -46,7 +46,7 @@ sys_model=$(cat /tmp/sysinfo/model | awk -v i="+" '{print $1i$2i$3i$4}')
 uname_version=$(uname -a | awk -v i="+" '{print $1i $2i $3}')
 
 #给强迫症的福利
-wan_ip=$(cat /etc/config/network | grep "wan")
+wan_ip=$(cat /etc/config/network | grep "wan" | wc -l)
 if [ ! $wan_ip ];then
 	wan_ip="找不到Wan IP"
 else
@@ -273,6 +273,11 @@ cat >$dir_file/config/tmp/smiek2221_url.txt <<EOF
 	gua_MMdou.js                    #赚京豆MM豆
 	gua_opencard39.js		#开卡默认不运行
 	gua_opencard43.js		#开卡默认不运行
+	gua_opencard44.js		#开卡默认不运行
+	gua_opencard45.js		#开卡默认不运行
+	gua_opencard46.js		#开卡默认不运行
+	gua_opencard47.js		#开卡默认不运行
+	gua_opencard48.js		#开卡默认不运行
 	gua_UnknownTask3.js		#寻找内容鉴赏官
 EOF
 
@@ -317,7 +322,6 @@ cat >$dir_file/config/tmp/zero205_url.txt <<EOF
 	jd_joy_park_newtask.js		# 汪汪乐园过新手任务，有火爆账号的可以手动运行一次（默认不运行）
 	jd_superMarket.js		#东东超市
 	jd_unsubscriLive.js		#取关主播
-	jd_superBrand.js		#特物Z|万物皆可国创
 	jd_try.js 			#京东试用（默认不启用）
 	jd_nzmh.js			#新一期女装盲盒
 	jd_qqxing.js			#QQ星系牧场
@@ -362,6 +366,7 @@ cat >$dir_file/config/tmp/Aaron_url.txt <<EOF
 	jd_live.js			#京东直播
 	jd_mf.js			#集魔方
 	jd_price.js		        #价保脚本
+	jd_ys.js			#预售福利机
 EOF
 
 for script_name in `cat $dir_file/config/tmp/Aaron_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -376,7 +381,6 @@ yuannian1112_url="https://raw.githubusercontent.com/yuannian1112/jd_scripts/main
 cat >$dir_file/config/tmp/yuannian1112_url.txt <<EOF
 	jd_plantBean.js			#种豆得豆
 	jd_dwapp.js			#积分换话费
-	jd_qycl.js			#企有此礼
 EOF
 
 for script_name in `cat $dir_file/config/tmp/yuannian1112_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -432,7 +436,7 @@ done
 #Tsukasa007
 Tsukasa007_url="https://raw.githubusercontent.com/Tsukasa007/my_script/master"
 cat >$dir_file/config/tmp/Tsukasa007_url.txt <<EOF
-	#空
+	#空.js
 EOF
 
 for script_name in `cat $dir_file/config/tmp/Tsukasa007_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -454,6 +458,7 @@ do
 done
 
 cat >>$dir_file/config/collect_script.txt <<EOF
+	jd_fission.js			#东东超市限时抢京豆
 	gua_city.js			#城城分现金
 	gua_UnknownTask2.js		#关注频道、抽奖(默认不运行)
 	jd_dianjing.js			#电竞经理
@@ -474,6 +479,8 @@ EOF
 
 #删掉过期脚本
 cat >/tmp/del_js.txt <<EOF
+	jd_qycl.js			#企有此礼
+	jd_superBrand.js		#特物Z|万物皆可国创
 	gua_opencard41.js		#开卡默认不运行
 	gua_opencard42.js
 EOF
@@ -538,10 +545,11 @@ ccr_run() {
 cat >/tmp/jd_tmp/ccr_run <<EOF
 	jd_connoisseur.js		#内容鉴赏官
 	gua_UnknownTask3.js		#寻找内容鉴赏官
-	jd_superBrand.js		#特物Z|万物皆可国创
 	jd_jdzz.js			#京东赚赚长期活动
 	jd_cfd_mooncake.js		#京喜财富岛合成月饼
 	jd_ddworld.js			#东东世界
+	jd_fission.js			#东东超市限时抢京豆
+	jd_fission.js			#东东超市限时抢京豆(多加一次领奖励)
 EOF
 	for i in `cat /tmp/jd_tmp/ccr_run | grep -v "#.*js" | awk '{print $1}'`
 	do
@@ -721,9 +729,9 @@ cat >/tmp/jd_tmp/run_06_18 <<EOF
 	jd_goodMorning.js		#早起福利
 	jd_nzmh.js			#新一期女装盲盒
 	jd_dwapp.js			#积分换话费
-	jd_qycl.js			#企有此礼
 	jd_mf.js			#集魔方
 	jd_ttpt.js			#天天拼图
+	jd_ys.js			#预售福利机
 EOF
 	echo -e "$green run_06_18$start_script_time $white"
 

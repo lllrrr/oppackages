@@ -311,6 +311,7 @@ done
 cdle_carry_url="https://raw.githubusercontent.com/cdle/carry/main"
 cat >$dir_file/config/tmp/cdle_carry_url.txt <<EOF
 	jd_hyj.js			#环游记
+	rush_lzdz2_fashion.js		#时尚宠粉趴
 EOF
 
 for script_name in `cat $dir_file/config/tmp/cdle_carry_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -340,6 +341,7 @@ cat >$dir_file/config/tmp/zero205_url.txt <<EOF
 	jd_qqxing.js			#QQ星系牧场
 	jd_get_share_code.js		#获取jd所有助力码脚本
 	jd_ttpt.js			#天天拼图
+	jd_jump.js			#跳跳乐瓜分京豆
 EOF
 
 for script_name in `cat $dir_file/config/tmp/zero205_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -380,6 +382,7 @@ cat >$dir_file/config/tmp/Aaron_url.txt <<EOF
 	jd_mf.js			#集魔方
 	jd_price.js		        #价保脚本
 	jd_ys.js			#预售福利机
+	jd_wish.js			#众筹许愿池
 EOF
 
 for script_name in `cat $dir_file/config/tmp/Aaron_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -392,14 +395,14 @@ done
 #Ariszy
 Ariszy_url="https://raw.githubusercontent.com/Ariszy/Private-Script/master/JD"
 cat >$dir_file/config/tmp/Ariszy_url.txt <<EOF
-	zy_jxdzz.js		#惊喜大作战
+	#zy_jxdzz.js		#惊喜大作战
 EOF
 
 for script_name in `cat $dir_file/config/tmp/Ariszy_url.txt | grep -v "#.*js" | awk '{print $1}'`
 do
 	url="$Ariszy_url"
-	wget $Ariszy_url/$script_name -O $dir_file_js/$script_name
-	update_if
+	#wget $Ariszy_url/$script_name -O $dir_file_js/$script_name
+	#update_if
 done
 
 #yuannian1112
@@ -422,6 +425,7 @@ done
 star261_url="https://raw.githubusercontent.com/star261/jd/main/scripts"
 cat >$dir_file/config/tmp/star261_url.txt <<EOF
 	jd_jxmc.js			#惊喜牧场(先将新手任务做完，再执行本脚本，不然会出现未知错误)
+	jd_selectionOfficer.js		#美妆馆
 EOF
 
 for script_name in `cat $dir_file/config/tmp/star261_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -505,6 +509,7 @@ EOF
 
 #删掉过期脚本
 cat >/tmp/del_js.txt <<EOF
+	zy_jxdzz.js			#惊喜大作战
 	jd_qycl.js			#企有此礼
 	jd_superBrand.js		#特物Z|万物皆可国创
 	gua_opencard41.js		#开卡默认不运行
@@ -576,6 +581,8 @@ cat >/tmp/jd_tmp/ccr_run <<EOF
 	jd_ddworld.js			#东东世界
 	jd_fission.js			#东东超市限时抢京豆
 	jd_fission.js			#东东超市限时抢京豆(多加一次领奖励)
+	jd_selectionOfficer.js		#美妆馆
+	rush_lzdz2_fashion.js		#时尚宠粉趴
 EOF
 	for i in `cat /tmp/jd_tmp/ccr_run | grep -v "#.*js" | awk '{print $1}'`
 	do
@@ -622,7 +629,7 @@ cat >/tmp/jd_tmp/run_0 <<EOF
 	jd_ccSign.js			#领券中心签到
 	jd_unsubscribe.js 		#取关店铺，没时间要求
 	jd_ljd_xh.js			#领京豆
-	zy_jxdzz.js			#惊喜大作战
+	jd_wish.js			#众筹许愿池
 EOF
 	echo -e "$green run_0$start_script_time $white"
 
@@ -760,6 +767,7 @@ cat >/tmp/jd_tmp/run_06_18 <<EOF
 	jd_mf.js			#集魔方
 	jd_ttpt.js			#天天拼图
 	jd_ys.js			#预售福利机
+	jd_jump.js			#跳跳乐瓜分京豆
 EOF
 	echo -e "$green run_06_18$start_script_time $white"
 
@@ -2950,6 +2958,9 @@ system_variable() {
 	close_notification
 
 	script_black
+
+	#清理一下之前的问题
+	rm -rf /root/README.*
 }
 
 index_js() {

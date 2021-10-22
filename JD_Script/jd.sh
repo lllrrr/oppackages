@@ -307,6 +307,19 @@ do
 	#update_if
 done
 
+#cdle_carry
+cdle_carry_url="https://raw.githubusercontent.com/cdle/carry/main"
+cat >$dir_file/config/tmp/cdle_carry_url.txt <<EOF
+	jd_hyj.js			#环游记
+EOF
+
+for script_name in `cat $dir_file/config/tmp/cdle_carry_url.txt | grep -v "#.*js" | awk '{print $1}'`
+do
+	url="$cdle_carry_url"
+	wget $cdle_carry_url/$script_name -O $dir_file_js/$script_name
+	update_if
+done
+
 #zero205
 zero205_url="https://raw.githubusercontent.com/zero205/JD_tencent_scf/main"
 cat >$dir_file/config/tmp/zero205_url.txt <<EOF
@@ -373,6 +386,19 @@ for script_name in `cat $dir_file/config/tmp/Aaron_url.txt | grep -v "#.*js" | a
 do
 	url="$Aaron_url"
 	wget $Aaron_url/$script_name -O $dir_file_js/$script_name
+	update_if
+done
+
+#Ariszy
+Ariszy_url="https://raw.githubusercontent.com/Ariszy/Private-Script/master/JD"
+cat >$dir_file/config/tmp/Ariszy_url.txt <<EOF
+	zy_jxdzz.js		#惊喜大作战
+EOF
+
+for script_name in `cat $dir_file/config/tmp/Ariszy_url.txt | grep -v "#.*js" | awk '{print $1}'`
+do
+	url="$Ariszy_url"
+	wget $Ariszy_url/$script_name -O $dir_file_js/$script_name
 	update_if
 done
 
@@ -596,6 +622,7 @@ cat >/tmp/jd_tmp/run_0 <<EOF
 	jd_ccSign.js			#领券中心签到
 	jd_unsubscribe.js 		#取关店铺，没时间要求
 	jd_ljd_xh.js			#领京豆
+	zy_jxdzz.js			#惊喜大作战
 EOF
 	echo -e "$green run_0$start_script_time $white"
 
@@ -680,6 +707,7 @@ run_02() {
 cat >/tmp/jd_tmp/run_02 <<EOF
 	jd_joy.js			#宠汪汪
 	jd_moneyTree.js 		#摇钱树
+	jd_hyj.js			#环游记
 EOF
 	echo -e "$green run_02$start_script_time $white"
 

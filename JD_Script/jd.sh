@@ -93,7 +93,7 @@ export guaopencard_draw="true"
 export FS_LEVEL="card开卡+加购"
 
 task() {
-	cron_version="3.66"
+	cron_version="3.67"
 	if [[ `grep -o "JD_Script的定时任务$cron_version" $cron_file |wc -l` == "0" ]]; then
 		echo "不存在计划任务开始设置"
 		task_delete
@@ -133,7 +133,6 @@ cat >>/etc/crontabs/root <<EOF
 59 23,7,15 * * * sleep 50 && $dir_file/jd.sh run_jd_joy_reward >/tmp/jd_joy_reward.log	#汪汪兑换积分#100#
 45 23 * * * $dir_file/jd.sh kill_ccr #杀掉所有并发进程，为零点准备#100#
 46 23 * * * rm -rf /tmp/*.log #删掉所有log文件，为零点准备#100#
-20 * * * * $dir_file/jd.sh ss_if >/tmp/ss_if.log #每20分钟检测一下github#100#
 ###########100##########请将其他定时任务放到底下###############
 #**********这里是backnas定时任务#100#******************************#
 45 11,20 * * * $dir_file/jd.sh backnas  >/tmp/jd_backnas.log 2>&1 #每4个小时备份一次script,如果没有填写参数不会运行#100#
@@ -157,6 +156,8 @@ ds_setup() {
 }
 
 update() {
+	#ss_if
+
 	cat $openwrt_script_config/jdCookie.js | sed -e "s/pt_key=XXX;pt_pin=XXX//g" -e "s/pt_pin=(//g" -e "s/pt_key=xxx;pt_pin=xxx//g"| grep "pt_pin" | grep -v "//'" |grep -v "// '" > $openwrt_script_config/js_cookie.txt
 
 	if [ ! -d $dir_file/git_clone ];then
@@ -276,6 +277,7 @@ cat >$dir_file/config/tmp/smiek2221_url.txt <<EOF
 	gua_opencard47.js		#开卡默认不运行
 	gua_opencard48.js		#开卡默认不运行
 	gua_opencard49.js		#开卡默认不运行
+	gua_opencard50.js		#开卡默认不运行
 	gua_UnknownTask3.js		#寻找内容鉴赏官
 EOF
 
@@ -308,7 +310,7 @@ done
 #cdle_carry
 cdle_carry_url="https://raw.githubusercontent.com/cdle/carry/main"
 cat >$dir_file/config/tmp/cdle_carry_url.txt <<EOF
-	jd_hyj.js			#环游记
+	#空.js
 EOF
 
 for script_name in `cat $dir_file/config/tmp/cdle_carry_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -480,7 +482,6 @@ done
 	wget https://raw.githubusercontent.com/jiulan/platypus/main/scripts/jd_all_bean_change.js -O $dir_file_js/jd_all_bean_change.js #京东月资产变动通知
 	wget https://raw.githubusercontent.com/whyour/hundun/master/quanx/jx_products_detail.js -O $dir_file_js/jx_products_detail.js #京喜工厂商品列表详情
 	wget https://raw.githubusercontent.com/Aaron-lv/sync/jd_scripts/utils/JDJRValidator_Pure.js -O $dir_file_js/JDJRValidator_Pure.js
-	wget https://raw.githubusercontent.com/curtinlv/JD-Script/main/jd_hyj_help.py -O $dir_file_js/jd_hyj_help.py #环游记助力
 
 #将所有文本汇总
 echo > $dir_file/config/collect_script.txt
@@ -1685,7 +1686,7 @@ checklog() {
 
 #检测当天更新情况并推送
 that_day() {
-	wget https://raw.githubusercontent.com/ITdesk01/JD_Script/master/README.md -O /tmp/test_README.md
+	 wget -t 1 -T 20 https://raw.githubusercontent.com/ITdesk01/JD_Script/master/README.md -O /tmp/test_README.md
 	if [[ $? -eq 0 ]]; then
 		cd $dir_file
 		git fetch
@@ -2999,26 +3000,51 @@ kill_index() {
 
 
 ss_if() {
+	ss_server=$(grep "option global_server 'nil'" /etc/config/shadowsocksr | wc -l)
 	echo -e "$green开启检测github是否联通，请稍等。。$white"
-	wget https://raw.githubusercontent.com/ITdesk01/JD_Script/master/README.md -O /tmp/test_README.md
-	if [[ $? -eq 0 ]]; then
-		echo "github正常访问，不做任何操作"
-	else
-		ss_pid=$(ps -ww | grep "ssrplus" | grep -v grep | awk '{print $1}')
-		if [ $ss_pid == "2" ];then
-			echo "后台有ss进程，不做处理"
+	if [ $ss_server == "0" ];then
+		wget -t 1 -T 20 https://raw.githubusercontent.com/ITdesk01/JD_Script/master/README.md -O /tmp/test_README.md
+		if [[ $? -eq 0 ]]; then
+			echo "github正常访问，不做任何操作"
 		else
-			echo "无法ping通Github,重新加载ss进程"
-			/etc/init.d/shadowsocksr stop
-			/etc/init.d/shadowsocksr start
-			echo "重启进程完成"
-			wget https://raw.githubusercontent.com/ITdesk01/JD_Script/master/README.md -O /tmp/test_README.md
-			if [[ $? -eq 0 ]]; then
-				echo -e "$green github正常访问，不做任何操作$white"
+			ss_pid=$(ps -ww | grep "ssrplus" | grep -v grep | awk '{print $1}')
+			if [ $ss_pid == "2" ];then
+				echo "后台有ss进程，不做处理"
 			else
-				echo -e "$red依旧无法访问github,请检查网络问题$white"
+				echo "无法ping通Github,重新加载ss进程"
+				/etc/init.d/shadowsocksr stop
+				/etc/init.d/shadowsocksr start
+				echo "重启进程完成"
+				wget -t 1 -T 20 https://raw.githubusercontent.com/ITdesk01/JD_Script/master/README.md -O /tmp/test_README.md
+				if [[ $? -eq 0 ]]; then
+					echo -e "$green github正常访问，不做任何操作$white"
+				else
+					echo "检测到ss服务器故障"
+					log_sort=$(echo "检测到ss故障，已经为你重启进程一次，但问题依旧，请手动检查，请尽快处理防止无法愉快跑脚本" |sed "s/$/$wrap$wrap_tab/" | sed ':t;N;s/\n//;b t' | sed "s/$wrap_tab####/####/g")
+					server_content=$(echo "${log_sort}${by}" | sed "s/$wrap_tab####/####/g" )
+
+					weixin_content_sort=$(echo  $log_sort |sed "s/####/<b>/g"   |sed "s/$line/<hr\/><\/b>/g" |sed "s/$wrap/<br>/g" |sed "s/<br>#//g"  | sed "s/$/<br>/" |sed "s/<hr\/><\/b><br>/<hr\/><\/b>/g" |sed "s/+/ /g"| sed "s/<br> <br>/<br>/g"|  sed ':t;N;s/\n//;b t' )
+					weixin_content=$(echo "$weixin_content_sort<br><b>$by")
+					weixin_desp=$(echo "$weixin_content" | sed "s/<hr\/><\/b><b>/$weixin_line\n/g" |sed "s/<hr\/><\/b>/\n$weixin_line\n/g"| sed "s/<b>/\n/g"| sed "s/<br>/\n/g" | sed "s/<br><br>/\n/g" | sed "s/#/\n/g" )
+					title="检测到ss服务器故障"
+					push_menu
+					echo -e "$red JD_Script 检测到ss故障，已经为你重启进程一次，但问题依旧，请手动检查$white"
+					exit 0
+				fi
 			fi
 		fi
+	else
+		echo "检测到ss没有选择服务器，发送通知"
+		log_sort=$(echo "检测到ss没有选择服务器.无法联通网络，请尽快处理防止无法愉快跑脚本" |sed "s/$/$wrap$wrap_tab/" | sed ':t;N;s/\n//;b t' | sed "s/$wrap_tab####/####/g")
+		server_content=$(echo "${log_sort}${by}" | sed "s/$wrap_tab####/####/g" )
+
+		weixin_content_sort=$(echo  $log_sort |sed "s/####/<b>/g"   |sed "s/$line/<hr\/><\/b>/g" |sed "s/$wrap/<br>/g" |sed "s/<br>#//g"  | sed "s/$/<br>/" |sed "s/<hr\/><\/b><br>/<hr\/><\/b>/g" |sed "s/+/ /g"| sed "s/<br> <br>/<br>/g"|  sed ':t;N;s/\n//;b t' )
+		weixin_content=$(echo "$weixin_content_sort<br><b>$by")
+		weixin_desp=$(echo "$weixin_content" | sed "s/<hr\/><\/b><b>/$weixin_line\n/g" |sed "s/<hr\/><\/b>/\n$weixin_line\n/g"| sed "s/<b>/\n/g"| sed "s/<br>/\n/g" | sed "s/<br><br>/\n/g" | sed "s/#/\n/g" )
+		title="检测到你的ss服务器没有启动"
+		push_menu
+		echo -e "$red JD_Script 检测到你的ss服务器没有启动,暂时不更新脚本$white"
+		exit 0
 	fi
 }
 

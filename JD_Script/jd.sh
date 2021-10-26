@@ -275,6 +275,7 @@ cat >$dir_file/config/tmp/smiek2221_url.txt <<EOF
 	gua_opencard43.js		#开卡默认不运行
 	gua_opencard47.js		#开卡默认不运行
 	gua_opencard48.js		#开卡默认不运行
+	gua_opencard49.js		#开卡默认不运行
 	gua_UnknownTask3.js		#寻找内容鉴赏官
 EOF
 
@@ -339,6 +340,7 @@ cat >$dir_file/config/tmp/zero205_url.txt <<EOF
 	jd_ttpt.js			#天天拼图
 	jd_jump.js			#跳跳乐瓜分京豆
 	jd_lol.js			#电竞预言家,请在18点之前运行
+	jd_big_winner.js		#翻翻乐
 EOF
 
 for script_name in `cat $dir_file/config/tmp/zero205_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -424,6 +426,7 @@ star261_url="https://raw.githubusercontent.com/star261/jd/main/scripts"
 cat >$dir_file/config/tmp/star261_url.txt <<EOF
 	jd_jxmc.js			#惊喜牧场(先将新手任务做完，再执行本脚本，不然会出现未知错误)
 	jd_selectionOfficer.js		#美妆馆
+	jd_zzt.js			#潮玩儿制躁团
 EOF
 
 for script_name in `cat $dir_file/config/tmp/star261_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -699,6 +702,7 @@ cat >/tmp/jd_tmp/run_01 <<EOF
 	jd_plantBean.js 		#种豆得豆，没时间要求，一个小时收一次瓶子
 	long_super_redrain.js		#整点红包雨
 	jd_cfd_mooncake.js		#京喜财富岛合成月饼
+	jd_big_winner.js		#翻翻乐
 EOF
 	echo -e "$green run_01$start_script_time $white"
 
@@ -769,6 +773,7 @@ cat >/tmp/jd_tmp/run_06_18 <<EOF
 	jd_ttpt.js			#天天拼图
 	jd_ys.js			#预售福利机
 	jd_jump.js			#跳跳乐瓜分京豆
+	jd_zzt.js			#潮玩儿制躁团
 EOF
 	echo -e "$green run_06_18$start_script_time $white"
 
@@ -2423,7 +2428,7 @@ additional_settings() {
 	done
 
 	#京喜工厂
-	new_dreamFactory="4HL35B_v85-TsEGQbQTfFg==@q3X6tiRYVGYuAO4OD1-Fcg==@Gkf3Upy3YwQn2K3kO1hFFg==@1s8ZZnxD6DVDyjdEUu-zXA==@MrEZ6KupbLvOQ_2LDf_xgQ==@jwk7hHoEWAsvQyBkNrBS1Q==@iqAUAWEQx86GvVthAu7-jQ==@ga_4DMiCZm_RqninySPJQw==@0_XIjHNNfhz2vahAPsORWg=="
+	new_dreamFactory="4HL35B_v85-TsEGQbQTfFg==@q3X6tiRYVGYuAO4OD1-Fcg==@Gkf3Upy3YwQn2K3kO1hFFg==@1s8ZZnxD6DVDyjdEUu-zXA==@MrEZ6KupbLvOQ_2LDf_xgQ==@jwk7hHoEWAsvQyBkNrBS1Q==@iqAUAWEQx86GvVthAu7-jQ==@ga_4DMiCZm_RqninySPJQw==@0_XIjHNNfhz2vahAPsORWg==@5fR4SoV03xlnfBTzPY537A=="
 	zuoyou_20190516_df="oWcboKZa9XxTSWd28tCEPA==@sboe5PFeXgL2EWpxucrKYw==@rm-j1efPyFU50GBjacgEsw==@tZXnazfKhM0mZd2UGPWeCA==@9aUfCEmRqRW9fK7-P-eGnQ==@4yiyXPAaB_ReMPQy-st4AQ==@MmOfTa6Z79J9XRZA4roX1A==@rlJZquhGZTvDFksbDMhs2Q==@DriN9xUWha-XqE0cN3u7Fg==@krMPYOnVbZAAkZJiSz5cUw=="
 	Javon_20201224_df="qXsC2yNWiylHJjOrjebXgQ==@P2nGgK6JgLtCqJBeQJ0f27XXLQwYAFHrKmA2siZTuj8=@LTyKtCPGU6v0uv-n1GSwfQ=="
 	Javon_20201224_random_df="P2nGgK6JgLtCqJBeQJ0f27XXLQwYAFHrKmA2siZTuj8=@Y4r32JTAKNBpMoCXvBf7oA==@KDhTwFSjylKffc2V7dp5HQ==@UdTgtWxsEwypwH1v6GETfA==@LTyKtCPGU6v0uv-n1GSwfQ==@JuMHWNtZt4Ny_0ltvG6Ipg==@WnaDbsWYwImvOD1CpkeVWA==@Z2t6d_X8aMYIp7IwTnuNyA==@1Oob_S4cfK2z2gApmzRBgw==@BsCgeeTl_H2x5JQKGte6ow==@y7KhVRopnOwB1qFo2vIefg==@zS1ivJY43UFvaqOUiFijZQ==@USNexnDxgdW3h1M84IA8hQ==@QcxX97p7yNgImbEEZVEcyw==@N3AXGi-1Gt51bwdrCo76-Q=="
@@ -2431,7 +2436,7 @@ additional_settings() {
 	Jhone_Potte_20200824_df="Q4Rij5_6085kuANMaAvBMA==@gTLa05neWl8UFTGKpFLeog=="
 	ashou_20210516_df="1rQLjMF_eWMiQ-RAWARW_w==@6h514zWW6JNRE_Kp-L4cjA==@2G-4uh8CqPAv48cQT7BbXQ==@cxWqqvvoGwDhojw6JDJzaA==@pvMjBwEJuWqNrupO6Pjn6w==@nNK5doo5rxvF1HjnP0Kwjw==@BoMD6oFV2DhQRRo_w-h83g==@PqXKBSk3K1QcHUS0QRsCBg=="
 	jidiyangguang_20190516_df="w8B9d4EVh3e3eskOT5PR1A==@FyYWfETygv_4XjGtnl2YSg=="
-	test_df="1s8ZZnxD6DVDyjdEUu-zXA==@oK5uN03nIPjodWxbtdxPPA==@7VHDTh1iDT3_YEtiZ1iRPA==@KPmB_yK4CEvytAyuVu1zpA==@2oz-ZbJy_cNdcrgSgRJ4Nw==@RNpsm77e351Rmo_R3KwC-g==@SY7JjLpgyYem-rsx1ezHyQ==@ziq14nX6tEIoto9iGTimVQ=="
+	test_df="1s8ZZnxD6DVDyjdEUu-zXA==@oK5uN03nIPjodWxbtdxPPA==@7VHDTh1iDT3_YEtiZ1iRPA==@KPmB_yK4CEvytAyuVu1zpA==@2oz-ZbJy_cNdcrgSgRJ4Nw==@RNpsm77e351Rmo_R3KwC-g==@SY7JjLpgyYem-rsx1ezHyQ==@ziq14nX6tEIoto9iGTimVQ==@yHZcWiQpCym6GPplpjgwJQ=="
 
 	#比白人
 	wjq_20190516_df="43I0xnmtfBvt5qiFm6ftxA==@Suo8Gk5ZAB8bY5RgiNgdlw==@NoLbYPmp_p3aXBkDRwdE2Q==@-sO6tqkIoeAscsS36ljDMA==@1ZreRGjQrXEAVEk9h6kYBg==@qXB1yTY4gKnmblhlHMqPNrt_8ZxwR8bU8sI5om5_iOA=@XlnTBbI_A83LC6sVZsSt9A==@5nSB1JZvQ3Rhw1P7lk7WiA==@qloqgn5XJVT6gHqzfDAluA==@BK7bP7bzE4GC9h5GPSiMUg==@7R0Uw90k8K8knhyV5NCi7Q=="

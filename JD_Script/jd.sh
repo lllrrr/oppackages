@@ -278,6 +278,7 @@ cat >$dir_file/config/tmp/smiek2221_url.txt <<EOF
 	gua_opencard48.js		#开卡默认不运行
 	gua_opencard49.js		#开卡默认不运行
 	gua_opencard50.js		#开卡默认不运行
+	gua_opencard51.js		#开卡默认不运行
 	gua_UnknownTask3.js		#寻找内容鉴赏官
 EOF
 
@@ -374,7 +375,6 @@ cat >$dir_file/config/tmp/Aaron_url.txt <<EOF
 	jd_ccSign.js			#领券中心签到
 	jd_cash.js			#签到领现金，每日2毛～5毛长期
 	jd_jdzz.js			#京东赚赚长期活动
-	jd_cfd_mooncake.js		#京喜财富岛合成月饼
 	jd_connoisseur.js		#内容鉴赏官
 	jd_joy_reward.js		#宠汪汪积分兑换奖品脚本
 	jd_ddworld.js			#东东世界
@@ -513,11 +513,7 @@ EOF
 
 #删掉过期脚本
 cat >/tmp/del_js.txt <<EOF
-	zy_jxdzz.js			#惊喜大作战
-	jd_qycl.js			#企有此礼
-	jd_superBrand.js		#特物Z|万物皆可国创
-	gua_opencard41.js		#开卡默认不运行
-	gua_opencard42.js
+	jd_cfd_mooncake.js		#京喜财富岛合成月饼
 EOF
 
 for script_name in `cat /tmp/del_js.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -581,7 +577,6 @@ cat >/tmp/jd_tmp/ccr_run <<EOF
 	jd_connoisseur.js		#内容鉴赏官
 	gua_UnknownTask3.js		#寻找内容鉴赏官
 	jd_jdzz.js			#京东赚赚长期活动
-	jd_cfd_mooncake.js		#京喜财富岛合成月饼
 	jd_ddworld.js			#东东世界
 	jd_fission.js			#东东超市限时抢京豆
 	jd_fission.js			#东东超市限时抢京豆(多加一次领奖励)
@@ -704,11 +699,9 @@ run_01() {
 cat >/tmp/jd_tmp/run_01 <<EOF
 	jd_plantBean.js 		#种豆得豆，没时间要求，一个小时收一次瓶子
 	long_super_redrain.js		#整点红包雨
-	jd_cfd_mooncake.js		#京喜财富岛合成月饼
 	jd_big_winner.js		#翻翻乐
 EOF
 	echo -e "$green run_01$start_script_time $white"
-
 	for i in `cat /tmp/jd_tmp/run_01 | grep -v "#.*js" | awk '{print $1}'`
 	do
 		$node $dir_file_js/$i
@@ -3037,17 +3030,22 @@ ss_if() {
 				fi
 			fi
 		else
-			echo "检测到ss没有选择服务器，发送通知"
-			log_sort=$(echo "检测到ss没有选择服务器.无法联通网络，请尽快处理防止无法愉快跑脚本" |sed "s/$/$wrap$wrap_tab/" | sed ':t;N;s/\n//;b t' | sed "s/$wrap_tab####/####/g")
-			server_content=$(echo "${log_sort}${by}" | sed "s/$wrap_tab####/####/g" )
+			wget -t 1 -T 20 https://raw.githubusercontent.com/ITdesk01/JD_Script/master/README.md -O /tmp/test_README.md
+			if [[ $? -eq 0 ]]; then
+				echo "github正常访问，不做任何操作"
+			else
+				echo "检测到ss没有选择服务器，发送通知"
+				log_sort=$(echo "检测到ss没有选择服务器.无法联通网络，请尽快处理防止无法愉快跑脚本" |sed "s/$/$wrap$wrap_tab/" | sed ':t;N;s/\n//;b t' | sed "s/$wrap_tab####/####/g")
+				server_content=$(echo "${log_sort}${by}" | sed "s/$wrap_tab####/####/g" )
 
-			weixin_content_sort=$(echo  $log_sort |sed "s/####/<b>/g"   |sed "s/$line/<hr\/><\/b>/g" |sed "s/$wrap/<br>/g" |sed "s/<br>#//g"  | sed "s/$/<br>/" |sed "s/<hr\/><\/b><br>/<hr\/><\/b>/g" |sed "s/+/ /g"| sed "s/<br> <br>/<br>/g"|  sed ':t;N;s/\n//;b t' )
-			weixin_content=$(echo "$weixin_content_sort<br><b>$by")
-			weixin_desp=$(echo "$weixin_content" | sed "s/<hr\/><\/b><b>/$weixin_line\n/g" |sed "s/<hr\/><\/b>/\n$weixin_line\n/g"| sed "s/<b>/\n/g"| sed "s/<br>/\n/g" | sed "s/<br><br>/\n/g" | sed "s/#/\n/g" )
-			title="检测到你的ss服务器没有启动"
-			push_menu
-			echo -e "$red JD_Script 检测到你的ss服务器没有启动,暂时不更新脚本$white"
-			exit 0
+				weixin_content_sort=$(echo  $log_sort |sed "s/####/<b>/g"   |sed "s/$line/<hr\/><\/b>/g" |sed "s/$wrap/<br>/g" |sed "s/<br>#//g"  | sed "s/$/<br>/" |sed "s/<hr\/><\/b><br>/<hr\/><\/b>/g" |sed "s/+/ /g"| sed "s/<br> <br>/<br>/g"|  sed ':t;N;s/\n//;b t' )
+				weixin_content=$(echo "$weixin_content_sort<br><b>$by")
+				weixin_desp=$(echo "$weixin_content" | sed "s/<hr\/><\/b><b>/$weixin_line\n/g" |sed "s/<hr\/><\/b>/\n$weixin_line\n/g"| sed "s/<b>/\n/g"| sed "s/<br>/\n/g" | sed "s/<br><br>/\n/g" | sed "s/#/\n/g" )
+				title="检测到你的ss服务器没有启动"
+				push_menu
+				echo -e "$red JD_Script 检测到你的ss服务器没有启动,暂时不更新脚本$white"
+				exit 0
+			fi
 		fi
 	else
 		echo "在/etc/config没有找到shadowsocksr文件，不做任何操作"

@@ -491,6 +491,7 @@ do
 done
 
 cat >>$dir_file/config/collect_script.txt <<EOF
+	gua_1111RedEnvelope.js		#双十一无门槛红包
 	rush_wxCollectionActivity.js 	#加购物车抽奖
 	jd_fission.js			#东东超市限时抢京豆
 	gua_city.js			#城城分现金
@@ -585,6 +586,7 @@ cat >/tmp/jd_tmp/ccr_run <<EOF
 	jd_jxlhb.js			#京喜领红包
 	jd_redPacket.js			#京东全民开红包(活动入口：京东APP首页-领券-锦鲤红包)
 	gua_city.js			#城城分现金
+	gua_1111RedEnvelope.js		#双十一无门槛红包
 EOF
 	for i in `cat /tmp/jd_tmp/ccr_run | grep -v "#.*js" | awk '{print $1}'`
 	do

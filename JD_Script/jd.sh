@@ -286,8 +286,8 @@ for script_name in `cat $dir_file/config/tmp/smiek2221_url.txt | grep -v "#.*js"
 do
 {
 	url="$smiek2221_url"
-	wget $smiek2221_url/$script_name -O $dir_file_js/$script_name
-	update_if
+	#wget $smiek2221_url/$script_name -O $dir_file_js/$script_name
+	#update_if
 }&
 done
 
@@ -397,7 +397,7 @@ done
 #Ariszy
 Ariszy_url="https://raw.githubusercontent.com/Ariszy/Private-Script/master/JD"
 cat >$dir_file/config/tmp/Ariszy_url.txt <<EOF
-	#zy_jxdzz.js		#惊喜大作战
+	#zy_jxdzz.js		#京喜大作战
 EOF
 
 for script_name in `cat $dir_file/config/tmp/Ariszy_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -426,9 +426,8 @@ done
 #star261
 star261_url="https://raw.githubusercontent.com/star261/jd/main/scripts"
 cat >$dir_file/config/tmp/star261_url.txt <<EOF
-	jd_jxmc.js			#惊喜牧场(先将新手任务做完，再执行本脚本，不然会出现未知错误)
+	jd_jxmc.js			#京喜牧场(先将新手任务做完，再执行本脚本，不然会出现未知错误)
 	jd_selectionOfficer.js		#美妆馆
-	jd_zzt.js			#潮玩儿制躁团
 EOF
 
 for script_name in `cat $dir_file/config/tmp/star261_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -491,6 +490,7 @@ do
 done
 
 cat >>$dir_file/config/collect_script.txt <<EOF
+	jd_qjd.js			#抢京豆
 	gua_1111RedEnvelope.js		#双十一无门槛红包
 	rush_wxCollectionActivity.js 	#加购物车抽奖
 	jd_fission.js			#东东超市限时抢京豆
@@ -514,6 +514,7 @@ EOF
 
 #删掉过期脚本
 cat >/tmp/del_js.txt <<EOF
+	jd_zzt.js
 	jd_cfd_mooncake.js		#京喜财富岛合成月饼
 EOF
 
@@ -595,7 +596,6 @@ EOF
 		$run_sleep
 	}&
 	done
-	$python3 $openwrt_script/JD_Script/js/jd_hyj_help.py 			#环游记助力
 }
 
 concurrent_js_run_07() {
@@ -618,6 +618,7 @@ EOF
 
 run_0() {
 cat >/tmp/jd_tmp/run_0 <<EOF
+	jd_qjd.js			#抢京豆
 	jd_car.js 			#京东汽车，签到满500赛点可兑换500京豆，一天运行一次即可
 	jd_cash.js 			#签到领现金，每日2毛～5毛长期
 	jd_sgmh.js 			#闪购盲盒长期活动
@@ -661,7 +662,7 @@ run_030() {
 cat >/tmp/jd_tmp/run_030 <<EOF
 	gua_wealth_island.js 		#财富岛新版
 	jd_jdfactory.js 		#东东工厂，不是京喜工厂
-	jd_jxmc.js			#惊喜牧场
+	jd_jxmc.js			#京喜牧场
 	jd_health_collect.js		#健康社区-收能量
 	long_half_redrain.js		#半点红包雨
 	jd_dreamFactory.js 		#京喜工厂
@@ -717,7 +718,6 @@ run_02() {
 cat >/tmp/jd_tmp/run_02 <<EOF
 	jd_joy.js			#宠汪汪
 	jd_moneyTree.js 		#摇钱树
-	jd_hyj.js			#环游记
 EOF
 	echo -e "$green run_02$start_script_time $white"
 
@@ -771,7 +771,6 @@ cat >/tmp/jd_tmp/run_06_18 <<EOF
 	jd_ttpt.js			#天天拼图
 	jd_ys.js			#预售福利机
 	jd_jump.js			#跳跳乐瓜分京豆
-	jd_zzt.js			#潮玩儿制躁团
 EOF
 	echo -e "$green run_06_18$start_script_time $white"
 
@@ -1031,6 +1030,18 @@ EOF
 }
 
 concurrent_js_update() {
+	if [ "$ccr_if" == "yes" ];then
+		if [[ ! -d "$ccr_js_file" ]]; then
+			mkdir  $ccr_js_file
+		fi
+	else
+		if [[ ! -d "$ccr_js_file" ]]; then
+			echo ""
+		else
+			rm -rf $ccr_js_file
+		fi
+	fi
+
 	if [ "$ccr_if" == "yes" ];then
 		js_amount=$(cat $openwrt_script_config/js_cookie.txt |wc -l)
 		echo -e "$green>> 你有$js_amount个ck要创建并发文件夹$white"
@@ -2682,10 +2693,25 @@ additional_settings() {
 	done
 }
 
-if [ ! `cat /tmp/github.txt` == "ITdesk01" ];then 
-echo ""
-#exit 0
-fi
+del_jxdr() {
+	#检测变量删除对应并发文件夹的京喜工厂，达到不跑的目的，缺点run文件会出现找不到文件提示，无伤大雅
+	if [ ! $jx_dr ];then
+		echo "没有要删除的京喜工厂文件"
+	else
+		del_ck=$(echo $jx_dr | sed "s/@/ /g")
+		for i in `echo $del_ck`
+		do
+			jx_file=$(ls $ccr_js_file/js_$i | grep "jd_dreamFactory.js"  | wc -l)
+			if [ "$jx_file" == "1" ];then
+				echo "开始删除并发文件js_$i的京喜工厂文件"
+				rm -rf $ccr_js_file/js_$i/jd_dreamFactory.js
+			else
+				echo "并发文件js_$i的京喜工厂文件已经删除了"
+			fi
+		done
+	fi
+	clear
+}
 
 share_code_generate() {
 	js_amount="10"
@@ -2898,34 +2924,6 @@ system_variable() {
 		fi
 	fi
 
-	jd_openwrt_config_version="1.4"
-	if [ "$dir_file" == "$openwrt_script/JD_Script" ];then
-		jd_openwrt_config="$openwrt_script_config/jd_openwrt_script_config.txt"
-		if [ ! -f "$jd_openwrt_config" ]; then
-			jd_openwrt_config_description
-		fi
-		#jd_openwrt_script_config用于升级以后恢复链接
-		if [ ! -L "$dir_file/config/jd_openwrt_script_config.txt" ]; then
-			rm rf $dir_file/config/jd_openwrt_script_config.txt
-			ln -s $jd_openwrt_config $dir_file/config/jd_openwrt_script_config.txt
-		fi
-	fi
-
-	if [ `grep "jd_openwrt_config $jd_openwrt_config_version" $jd_openwrt_config |wc -l` == "1"  ];then
-		jd_config_version="$green jd_config最新 $yellow$jd_openwrt_config$white"
-	else
-		jd_config_version="$red jd_config与新版不一致，请手动更新，更新办法，删除$green rm -rf $jd_openwrt_config$white然后更新一下脚本,再进去重新设置一下"
-	fi
-
-	ccr_if=$(grep "concurrent" $jd_openwrt_config | awk -F "'" '{print $2}')
-	jd_fruit=$(grep "jd_fruit" $jd_openwrt_config | awk -F "'" '{print $2}')
-	jd_joy_reward=$(grep "jd_joy_reward" $jd_openwrt_config | awk -F "'" '{print $2}')
-	jd_joy_feedPets=$(grep "jd_joy_feedPets" $jd_openwrt_config | awk -F "'" '{print $2}')
-	jd_joy_steal=$(grep "jd_joy_steal" $jd_openwrt_config | awk -F "'" '{print $2}')
-	jd_unsubscribe=$(grep "jd_unsubscribe" $jd_openwrt_config | awk -F "'" '{print $2}')
-	push_if=$(grep "push_if" $jd_openwrt_config | awk -F "'" '{print $2}')
-	weixin2=$(grep "weixin2" $jd_openwrt_config | awk -F "'" '{print $2}')
-
 	#添加系统变量
 	jd_script_path=$(cat /etc/profile | grep -o jd.sh | wc -l)
 	if [[ "$jd_script_path" == "0" ]]; then
@@ -2934,28 +2932,7 @@ system_variable() {
 		source /etc/profile
 	fi
 
-
-	cd $dir_file
-	if_git=$(git remote -v | grep -o "https:\/\/github.com\/ITdesk01\/JD_Script.git" | wc -l)
-	if [ "$if_git" == "2" ];then
-		echo ""
-	else
-		echo ""
-		#echo -e "$red检测到你的JD_Script的github地址错误，停止为你服务，省的老问我，为什么你更新了以后，没有我说的脚本,你用的都不是我的，怎么可能跟上我的更新！！！$white"
-		#echo -e "$green唯一的github地址：https://github.com/ITdesk01/JD_Script.git$white"
-		#exit 0
-	fi
-	if [ "$ccr_if" == "yes" ];then
-		if [[ ! -d "$ccr_js_file" ]]; then
-			mkdir  $ccr_js_file
-		fi
-	else
-		if [[ ! -d "$ccr_js_file" ]]; then
-			echo ""
-		else
-			rm -rf $ccr_js_file
-		fi
-	fi
+	jd_openwrt_config
 
 	index_js
 
@@ -2964,9 +2941,8 @@ system_variable() {
 
 	script_black
 
-	#清理一下之前的问题
-	rm -rf /root/README.*
-	rm -rf $dir_file/README.*.*
+	#删除并发的京喜文件
+	del_jxdr
 }
 
 index_js() {
@@ -3054,6 +3030,36 @@ ss_if() {
 	fi
 }
 
+jd_openwrt_config() {
+	jd_openwrt_config_version="1.5"
+	if [ "$dir_file" == "$openwrt_script/JD_Script" ];then
+		jd_openwrt_config="$openwrt_script_config/jd_openwrt_script_config.txt"
+		if [ ! -f "$jd_openwrt_config" ]; then
+			jd_openwrt_config_description
+		fi
+		#jd_openwrt_script_config用于升级以后恢复链接
+		if [ ! -L "$dir_file/config/jd_openwrt_script_config.txt" ]; then
+			rm rf $dir_file/config/jd_openwrt_script_config.txt
+			ln -s $jd_openwrt_config $dir_file/config/jd_openwrt_script_config.txt
+		fi
+	fi
+
+	if [ `grep "jd_openwrt_config $jd_openwrt_config_version" $jd_openwrt_config |wc -l` == "1"  ];then
+		jd_config_version="$green jd_config最新 $yellow$jd_openwrt_config$white"
+	else
+		jd_config_version="$red jd_config与新版不一致，请手动更新，更新办法，删除$green rm -rf $jd_openwrt_config$white然后更新一下脚本,再进去重新设置一下"
+	fi
+
+	ccr_if=$(grep "concurrent" $jd_openwrt_config | awk -F "'" '{print $2}')
+	jd_fruit=$(grep "jd_fruit" $jd_openwrt_config | awk -F "'" '{print $2}')
+	jd_joy_reward=$(grep "jd_joy_reward" $jd_openwrt_config | awk -F "'" '{print $2}')
+	jd_joy_feedPets=$(grep "jd_joy_feedPets" $jd_openwrt_config | awk -F "'" '{print $2}')
+	jd_joy_steal=$(grep "jd_joy_steal" $jd_openwrt_config | awk -F "'" '{print $2}')
+	jd_unsubscribe=$(grep "jd_unsubscribe" $jd_openwrt_config | awk -F "'" '{print $2}')
+	push_if=$(grep "push_if" $jd_openwrt_config | awk -F "'" '{print $2}')
+	weixin2=$(grep "weixin2" $jd_openwrt_config | awk -F "'" '{print $2}')
+	jx_dr=$(grep "jx_dr" $jd_openwrt_config | awk -F "'" '{print $2}')
+}
 
 jd_openwrt_config_description() {
 cat > $jd_openwrt_config <<EOF
@@ -3086,7 +3092,7 @@ JD_TRY="false"
 jd_try_ck=""
 
 #jd_try黑名单
-export JD_TRY_TITLEFILTERS="考题@试卷@短筒靴@双面胶@沉香@香薰@充电宝@网红零食礼盒@网红@矿泉水@热身膏@按摩膏@芝士片@莆田@男鞋@精粹水@娇兰@帝皇峰@古龙香水@保暖护膝@小凳子@真皮笔袋@牛皮笔袋@触控手写@电容笔@SD卡@电池iPhone@摄像头@康复训练器@单肩包@防火毯@应急逃生衣@硒鼓@休闲零食@电动割草机@除草剂@膝盖贴@艾灸@茶叶@青梅酒@食用油@话筒@燃油宝@燃油添加剂@洗衣液@汽车应急启动电源@背景板@摆件@创意礼盒@烧水壶@果酒@注射器@浴巾@靴子@警告牌@被芯@手电筒@潮牌@土工布@安美琪@爽肤水@健身轮@懒人鞋@抛光@文玩@包浆@机油@户外鞋@白葡萄酒@宝珠笔@签字笔@台秤@麻将机@卡片@钱码@贵州名酒@葡萄酒@四件套@平底锅@休闲潮鞋@地图@茅台镇@贵州茅台镇@养殖围栏@平光@蜡油@花架子@水龙头@沐浴露@止痒@洗衣凝珠@记事本@灯泡@休闲鞋@运动鞋@女靴@男装@修复贴@冻干@保密袋@手机屏蔽袋@拖把池@冻干粉@修颜@牛仔裤@苏打水@代餐@精华@洗发露@鸡毛掸@拖把@咖啡豆@精油@维生素@降血压@活络油@隔离网@养生茶@减肥@喷雾@正骨@枕头@925@PVC@qq名片@按摩霜@奥咖蚕精参肽片压片@白富美@白玉@棒@棒球帽@包皮@孢子@保护膜@保护套@保健@保湿乳@杯@鼻@鼻炎@壁纸@避孕@便携装@饼干@玻尿酸@不限速@不锈钢@补钙@补水@布鞋@擦杯布@产后修复@尝鲜@长袖@超薄@超长@车载充电器@成功学@虫@宠物@除臭@床垫@春节@纯棉@瓷砖@打底裤@大米@单肩包女@淡化@蛋糕@档案袋@电话@电脑椅@电商@吊带@吊坠@钓鱼@定情@抖音@抖音作品@痘印@端午节@短裤@俄语@儿童@儿童牛奶@耳钉@耳环@耳坠@防臭地漏@防晒霜@翡翠@粉底@风湿@辅导@妇女@钙片@肛门@钢化@钢化膜@钢圈@高跟鞋@高血压@隔离带@宫颈@狗@股票@挂画@挂件@冠心病@罐@国庆节@果树@和田白玉@和田玉@黑丝@狐臭@互动课@护眼仪@花洒@化妆爽肤水@化妆水@活动@激素@甲醛@尖锐@监控补光灯@僵尸粉@降敏@教程@脚气@洁面乳@睫毛@睫毛胶水@解酒@戒烟@戒指@界家居@金刚石@精华@精华水@精华液@镜片@咀嚼片@卷尺@开发@看房@看房游@抗皱@克尤@刻字@课@口@口臭咀嚼片@口腔@口罩@快手@垃圾@垃圾桶@懒人支架@老太太@类纸膜@灵芝@领带@流量@流量卡@六级@旅游@玛瑙@猫@帽@眉@美白@美容仪@美少女@门把手@门票@糜烂@棉签@面膜@面霜@膜@墨水@奶粉@男用喷剂@内裤@尿不湿@女纯棉@女孩@女内裤@女内衣@女士上衣@女鞋@女性内裤@女性内衣@女友@女装@泡沫@疱疹@培训@盆栽@皮带@皮带扣@皮鞋@屏风底座@菩提@旗袍@亲子@轻奢@情人节@祛斑@祛痘@驱蚊@去黑头@染色@日租@肉苁蓉@乳霜@软件@腮红@三角短裤@三角裤@杀@少妇@少女@少女内衣@伸缩带@生殖器@施华洛世奇@湿疣@实战@手表@手抄报@手环@手机壳@手机膜@手机套@手机支架@手链@手套@手镯@树脂@刷头@水管@水晶@睡袍@睡衣@四级@四角短裤@四六级@素@随身wifi@损伤膏@太阳能@糖果@糖尿病@题库@体验装@贴膜@贴纸@铁@通话@童鞋@童装@褪黑素@娃娃@袜@袜子@袜子一双@外套@网课@网络@网络课程@网校@卫生巾@卫生条@卫衣@文胸@卧室灯@西服@西装@洗面@系统@癣@项链@小白鞋@小红书@小靓美@小胸@鞋拔@卸妆@卸妆水@心动@性感@胸部按摩@胸罩@休闲裤@Ｔ恤@玄关画@鸭舌帽@牙刷头@延时湿巾@演唱会@眼@眼镜@眼影@洋娃娃@羊脂白玉@羊脂玉@腰带@药@一次性@一米线栏杆@医用@衣架@姨妈巾@益生菌@益智@阴道@阴道炎@银@印度神油@婴儿@英语@疣@幼儿@鱼@鱼饵@羽绒服@语@玉@玉石@孕妇@在线@在线网络@在线直播@早餐奶@蟑螂@照明@遮斑@遮痘@遮瑕@职称@纸尿裤@中年@中秋节@中小学@种子@咨询@滋润@钻@钻石@坐垫"
+export JD_TRY_TITLEFILTERS="洁面@防晒@控油@润霜@手机解码线@肌肉收紧@骨盆@打呼噜@跑步鞋@羊毛裤@腹部按摩器@脚垫@太阳镜@腰部按摩器@化妆镜@书房灯@台灯@吊灯@短靴@瑜伽垫@羊毛衫@甩脂机@水果@五粮股份@护膝@笔记本电池@毛毯@泡脚桶@手机转接头@电视天线@门锁@保暖棉鞋@健身板@礼券@洁面巾@茅台旗下@茅台股份@郎酒@蛋黄酥@礼盒@考题@试卷@短筒靴@双面胶@沉香@香薰@充电宝@网红零食礼盒@网红@矿泉水@热身膏@按摩膏@芝士片@莆田@男鞋@精粹水@娇兰@帝皇峰@古龙香水@保暖护膝@小凳子@真皮笔袋@牛皮笔袋@触控手写@电容笔@SD卡@电池iPhone@摄像头@康复训练器@单肩包@防火毯@应急逃生衣@硒鼓@休闲零食@电动割草机@除草剂@膝盖贴@艾灸@茶叶@青梅酒@食用油@话筒@燃油宝@燃油添加剂@洗衣液@汽车应急启动电源@背景板@摆件@创意礼盒@烧水壶@果酒@注射器@浴巾@靴子@警告牌@被芯@手电筒@潮牌@土工布@安美琪@爽肤水@健身轮@懒人鞋@抛光@文玩@包浆@机油@户外鞋@白葡萄酒@宝珠笔@签字笔@台秤@麻将机@卡片@钱码@贵州名酒@葡萄酒@四件套@平底锅@休闲潮鞋@地图@茅台镇@贵州茅台镇@养殖围栏@平光@蜡油@花架子@水龙头@沐浴露@止痒@洗衣凝珠@记事本@灯泡@休闲鞋@运动鞋@女靴@男装@修复贴@冻干@保密袋@手机屏蔽袋@拖把池@冻干粉@修颜@牛仔裤@苏打水@代餐@精华@洗发露@鸡毛掸@拖把@咖啡豆@精油@维生素@降血压@活络油@隔离网@养生茶@减肥@喷雾@正骨@枕头@925@PVC@qq名片@按摩霜@奥咖蚕精参肽片压片@白富美@白玉@棒@棒球帽@包皮@孢子@保护膜@保护套@保健@保湿乳@杯@鼻@鼻炎@壁纸@避孕@便携装@饼干@玻尿酸@不限速@不锈钢@补钙@补水@布鞋@擦杯布@产后修复@尝鲜@长袖@超薄@超长@车载充电器@成功学@虫@宠物@除臭@床垫@春节@纯棉@瓷砖@打底裤@大米@单肩包女@淡化@蛋糕@档案袋@电话@电脑椅@电商@吊带@吊坠@钓鱼@定情@抖音@抖音作品@痘印@端午节@短裤@俄语@儿童@儿童牛奶@耳钉@耳环@耳坠@防臭地漏@防晒霜@翡翠@粉底@风湿@辅导@妇女@钙片@肛门@钢化@钢化膜@钢圈@高跟鞋@高血压@隔离带@宫颈@狗@股票@挂画@挂件@冠心病@罐@国庆节@果树@和田白玉@和田玉@黑丝@狐臭@互动课@护眼仪@花洒@化妆爽肤水@化妆水@活动@激素@甲醛@尖锐@监控补光灯@僵尸粉@降敏@教程@脚气@洁面乳@睫毛@睫毛胶水@解酒@戒烟@戒指@界家居@金刚石@精华@精华水@精华液@镜片@咀嚼片@卷尺@开发@看房@看房游@抗皱@克尤@刻字@课@口@口臭咀嚼片@口腔@口罩@快手@垃圾@垃圾桶@懒人支架@老太太@类纸膜@灵芝@领带@流量@流量卡@六级@旅游@玛瑙@猫@帽@眉@美白@美容仪@美少女@门把手@门票@糜烂@棉签@面膜@面霜@膜@墨水@奶粉@男用喷剂@内裤@尿不湿@女纯棉@女孩@女内裤@女内衣@女士上衣@女鞋@女性内裤@女性内衣@女友@女装@泡沫@疱疹@培训@盆栽@皮带@皮带扣@皮鞋@屏风底座@菩提@旗袍@亲子@轻奢@情人节@祛斑@祛痘@驱蚊@去黑头@染色@日租@肉苁蓉@乳霜@软件@腮红@三角短裤@三角裤@杀@少妇@少女@少女内衣@伸缩带@生殖器@施华洛世奇@湿疣@实战@手表@手抄报@手环@手机壳@手机膜@手机套@手机支架@手链@手套@手镯@树脂@刷头@水管@水晶@睡袍@睡衣@四级@四角短裤@四六级@素@随身wifi@损伤膏@太阳能@糖果@糖尿病@题库@体验装@贴膜@贴纸@铁@通话@童鞋@童装@褪黑素@娃娃@袜@袜子@袜子一双@外套@网课@网络@网络课程@网校@卫生巾@卫生条@卫衣@文胸@卧室灯@西服@西装@洗面@系统@癣@项链@小白鞋@小红书@小靓美@小胸@鞋拔@卸妆@卸妆水@心动@性感@胸部按摩@胸罩@休闲裤@Ｔ恤@玄关画@鸭舌帽@牙刷头@延时湿巾@演唱会@眼@眼镜@眼影@洋娃娃@羊脂白玉@羊脂玉@腰带@药@一次性@一米线栏杆@医用@衣架@姨妈巾@益生菌@益智@阴道@阴道炎@银@印度神油@婴儿@英语@疣@幼儿@鱼@鱼饵@羽绒服@语@玉@玉石@孕妇@在线@在线网络@在线直播@早餐奶@蟑螂@照明@遮斑@遮痘@遮瑕@职称@纸尿裤@中年@中秋节@中小学@种子@咨询@滋润@钻@钻石@坐垫"
 
 #jd_try试用白名单
 JD_TRY_WHITELIST="耳机@键盘"
@@ -3103,6 +3109,8 @@ JD_TRY_TRIALPRICE="10"
 #这里的变量都可以自己修改，按自己的想法来
 ------------------------------------------------------------------------------------------------------------
 
+#指定账号不跑京喜工厂，默认空全跑，指定格式1@2@3，这样子123账号就不跑了，只针对并发
+jx_dr=''
 
 #农场不浇水换豆 false关闭 true打开
 jd_fruit='false'

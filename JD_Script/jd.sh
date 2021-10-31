@@ -174,16 +174,6 @@ update() {
 		git reset --hard origin/main
 	fi
 
-	if [ ! -d $dir_file/git_clone/JDHelloWorld ];then
-		echo ""
-		git clone https://github.com/JDHelloWorld/jd_scripts.git $dir_file/git_clone/JDHelloWorld
-
-	else
-		cd $dir_file/git_clone/JDHelloWorld
-		git fetch --all
-		git reset --hard origin/main
-	fi
-
 	if [ ! -d $dir_file/git_clone/curtinlv_script ];then
 		echo ""
 		git clone https://github.com/curtinlv/JD-Script.git $dir_file/git_clone/curtinlv_script
@@ -239,18 +229,6 @@ do
 	cp  $dir_file/git_clone/lxk0301_back/$script_name  $dir_file_js/$script_name
 done
 
-#JDHelloWorld
-cat >$dir_file/config/tmp/JDHelloWorld_script.txt <<EOF
-	jd_joy_new.js			#宠汪汪二代目
-EOF
-
-for script_name in `cat $dir_file/config/tmp/JDHelloWorld_script.txt | grep -v "#.*js" | awk '{print $1}'`
-do
-	echo -e "$yellow copy $green$script_name$white"
-	cp  $dir_file/git_clone/JDHelloWorld/$script_name  $dir_file_js/$script_name
-done
-
-
 sleep 5
 
 #longzhuzhu
@@ -270,16 +248,16 @@ done
 #smiek2221
 smiek2221_url="https://raw.githubusercontent.com/smiek2221/scripts/master"
 cat >$dir_file/config/tmp/smiek2221_url.txt <<EOF
-	jd_joy_steal.js			#宠汪汪偷好友积分与狗粮
-	gua_MMdou.js                    #赚京豆MM豆
-	gua_opencard39.js		#开卡默认不运行
-	gua_opencard43.js		#开卡默认不运行
-	gua_opencard47.js		#开卡默认不运行
-	gua_opencard48.js		#开卡默认不运行
-	gua_opencard49.js		#开卡默认不运行
-	gua_opencard50.js		#开卡默认不运行
-	gua_opencard51.js		#开卡默认不运行
-	gua_UnknownTask3.js		#寻找内容鉴赏官
+	#jd_joy_steal.js			#宠汪汪偷好友积分与狗粮
+	#gua_MMdou.js                    #赚京豆MM豆
+	#gua_opencard39.js		#开卡默认不运行
+	#gua_opencard43.js		#开卡默认不运行
+	#gua_opencard47.js		#开卡默认不运行
+	#gua_opencard48.js		#开卡默认不运行
+	#gua_opencard49.js		#开卡默认不运行
+	#gua_opencard50.js		#开卡默认不运行
+	#gua_opencard51.js		#开卡默认不运行
+	#gua_UnknownTask3.js		#寻找内容鉴赏官
 EOF
 
 for script_name in `cat $dir_file/config/tmp/smiek2221_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -337,12 +315,14 @@ cat >$dir_file/config/tmp/zero205_url.txt <<EOF
 	jd_superMarket.js		#东东超市
 	jd_unsubscriLive.js		#取关主播
 	jd_try.js 			#京东试用（默认不启用）
-	jd_nzmh.js			#新一期女装盲盒
 	jd_qqxing.js			#QQ星系牧场
 	jd_get_share_code.js		#获取jd所有助力码脚本
 	jd_ttpt.js			#天天拼图
 	jd_lol.js			#电竞预言家,请在18点之前运行
 	jd_big_winner.js		#翻翻乐
+	jd_fcwb.js			#发财挖宝
+	jd_hotNeight.js			#沸腾之夜
+	jd_cjhz.js			#京东超级盒子
 EOF
 
 for script_name in `cat $dir_file/config/tmp/zero205_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -384,6 +364,7 @@ cat >$dir_file/config/tmp/Aaron_url.txt <<EOF
 	jd_ys.js			#预售福利机
 	jd_wish.js			#众筹许愿池
 	jd_carnivalcity.js		#京东手机狂欢城
+	jd_jxmc.js			#京喜牧场
 EOF
 
 for script_name in `cat $dir_file/config/tmp/Aaron_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -425,7 +406,7 @@ done
 #star261
 star261_url="https://raw.githubusercontent.com/star261/jd/main/scripts"
 cat >$dir_file/config/tmp/star261_url.txt <<EOF
-	jd_jxmc.js			#京喜牧场(先将新手任务做完，再执行本脚本，不然会出现未知错误)
+	#空.js
 EOF
 
 for script_name in `cat $dir_file/config/tmp/star261_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -479,6 +460,7 @@ done
 	wget https://raw.githubusercontent.com/jiulan/platypus/main/scripts/jd_all_bean_change.js -O $dir_file_js/jd_all_bean_change.js #京东月资产变动通知
 	wget https://raw.githubusercontent.com/whyour/hundun/master/quanx/jx_products_detail.js -O $dir_file_js/jx_products_detail.js #京喜工厂商品列表详情
 	wget https://raw.githubusercontent.com/Aaron-lv/sync/jd_scripts/utils/JDJRValidator_Pure.js -O $dir_file_js/JDJRValidator_Pure.js
+	wget https://raw.githubusercontent.com/shufflewzc/faker3/main/jd_jxmc_hb.js -O $dir_file_js/jd_jxmc_hb.js #京喜牧场助力
 
 #将所有文本汇总
 echo > $dir_file/config/collect_script.txt
@@ -488,6 +470,7 @@ do
 done
 
 cat >>$dir_file/config/collect_script.txt <<EOF
+	jd_jxmc_hb.js 			#京喜牧场助力
 	jd_qjd.js			#抢京豆
 	gua_1111RedEnvelope.js		#双十一无门槛红包
 	rush_wxCollectionActivity.js 	#加购物车抽奖
@@ -512,6 +495,7 @@ EOF
 
 #删掉过期脚本
 cat >/tmp/del_js.txt <<EOF
+	jd_joy_new.js
 	jd_selectionOfficer.js		#美妆馆
 	jd_jump.js			#跳跳乐瓜分京豆
 	jd_zzt.js
@@ -587,6 +571,7 @@ cat >/tmp/jd_tmp/ccr_run <<EOF
 	jd_redPacket.js			#京东全民开红包(活动入口：京东APP首页-领券-锦鲤红包)
 	gua_city.js			#城城分现金
 	gua_1111RedEnvelope.js		#双十一无门槛红包
+	jd_jxmc_hb.js 			#京喜牧场助力
 EOF
 	for i in `cat /tmp/jd_tmp/ccr_run | grep -v "#.*js" | awk '{print $1}'`
 	do
@@ -633,6 +618,7 @@ cat >/tmp/jd_tmp/run_0 <<EOF
 	jd_ljd_xh.js			#领京豆
 	jd_wish.js			#众筹许愿池
 	jd_carnivalcity.js		#京东手机狂欢城
+	jd_hotNeight.js			#沸腾之夜
 EOF
 	echo -e "$green run_0$start_script_time $white"
 
@@ -700,7 +686,7 @@ EOF
 run_01() {
 cat >/tmp/jd_tmp/run_01 <<EOF
 	jd_plantBean.js 		#种豆得豆，没时间要求，一个小时收一次瓶子
-	long_super_redrain.js		#整点红包雨
+	raw_main_jd_super_redrain.js	#整点红包雨
 	jd_big_winner.js		#翻翻乐
 EOF
 	echo -e "$green run_01$start_script_time $white"
@@ -732,13 +718,13 @@ EOF
 run_03() {
 #这里不会并发
 cat >/tmp/jd_tmp/run_03 <<EOF
-	jd_joy_new.js 			#jd宠汪汪，零点开始，11.30-15:00 17-21点可以领狗粮
 	jd_speed.js 			#天天加速 3小时运行一次，打卡时间间隔是6小时
 	jd_health.js			#健康社区
 	jd_mohe.js			#5G超级盲盒
 	jd_dianjing.js			#电竞经理
 	jd_joy_park_help.js 		#汪汪乐园助力
 	jd_qqxing.js			#QQ星系牧场
+	jd_hotNeight.js			#沸腾之夜
 EOF
 	echo -e "$green run_03$start_script_time $white"
 
@@ -764,11 +750,11 @@ cat >/tmp/jd_tmp/run_06_18 <<EOF
 	jd_superMarket.js 		#东东超市,6点 18点多加两场用于收金币
 	jd_gold_creator.js		#金榜创造营
 	jd_goodMorning.js		#早起福利
-	jd_nzmh.js			#新一期女装盲盒
 	jd_dwapp.js			#积分换话费
 	jd_mf.js			#集魔方
 	jd_ttpt.js			#天天拼图
 	jd_ys.js			#预售福利机
+	jd_fcwb.js			#发财挖宝
 EOF
 	echo -e "$green run_06_18$start_script_time $white"
 
@@ -830,6 +816,7 @@ cat >/tmp/jd_tmp/run_10_15_20 <<EOF
 	jd_superMarket.js 		#东东超市,0 10 15 20四场补货加劵
 	jd_speed_sign.js 		#京东极速版签到+赚现金任务
 	jd_speed_redpocke.js		#极速版红包
+	jd_cjhz.js			#京东超级盒子
 EOF
 
 	echo -e "$green run_10_15_20$start_script_time $white"
@@ -2690,6 +2677,9 @@ additional_settings() {
 		sed -i "$healthcode_rows a \ '$new_health_set', " $dir_file_js/jd_health.js
 		js_amount=$(($js_amount - 1))
 	done
+
+	#发财挖宝
+	sed -i "s/https:\/\/raw.fastgit.org\/zero205\/updateTeam\/main\/shareCodes\/fcwb.json//g" $dir_file_js/jd_fcwb.js
 }
 
 del_jxdr() {

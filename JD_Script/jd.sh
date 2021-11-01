@@ -93,7 +93,7 @@ export guaopencard_draw="true"
 export FS_LEVEL="card开卡+加购"
 
 task() {
-	cron_version="3.68"
+	cron_version="3.69"
 	if [[ `grep -o "JD_Script的定时任务$cron_version" $cron_file |wc -l` == "0" ]]; then
 		echo "不存在计划任务开始设置"
 		task_delete
@@ -135,7 +135,7 @@ cat >>/etc/crontabs/root <<EOF
 46 23 * * * rm -rf /tmp/*.log #删掉所有log文件，为零点准备#100#
 ###########100##########请将其他定时任务放到底下###############
 #**********这里是backnas定时任务#100#******************************#
-45 11,20 * * * $dir_file/jd.sh backnas  >/tmp/jd_backnas.log 2>&1 #每4个小时备份一次script,如果没有填写参数不会运行#100#
+45 12,19 * * * $dir_file/jd.sh backnas  >/tmp/jd_backnas.log 2>&1 #每4个小时备份一次script,如果没有填写参数不会运行#100#
 ############100###########请将其他定时任务放到底下###############
 EOF
 	/etc/init.d/cron restart
@@ -246,26 +246,24 @@ do
 done
 
 #smiek2221
-smiek2221_url="https://raw.githubusercontent.com/smiek2221/scripts/master"
+smiek2221_url="https://raw.githubusercontent.com/smiek2121/scripts/master"
 cat >$dir_file/config/tmp/smiek2221_url.txt <<EOF
-	#jd_joy_steal.js			#宠汪汪偷好友积分与狗粮
-	#gua_MMdou.js                    #赚京豆MM豆
-	#gua_opencard39.js		#开卡默认不运行
-	#gua_opencard43.js		#开卡默认不运行
-	#gua_opencard47.js		#开卡默认不运行
-	#gua_opencard48.js		#开卡默认不运行
-	#gua_opencard49.js		#开卡默认不运行
-	#gua_opencard50.js		#开卡默认不运行
-	#gua_opencard51.js		#开卡默认不运行
-	#gua_UnknownTask3.js		#寻找内容鉴赏官
+	jd_joy_steal.js			#宠汪汪偷好友积分与狗粮
+	gua_MMdou.js                    #赚京豆MM豆
+	gua_opencard39.js		#开卡默认不运行
+	gua_opencard48.js		#开卡默认不运行
+	gua_opencard49.js		#开卡默认不运行
+	gua_opencard53.js		#开卡默认不运行
+	gua_opencard55.js		#开卡默认不运行
+	gua_UnknownTask3.js		#寻找内容鉴赏官
 EOF
 
 for script_name in `cat $dir_file/config/tmp/smiek2221_url.txt | grep -v "#.*js" | awk '{print $1}'`
 do
 {
 	url="$smiek2221_url"
-	#wget $smiek2221_url/$script_name -O $dir_file_js/$script_name
-	#update_if
+	wget $smiek2221_url/$script_name -O $dir_file_js/$script_name
+	update_if
 }&
 done
 
@@ -302,7 +300,6 @@ done
 #zero205
 zero205_url="https://raw.githubusercontent.com/zero205/JD_tencent_scf/main"
 cat >$dir_file/config/tmp/zero205_url.txt <<EOF
-	jd_jxlhb.js			#京喜领红包
 	jd_joy.js			#宠汪汪
 	sign_graphics_validate.js
 	jd_sign_graphics.js		#京东签到图形验证
@@ -321,7 +318,6 @@ cat >$dir_file/config/tmp/zero205_url.txt <<EOF
 	jd_lol.js			#电竞预言家,请在18点之前运行
 	jd_big_winner.js		#翻翻乐
 	jd_fcwb.js			#发财挖宝
-	jd_hotNeight.js			#沸腾之夜
 	jd_cjhz.js			#京东超级盒子
 EOF
 
@@ -357,7 +353,6 @@ cat >$dir_file/config/tmp/Aaron_url.txt <<EOF
 	jd_connoisseur.js		#内容鉴赏官
 	jd_joy_reward.js		#宠汪汪积分兑换奖品脚本
 	jd_ddworld.js			#东东世界
-	jd_redPacket.js			#京东全民开红包(活动入口：京东APP首页-领券-锦鲤红包)
 	jd_live.js			#京东直播
 	jd_mf.js			#集魔方
 	jd_price.js		        #价保脚本
@@ -470,12 +465,14 @@ do
 done
 
 cat >>$dir_file/config/collect_script.txt <<EOF
+	rush_jinggengjcq_dapainew.js	#腿毛开卡，有水跑吧
+	jd_jxlhb.js			#京喜领红包
+	jd_redPacket.js			#京东全民开红包(活动入口：京东APP首页-领券-锦鲤红包)
+	jd_red.js			#双十一无门槛红包
 	jd_jxmc_hb.js 			#京喜牧场助力
 	jd_qjd.js			#抢京豆
-	gua_1111RedEnvelope.js		#双十一无门槛红包
 	rush_wxCollectionActivity.js 	#加购物车抽奖
 	jd_fission.js			#东东超市限时抢京豆
-	gua_city.js			#城城分现金
 	gua_UnknownTask2.js		#关注频道、抽奖(默认不运行)
 	jd_dianjing.js			#电竞经理
 	star_dreamFactory_tuan.js 	#京喜开团　star261脚本
@@ -495,11 +492,13 @@ EOF
 
 #删掉过期脚本
 cat >/tmp/del_js.txt <<EOF
-	jd_joy_new.js
-	jd_selectionOfficer.js		#美妆馆
-	jd_jump.js			#跳跳乐瓜分京豆
-	jd_zzt.js
-	jd_cfd_mooncake.js		#京喜财富岛合成月饼
+	jd_hotNeight.js			#沸腾之夜
+	gua_opencard43.js		#开卡默认不运行
+	gua_opencard47.js		#开卡默认不运行
+	gua_opencard50.js		#开卡默认不运行
+	gua_opencard51.js		#开卡默认不运行
+	gua_city.js			#城城分现金
+	gua_1111RedEnvelope.js		#双十一无门槛红包
 EOF
 
 for script_name in `cat /tmp/del_js.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -560,6 +559,7 @@ update_script() {
 ccr_run() {
 #这里有的就不要加到concurrent_js_run_07
 cat >/tmp/jd_tmp/ccr_run <<EOF
+	jd_red.js			#双十一无门槛红包
 	jd_connoisseur.js		#内容鉴赏官
 	gua_UnknownTask3.js		#寻找内容鉴赏官
 	jd_jdzz.js			#京东赚赚长期活动
@@ -569,8 +569,6 @@ cat >/tmp/jd_tmp/ccr_run <<EOF
 	jd_carnivalcity_help.js		#京东手机狂欢城助力
 	jd_jxlhb.js			#京喜领红包
 	jd_redPacket.js			#京东全民开红包(活动入口：京东APP首页-领券-锦鲤红包)
-	gua_city.js			#城城分现金
-	gua_1111RedEnvelope.js		#双十一无门槛红包
 	jd_jxmc_hb.js 			#京喜牧场助力
 EOF
 	for i in `cat /tmp/jd_tmp/ccr_run | grep -v "#.*js" | awk '{print $1}'`
@@ -618,7 +616,6 @@ cat >/tmp/jd_tmp/run_0 <<EOF
 	jd_ljd_xh.js			#领京豆
 	jd_wish.js			#众筹许愿池
 	jd_carnivalcity.js		#京东手机狂欢城
-	jd_hotNeight.js			#沸腾之夜
 EOF
 	echo -e "$green run_0$start_script_time $white"
 
@@ -724,7 +721,6 @@ cat >/tmp/jd_tmp/run_03 <<EOF
 	jd_dianjing.js			#电竞经理
 	jd_joy_park_help.js 		#汪汪乐园助力
 	jd_qqxing.js			#QQ星系牧场
-	jd_hotNeight.js			#沸腾之夜
 EOF
 	echo -e "$green run_03$start_script_time $white"
 
@@ -1842,9 +1838,6 @@ backnas() {
 		exit 0
 	fi
 
-	echo -e "$green >>先杀掉一下后台脚本，然后方便打包文件$white"
-	kill_ccr
-	sleep 5
 	echo -e "$green>> 开始备份到nas$white"
 	sleep 5
 
@@ -1896,6 +1889,10 @@ backnas() {
 	echo -e "$green>> 清理tmp文件 $white"
 	rm -rf /tmp/*.tar.gz
 	sleep 5
+
+	echo -e "$green>> 开始更新脚本并恢复并发文件夹$white"
+	update
+	echo -e "$green>> 脚本更新完成$white"
 }
 
 backnas_config() {

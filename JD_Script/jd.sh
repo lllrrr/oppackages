@@ -231,18 +231,18 @@ done
 
 sleep 5
 
-#longzhuzhu
-longzhuzhu_url="https://raw.githubusercontent.com/longzhuzhu/nianyu/main/qx"
-cat >$dir_file/config/tmp/longzhuzhu_qx.txt <<EOF
-	long_half_redrain.js		#半点红包雨
-	long_super_redrain.js 		#整点红包雨
+#fangpidedongsun
+fangpidedongsun_url="https://raw.githubusercontent.com/fangpidedongsun/jd_scripts2/master"
+cat >$dir_file/config/tmp/fangpidedongsun_qx.txt <<EOF
+	jd_xtgsign.js 			#星推官
+	jd_jingsubang.js 		#手机竞猜
 EOF
 
-for script_name in `cat $dir_file/config/tmp/longzhuzhu_qx.txt | grep -v "#.*js" | awk '{print $1}'`
+for script_name in `cat $dir_file/config/tmp/fangpidedongsun_qx.txt | grep -v "#.*js" | awk '{print $1}'`
 do
-	url="$longzhuzhu_url"
-	#wget $nianyuguai_url/$script_name -O $dir_file_js/$script_name
-	#update_if
+	url="$fangpidedongsun_url"
+	wget $nianyuguai_url/$script_name -O $dir_file_js/$script_name
+	update_if
 done
 
 #smiek2221
@@ -250,18 +250,20 @@ smiek2221_url="https://raw.githubusercontent.com/smiek2121/scripts/master"
 cat >$dir_file/config/tmp/smiek2221_url.txt <<EOF
 	jd_joy_steal.js			#宠汪汪偷好友积分与狗粮
 	gua_MMdou.js                    #赚京豆MM豆
-	gua_opencard39.js		#开卡默认不运行
-	gua_opencard48.js		#开卡默认不运行
-	gua_opencard49.js		#开卡默认不运行
+	gua_UnknownTask3.js		#寻找内容鉴赏官
 	gua_opencard53.js		#开卡默认不运行
 	gua_opencard52.js		#开卡默认不运行
+	gua_opencard54.js		#开卡默认不运行
 	gua_opencard55.js		#开卡默认不运行
+	gua_opencard56.js		#开卡默认不运行
 	gua_opencard57.js		#开卡默认不运行
 	gua_opencard58.js		#开卡默认不运行
 	gua_opencard59.js		#开卡默认不运行
 	gua_opencard60.js		#开卡默认不运行
+	gua_opencard61.js		#开卡默认不运行
 	gua_opencard62.js		#开卡默认不运行
-	gua_UnknownTask3.js		#寻找内容鉴赏官
+	gua_opencard63.js		#开卡默认不运行
+	gua_opencard64.js		#开卡默认不运行
 EOF
 
 for script_name in `cat $dir_file/config/tmp/smiek2221_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -271,36 +273,6 @@ do
 	wget $smiek2221_url/$script_name -O $dir_file_js/$script_name
 	update_if
 }&
-done
-
-#cdle
-cdle_url="https://raw.githubusercontent.com/cdle/jd_study/main"
-cat >$dir_file/config/tmp/cdle_url.txt <<EOF
-	jd_morningSc.js			#早起赢现金
-	jd_angryKoi.js			#愤怒的锦鲤
-	jd_goodMorning.js		#早起福利
-	jd_joy_park_help.js 		#汪汪乐园助力
-	jd_cash_exchange.js		#签到领现金兑换
-EOF
-
-for script_name in `cat $dir_file/config/tmp/cdle_url.txt | grep -v "#.*js" | awk '{print $1}'`
-do
-	url="$cdle_url"
-	#wget $cdle_url/$script_name -O $dir_file_js/$script_name
-	#update_if
-done
-
-#cdle_carry
-cdle_carry_url="https://raw.githubusercontent.com/cdle/carry/main"
-cat >$dir_file/config/tmp/cdle_carry_url.txt <<EOF
-	#空.js
-EOF
-
-for script_name in `cat $dir_file/config/tmp/cdle_carry_url.txt | grep -v "#.*js" | awk '{print $1}'`
-do
-	url="$cdle_carry_url"
-	wget $cdle_carry_url/$script_name -O $dir_file_js/$script_name
-	update_if
 done
 
 #zero205
@@ -325,6 +297,7 @@ cat >$dir_file/config/tmp/zero205_url.txt <<EOF
 	jd_big_winner.js		#翻翻乐
 	jd_fcwb.js			#发财挖宝
 	jd_cjhz.js			#京东超级盒子
+	jd_nnfls.js			#牛牛福利
 EOF
 
 for script_name in `cat $dir_file/config/tmp/zero205_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -334,19 +307,6 @@ do
 	wget $zero205_url/$script_name -O $dir_file_js/$script_name
 	update_if
 }&
-done
-
-#Wenmoux
-Wenmoux_url="https://raw.githubusercontent.com/Wenmoux/scripts/wen/jd"
-cat >$dir_file/config/tmp/Wenmoux_url.txt <<EOF
-	jd_ddnc_farmpark.js		#东东乐园 Wenmoux脚本
-EOF
-
-for script_name in `cat $dir_file/config/tmp/Wenmoux_url.txt | grep -v "#.*js" | awk '{print $1}'`
-do
-	url="$Wenmoux_url"
-	#wget $Wenmoux_url/$script_name -O $dir_file_js/$script_name
-	#update_if
 done
 
 #Aaron
@@ -375,19 +335,6 @@ do
 	update_if
 done
 
-#Ariszy
-Ariszy_url="https://raw.githubusercontent.com/Ariszy/Private-Script/master/JD"
-cat >$dir_file/config/tmp/Ariszy_url.txt <<EOF
-	#zy_jxdzz.js		#京喜大作战
-EOF
-
-for script_name in `cat $dir_file/config/tmp/Ariszy_url.txt | grep -v "#.*js" | awk '{print $1}'`
-do
-	url="$Ariszy_url"
-	#wget $Ariszy_url/$script_name -O $dir_file_js/$script_name
-	#update_if
-done
-
 #yuannian1112
 yuannian1112_url="https://raw.githubusercontent.com/yuannian1112/jd_scripts/main"
 cat >$dir_file/config/tmp/yuannian1112_url.txt <<EOF
@@ -403,6 +350,8 @@ do
 	update_if
 }&
 done
+
+
 
 #star261
 star261_url="https://raw.githubusercontent.com/star261/jd/main/scripts"
@@ -445,6 +394,62 @@ do
 	update_if
 done
 
+#cdle
+cdle_url="https://raw.githubusercontent.com/cdle/jd_study/main"
+cat >$dir_file/config/tmp/cdle_url.txt <<EOF
+	jd_morningSc.js			#早起赢现金
+	jd_angryKoi.js			#愤怒的锦鲤
+	jd_goodMorning.js		#早起福利
+	jd_joy_park_help.js 		#汪汪乐园助力
+	jd_cash_exchange.js		#签到领现金兑换
+EOF
+
+for script_name in `cat $dir_file/config/tmp/cdle_url.txt | grep -v "#.*js" | awk '{print $1}'`
+do
+	url="$cdle_url"
+	#wget $cdle_url/$script_name -O $dir_file_js/$script_name
+	#update_if
+done
+
+#cdle_carry
+cdle_carry_url="https://raw.githubusercontent.com/cdle/carry/main"
+cat >$dir_file/config/tmp/cdle_carry_url.txt <<EOF
+	#空.js
+EOF
+
+for script_name in `cat $dir_file/config/tmp/cdle_carry_url.txt | grep -v "#.*js" | awk '{print $1}'`
+do
+	url="$cdle_carry_url"
+	wget $cdle_carry_url/$script_name -O $dir_file_js/$script_name
+	update_if
+done
+
+#Ariszy
+Ariszy_url="https://raw.githubusercontent.com/Ariszy/Private-Script/master/JD"
+cat >$dir_file/config/tmp/Ariszy_url.txt <<EOF
+	#zy_jxdzz.js		#京喜大作战
+EOF
+
+for script_name in `cat $dir_file/config/tmp/Ariszy_url.txt | grep -v "#.*js" | awk '{print $1}'`
+do
+	url="$Ariszy_url"
+	#wget $Ariszy_url/$script_name -O $dir_file_js/$script_name
+	#update_if
+done
+
+#Wenmoux
+Wenmoux_url="https://raw.githubusercontent.com/Wenmoux/scripts/wen/jd"
+cat >$dir_file/config/tmp/Wenmoux_url.txt <<EOF
+	jd_ddnc_farmpark.js		#东东乐园 Wenmoux脚本
+EOF
+
+for script_name in `cat $dir_file/config/tmp/Wenmoux_url.txt | grep -v "#.*js" | awk '{print $1}'`
+do
+	url="$Wenmoux_url"
+	#wget $Wenmoux_url/$script_name -O $dir_file_js/$script_name
+	#update_if
+done
+
 #Tsukasa007
 Tsukasa007_url="https://raw.githubusercontent.com/Tsukasa007/my_script/master"
 cat >$dir_file/config/tmp/Tsukasa007_url.txt <<EOF
@@ -460,9 +465,8 @@ done
 
 	wget https://raw.githubusercontent.com/jiulan/platypus/main/scripts/jd_all_bean_change.js -O $dir_file_js/jd_all_bean_change.js #京东月资产变动通知
 	wget https://raw.githubusercontent.com/whyour/hundun/master/quanx/jx_products_detail.js -O $dir_file_js/jx_products_detail.js #京喜工厂商品列表详情
-	wget https://raw.githubusercontent.com/Aaron-lv/sync/jd_scripts/utils/JDJRValidator_Pure.js -O $dir_file_js/JDJRValidator_Pure.js
 	wget https://raw.githubusercontent.com/shufflewzc/faker3/main/jd_jxmc_hb.js -O $dir_file_js/jd_jxmc_hb.js #京喜牧场助力
-	wget https://raw.githubusercontent.com/fangpidedongsun/jd_scripts2/master/jd_xtgsign.js -O $dir_file_js/jd_xtgsign.js #星推官
+	wget https://raw.githubusercontent.com/Aaron-lv/sync/jd_scripts/utils/JDJRValidator_Pure.js -O $dir_file_js/JDJRValidator_Pure.js #因为路径不同单独下载
 
 #将所有文本汇总
 echo > $dir_file/config/collect_script.txt
@@ -472,7 +476,7 @@ do
 done
 
 cat >>$dir_file/config/collect_script.txt <<EOF
-	jd_xtgsign.js 			#星推官
+	jd_fcdyj.js			#发财大赢家
 	rush_jinggengjcq_dapainew.js	#腿毛开卡，有水跑吧
 	jd_jxlhb.js			#京喜领红包
 	jd_redPacket.js			#京东全民开红包(活动入口：京东APP首页-领券-锦鲤红包)
@@ -500,6 +504,9 @@ EOF
 
 #删掉过期脚本
 cat >/tmp/del_js.txt <<EOF
+	gua_opencard39.js		#开卡默认不运行
+	gua_opencard48.js		#开卡默认不运行
+	gua_opencard49.js		#开卡默认不运行
 	zy_sjjc.js			#手机竞猜
 	jd_hotNeight.js			#沸腾之夜
 	gua_opencard43.js		#开卡默认不运行
@@ -580,6 +587,7 @@ cat >/tmp/jd_tmp/ccr_run <<EOF
 	jd_redPacket.js			#京东全民开红包(活动入口：京东APP首页-领券-锦鲤红包)
 	jd_jxmc_hb.js 			#京喜牧场助力
 	jd_superBrand.js		#双11特务
+	jd_nnfls.js			#牛牛福利
 EOF
 	for i in `cat /tmp/jd_tmp/ccr_run | grep -v "#.*js" | awk '{print $1}'`
 	do
@@ -674,8 +682,19 @@ EOF
 
 opencard() {
 cat >/tmp/jd_tmp/opencard <<EOF
-	gua_opencard24.js		#开卡默认不运行
-	gua_opencard25.js		#开卡默认不运行
+	gua_opencard53.js		#开卡默认不运行
+	gua_opencard52.js		#开卡默认不运行
+	gua_opencard54.js		#开卡默认不运行
+	gua_opencard55.js		#开卡默认不运行
+	gua_opencard56.js		#开卡默认不运行
+	gua_opencard57.js		#开卡默认不运行
+	gua_opencard58.js		#开卡默认不运行
+	gua_opencard59.js		#开卡默认不运行
+	gua_opencard60.js		#开卡默认不运行
+	gua_opencard61.js		#开卡默认不运行
+	gua_opencard62.js		#开卡默认不运行
+	gua_opencard63.js		#开卡默认不运行
+	gua_opencard64.js		#开卡默认不运行
 EOF
 
 	echo -e "$green opencard$start_script_time $white"
@@ -683,8 +702,11 @@ EOF
 	for i in `cat /tmp/jd_tmp/opencard | grep -v "#.*js" | awk '{print $1}'`
 	do
 	{
+		num=$(python $dir_file/jd_random.py 2000,1)
+		echo "$i脚本延迟$num秒以后再开始跑，请耐心等待"
+		sleep $num
+		
 		$node $dir_file_js/$i
-		$run_sleep
 	}&
 	done
 	wait
@@ -1087,7 +1109,7 @@ concurrent_js_update() {
 concurrent_js_clean(){
 		if [ "$ccr_if" == "yes" ];then
 			echo -e "$yellow收尾一下$white"
-			for i in `ps -ww | grep "$action" | grep -v 'grep\|kill_ccr' | awk '{print $1}'`
+			for i in `ps -ww | grep "$action" | grep -v 'grep\|index.js\|jd_try.js\|ssrplus\|opencard' | awk '{print $1}'`
 			do
 				echo "开始kill $i"
 				kill -9 $i
@@ -1098,7 +1120,7 @@ concurrent_js_clean(){
 kill_ccr() {
 	if [ "$ccr_if" == "yes" ];then
 		echo -e "$green>>终止并发程序启动。请稍等。。。。$white"
-		if [ `ps -ww | grep "js$" | grep "JD_Script"| grep -v 'grep\|index.js\|jd_try.js\|ssrplus' | awk '{print $1}' |wc -l` == "0" ];then
+		if [ `ps -ww | grep "js$" | grep "JD_Script"| grep -v 'grep\|index.js\|jd_try.js\|ssrplus\|opencard' | awk '{print $1}' |wc -l` == "0" ];then
 			sleep 2
 			echo ""
 			echo -e "$green我曾经跨过山和大海，也穿过人山人海。。。$white"
@@ -1109,7 +1131,7 @@ kill_ccr() {
 			sleep 2
 			echo -e "$green后台都没有进程妹子，散了散了。。。$white"
 		else
-			for i in `ps -ww | grep "js$" | grep "JD_Script"| grep -v 'grep\|index.js\|jd_try.js\|ssrplus' | awk '{print $1}'`
+			for i in `ps -ww | grep "js$" | grep "JD_Script"| grep -v 'grep\|index.js\|jd_try.js\|ssrplus\|opencard' | awk '{print $1}'`
 			do
 				kill -9 $i
 				echo "kill $i"
@@ -1117,7 +1139,7 @@ kill_ccr() {
 			concurrent_js_clean
 			clear
 			echo -e "$green再次检测一下并发程序是否还有存在$white"
-			if [ `ps -ww | grep "js$" | grep "JD_Script"| grep -v 'grep\|index.js\|jd_try.js\|ssrplus' | awk '{print $1}' |wc -l` == "0" ];then
+			if [ `ps -ww | grep "js$" | grep "JD_Script"| grep -v 'grep\|index.js\|jd_try.js\|ssrplus\|opencard' | awk '{print $1}' |wc -l` == "0" ];then
 				echo -e "$yellow>>并发程序已经全部结束$white"
 			else
 				echo -e "$yellow！！！检测到并发程序还有存在，再继续杀，请稍等。。。$white"
@@ -1131,7 +1153,7 @@ kill_ccr() {
 }
 
 if_ps() {
-	ps_if=$(ps -ww | grep "js$" | grep "JD_Script"| grep -v 'grep\|index.js\|jd_try.js\|ssrplus' | awk '{print $1}' |wc -l)
+	ps_if=$(ps -ww | grep "js$" | grep "JD_Script"| grep -v 'grep\|index.js\|jd_try.js\|ssrplus\|opencard' | awk '{print $1}' |wc -l)
 	num1="20"
 
 	echo -e "$green>> $action并发程序还有$yellow$ps_if$green进程在后台，等待($num1秒)，后再检测一下$white"

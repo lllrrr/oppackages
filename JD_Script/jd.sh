@@ -251,9 +251,7 @@ smiek2221_url="https://raw.githubusercontent.com/smiek2121/scripts/master"
 cat >$dir_file/config/tmp/smiek2221_url.txt <<EOF
 	jd_joy_steal.js			#宠汪汪偷好友积分与狗粮
 	gua_MMdou.js                    #赚京豆MM豆
-	gua_UnknownTask3.js		#寻找内容鉴赏官
 	gua_opencard53.js		#开卡默认不运行
-	gua_opencard52.js		#开卡默认不运行
 	gua_opencard54.js		#开卡默认不运行
 	gua_opencard55.js		#开卡默认不运行
 	gua_opencard56.js		#开卡默认不运行
@@ -289,16 +287,15 @@ cat >$dir_file/config/tmp/zero205_url.txt <<EOF
 	JDJRValidator_Aaron.js		#京东多合一签到依赖2
 	jd_joy_park_newtask.js		# 汪汪乐园过新手任务，有火爆账号的可以手动运行一次（默认不运行）
 	jd_superMarket.js		#东东超市
-	jd_unsubscriLive.js		#取关主播
 	jd_try.js 			#京东试用（默认不启用）
 	jd_qqxing.js			#QQ星系牧场
 	jd_get_share_code.js		#获取jd所有助力码脚本
 	jd_ttpt.js			#天天拼图
-	jd_lol.js			#电竞预言家,请在18点之前运行
 	jd_big_winner.js		#翻翻乐
 	jd_cjhz.js			#京东超级盒子
 	jd_nnfls.js			#牛牛福利
 	jd_jump.js			#跳跳乐瓜分京豆脚本
+	jd_fanli.js			#京东饭粒
 EOF
 
 for script_name in `cat $dir_file/config/tmp/zero205_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -327,6 +324,7 @@ cat >$dir_file/config/tmp/Aaron_url.txt <<EOF
 	jd_wish.js			#众筹许愿池
 	jd_carnivalcity.js		#京东手机狂欢城
 	jd_jxmc.js			#京喜牧场
+	jx_sign.js			#京喜签到
 EOF
 
 for script_name in `cat $dir_file/config/tmp/Aaron_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -357,7 +355,6 @@ done
 #star261
 star261_url="https://raw.githubusercontent.com/star261/jd/main/scripts"
 cat >$dir_file/config/tmp/star261_url.txt <<EOF
-	jd_superBrand.js		#双11特务
 	jd_vivo.js			#热血心跳,狂解压
         jd_travel_shop.js               #环游记
 EOF
@@ -470,7 +467,7 @@ done
 	wget https://raw.githubusercontent.com/whyour/hundun/master/quanx/jx_products_detail.js -O $dir_file_js/jx_products_detail.js #京喜工厂商品列表详情
 	wget https://raw.githubusercontent.com/shufflewzc/faker3/main/jd_jxmc_hb.js -O $dir_file_js/jd_jxmc_hb.js #京喜牧场助力
 	wget https://raw.githubusercontent.com/Aaron-lv/sync/jd_scripts/utils/JDJRValidator_Pure.js -O $dir_file_js/JDJRValidator_Pure.js #因为路径不同单独下载
-	wget https://raw.githubusercontent.com/asd920/Auto-jd/main/jd_dqmh.js -O $dir_file_js/jd_dqmh.js #京东电器盲盒
+
 
 #将所有文本汇总
 echo > $dir_file/config/collect_script.txt
@@ -508,6 +505,12 @@ EOF
 
 #删掉过期脚本
 cat >/tmp/del_js.txt <<EOF
+	jd_dqmh.js 			#京东电器盲盒
+	gua_UnknownTask3.js		#寻找内容鉴赏官
+	jd_lol.js			#电竞预言家,请在18点之前运行
+	gua_opencard52.js		#开卡默认不运行
+	jd_unsubscriLive.js
+	jd_superBrand.js
 	jd_fcwb.js
 	gua_opencard64.js		#开卡默认不运行
 EOF
@@ -572,7 +575,6 @@ ccr_run() {
 cat >/tmp/jd_tmp/ccr_run <<EOF
 	jd_red.js			#双十一无门槛红包
 	jd_connoisseur.js		#内容鉴赏官
-	gua_UnknownTask3.js		#寻找内容鉴赏官
 	jd_jdzz.js			#京东赚赚长期活动
 	jd_ddworld.js			#东东世界
 	jd_fission.js			#东东超市限时抢京豆
@@ -581,9 +583,9 @@ cat >/tmp/jd_tmp/ccr_run <<EOF
 	jd_jxlhb.js			#京喜领红包
 	jd_redPacket.js			#京东全民开红包(活动入口：京东APP首页-领券-锦鲤红包)
 	jd_jxmc_hb.js 			#京喜牧场助力
-	jd_superBrand.js		#双11特务
 	jd_nnfls.js			#牛牛福利
 	jd_vivo.js			#热血心跳,狂解压
+	jx_sign.js			#京喜签到
 EOF
 	for i in `cat /tmp/jd_tmp/ccr_run | grep -v "#.*js" | awk '{print $1}'`
 	do
@@ -634,6 +636,7 @@ cat >/tmp/jd_tmp/run_0 <<EOF
 	jd_carnivalcity.js		#京东手机狂欢城
 	jd_jump.js			#跳跳乐瓜分京豆脚本
 	jd_travel_shop.js               #环游记
+	jd_fanli.js			#京东饭粒
 EOF
 	echo -e "$green run_0$start_script_time $white"
 
@@ -687,7 +690,6 @@ EOF
 opencard() {
 cat >/tmp/jd_tmp/opencard <<EOF
 	gua_opencard53.js		#开卡默认不运行
-	gua_opencard52.js		#开卡默认不运行
 	gua_opencard54.js		#开卡默认不运行
 	gua_opencard55.js		#开卡默认不运行
 	gua_opencard56.js		#开卡默认不运行
@@ -723,7 +725,6 @@ cat >/tmp/jd_tmp/run_01 <<EOF
 	jd_plantBean.js 		#种豆得豆，没时间要求，一个小时收一次瓶子
 	raw_main_jd_super_redrain.js	#整点红包雨
 	jd_big_winner.js		#翻翻乐
-	jd_dqmh.js 			#京东电器盲盒
 EOF
 	echo -e "$green run_01$start_script_time $white"
 	for i in `cat /tmp/jd_tmp/run_01 | grep -v "#.*js" | awk '{print $1}'`
@@ -826,7 +827,6 @@ cat >/tmp/jd_tmp/run_07 <<EOF
 	jd_jin_tie_xh.js  		#领金贴
 	jd_unsubscribe.js 		#取关店铺，没时间要求
         gua_MMdou.js                    #赚京豆MM豆
-	jd_unsubscriLive.js		#取关主播
 EOF
 	echo -e "$green run_07$start_script_time $white"
 
@@ -845,7 +845,6 @@ EOF
 run_08_12_16() {
 cat >/tmp/jd_tmp/run_08_12_16 <<EOF
 	jd_syj.js 			#赚京豆
-	jd_lol.js			#电竞预言家,请在18点之前运行
 EOF
 	echo -e "$green run_08_12_16$start_script_time $white"
 

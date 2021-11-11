@@ -236,7 +236,6 @@ fangpidedongsun_url="https://raw.githubusercontent.com/fangpidedongsun/jd_script
 cat >$dir_file/config/tmp/fangpidedongsun_qx.txt <<EOF
 	jd_xtgsign.js 			#星推官
 	jd_jingsubang.js 		#手机竞猜
-	jd_star.js			#星店长
 EOF
 
 for script_name in `cat $dir_file/config/tmp/fangpidedongsun_qx.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -320,7 +319,6 @@ cat >$dir_file/config/tmp/Aaron_url.txt <<EOF
 	jd_live.js			#京东直播
 	jd_mf.js			#集魔方
 	jd_price.js		        #价保脚本
-	jd_ys.js			#预售福利机
 	jd_wish.js			#众筹许愿池
 	jd_carnivalcity.js		#京东手机狂欢城
 	jd_jxmc.js			#京喜牧场
@@ -480,7 +478,6 @@ cat >>$dir_file/config/collect_script.txt <<EOF
 	jd_fcdyj.js			#发财大赢家
 	rush_jinggengjcq_dapainew.js	#腿毛开卡，有水跑吧
 	jd_jxlhb.js			#京喜领红包
-	jd_redPacket.js			#京东全民开红包(活动入口：京东APP首页-领券-锦鲤红包)
 	jd_red.js			#双十一无门槛红包
 	jd_jxmc_hb.js 			#京喜牧场助力
 	jd_qjd.js			#抢京豆
@@ -505,6 +502,9 @@ EOF
 
 #删掉过期脚本
 cat >/tmp/del_js.txt <<EOF
+	jd_ys.js			#预售福利机
+	jd_star.js
+	jd_redPacket.js			#京东全民开红包(活动入口：京东APP首页-领券-锦鲤红包)
 	jd_dqmh.js 			#京东电器盲盒
 	gua_UnknownTask3.js		#寻找内容鉴赏官
 	jd_lol.js			#电竞预言家,请在18点之前运行
@@ -581,7 +581,6 @@ cat >/tmp/jd_tmp/ccr_run <<EOF
 	jd_fission.js			#东东超市限时抢京豆(多加一次领奖励)
 	jd_carnivalcity_help.js		#京东手机狂欢城助力
 	jd_jxlhb.js			#京喜领红包
-	jd_redPacket.js			#京东全民开红包(活动入口：京东APP首页-领券-锦鲤红包)
 	jd_jxmc_hb.js 			#京喜牧场助力
 	jd_nnfls.js			#牛牛福利
 	jd_vivo.js			#热血心跳,狂解压
@@ -795,8 +794,6 @@ cat >/tmp/jd_tmp/run_06_18 <<EOF
 	jd_dwapp.js			#积分换话费
 	jd_mf.js			#集魔方
 	jd_ttpt.js			#天天拼图
-	jd_ys.js			#预售福利机
-	jd_star.js			#星店长
 EOF
 	echo -e "$green run_06_18$start_script_time $white"
 

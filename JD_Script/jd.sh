@@ -93,7 +93,7 @@ export guaopencard_draw="true"
 export FS_LEVEL="card开卡+加购"
 
 task() {
-	cron_version="3.71"
+	cron_version="3.72"
 	if [[ `grep -o "JD_Script的定时任务$cron_version" $cron_file |wc -l` == "0" ]]; then
 		echo "不存在计划任务开始设置"
 		task_delete
@@ -127,7 +127,6 @@ cat >>/etc/crontabs/root <<EOF
 0 10 */7 * * $node $dir_file_js/jd_price.js	>/tmp/jd_price.log	#价保脚本#100#
 0 0 * * * $python3 $dir_file/git_clone/curtinlv_script/getFollowGifts/jd_getFollowGift.py >/tmp/jd_getFollowGift.log #关注有礼#100#
 0 8,15 * * * $python3 $dir_file/git_clone/curtinlv_script/OpenCard/jd_OpenCard.py  >/tmp/jd_OpenCard.log #开卡程序#100#
-0 0 * * * $python3 $dir_file/git_clone/curtinlv_script/jd_qjd.py >/tmp/jd_qjd.log #抢京豆#100#
 59 23 * * 0,1,2,5,6 sleep 57 && $dir_file/jd.sh run_jd_cash >/tmp/jd_cash_exchange.log	#签到领现金兑换#100#
 59 23 * * * sleep 50 && $dir_file/jd.sh run_jd_blueCoin >/tmp/jd_jd_blueCoin.log	#京东超市兑换#100#
 59 23,7,15 * * * sleep 50 && $dir_file/jd.sh run_jd_joy_reward >/tmp/jd_joy_reward.log	#汪汪兑换积分#100#
@@ -201,7 +200,6 @@ cat >$dir_file/config/tmp/lxk0301_script.txt <<EOF
 	jd_car.js			#京东汽车，签到满500赛点可兑换500京豆，一天运行一次即可
 	jd_club_lottery.js		#摇京豆
 	jd_shop.js			#进店领豆
-	jd_syj.js			#赚京豆
 	jd_kd.js			#京东快递签到 一天运行一次即可
 	jd_small_home.js		#东东小窝
 	jd_speed.js			#天天加速
@@ -234,7 +232,6 @@ sleep 5
 #fangpidedongsun
 fangpidedongsun_url="https://raw.githubusercontent.com/fangpidedongsun/jd_scripts2/master"
 cat >$dir_file/config/tmp/fangpidedongsun_qx.txt <<EOF
-	jd_xtgsign.js 			#星推官
 	jd_jingsubang.js 		#手机竞猜
 EOF
 
@@ -250,13 +247,6 @@ smiek2221_url="https://raw.githubusercontent.com/smiek2121/scripts/master"
 cat >$dir_file/config/tmp/smiek2221_url.txt <<EOF
 	jd_joy_steal.js			#宠汪汪偷好友积分与狗粮
 	gua_MMdou.js                    #赚京豆MM豆
-	gua_opencard53.js		#开卡默认不运行
-	gua_opencard54.js		#开卡默认不运行
-	gua_opencard56.js		#开卡默认不运行
-	gua_opencard57.js		#开卡默认不运行
-	gua_opencard59.js		#开卡默认不运行
-	gua_opencard63.js		#开卡默认不运行
-	gua_opencard65.js		#开卡默认不运行
 EOF
 
 for script_name in `cat $dir_file/config/tmp/smiek2221_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -287,7 +277,6 @@ cat >$dir_file/config/tmp/zero205_url.txt <<EOF
 	jd_ttpt.js			#天天拼图
 	jd_big_winner.js		#翻翻乐
 	jd_nnfls.js			#牛牛福利
-	jd_jump.js			#跳跳乐瓜分京豆脚本
 	jd_fanli.js			#京东饭粒
 	jd_superBrand.js		#特务Ｚ
 EOF
@@ -457,8 +446,12 @@ done
 	wget https://raw.githubusercontent.com/jiulan/platypus/main/scripts/jd_all_bean_change.js -O $dir_file_js/jd_all_bean_change.js #京东月资产变动通知
 	wget https://raw.githubusercontent.com/whyour/hundun/master/quanx/jx_products_detail.js -O $dir_file_js/jx_products_detail.js #京喜工厂商品列表详情
 	wget https://raw.githubusercontent.com/shufflewzc/faker3/main/jd_jxmc_hb.js -O $dir_file_js/jd_jxmc_hb.js #京喜牧场助力
-	wget https://raw.githubusercontent.com/Aaron-lv/sync/jd_scripts/utils/JDJRValidator_Pure.js -O $dir_file_js/JDJRValidator_Pure.js #因为路径不同单独下载
+	wget https://raw.githubusercontent.com/Aaron-lv/sync/jd_scripts/utils/JDJRValidator_Pure.js -O $dir_file_js/JDJRValidator_Pure.js #因为路径不同单独下载.
+	wget https://raw.githubusercontent.com/curtinlv/JD-Script/main/jd_cookie.py -O $dir_file_js/jd_cookie.py
+	wget https://raw.githubusercontent.com/curtinlv/JD-Script/main/msg.py -O $dir_file_js/msg.py
+	wget https://raw.githubusercontent.com/curtinlv/JD-Script/main/sendNotify.py -O $dir_file_js/sendNotify.py
 
+	wget https://raw.githubusercontent.com/qiu-lzsnmb/jd_lzsnmb/jd/Evaluation.py -O $dir_file_js/Evaluation.py #自动评价
 
 #将所有文本汇总
 echo > $dir_file/config/collect_script.txt
@@ -468,9 +461,10 @@ do
 done
 
 cat >>$dir_file/config/collect_script.txt <<EOF
+	Evaluation.py 			#自动评价
+	jd_syj.js			#赚京豆
 	jd_jxlhb.js			#京喜领红包
 	jd_jxmc_hb.js 			#京喜牧场助力
-	jd_qjd.js			#抢京豆
 	rush_wxCollectionActivity.js 	#加购物车抽奖
 	jd_fission.js			#东东超市限时抢京豆
 	gua_UnknownTask2.js		#关注频道、抽奖(默认不运行)
@@ -492,18 +486,19 @@ EOF
 
 #删掉过期脚本
 cat >/tmp/del_js.txt <<EOF
+	jd_jump.js			#跳跳乐瓜分京豆脚本
+	gua_opencard53.js		#开卡默认不运行
+	gua_opencard54.js		#开卡默认不运行
+	gua_opencard56.js		#开卡默认不运行
+	gua_opencard57.js		#开卡默认不运行
+	gua_opencard59.js		#开卡默认不运行
+	gua_opencard63.js		#开卡默认不运行
+	gua_opencard65.js		#开卡默认不运行
+	jd_xtgsign.js 			#星推官
 	jd_travel_shop.js               #环游记
 	jd_carnivalcity.js		#京东手机狂欢城
 	gua_opencard55.js		#开卡默认不运行
 	gua_opencard62.js		#开卡默认不运行
-	jd_cjhz.js			#京东超级盒子
-	gua_opencard60.js		#开卡默认不运行
-	rush_jinggengjcq_dapainew.js	#腿毛开卡，有水跑吧
-	jd_fcdyj.js			#发财大赢家
-	gua_opencard61.js		#开卡默认不运行
-	gua_opencard58.js		#开卡默认不运行
-	jd_ys.js			#预售福利机
-	jd_star.js
 EOF
 
 for script_name in `cat /tmp/del_js.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -564,7 +559,8 @@ update_script() {
 }
 
 ccr_run() {
-#这里有的就不要加到concurrent_js_run_07
+#这里不会并发
+#这里有的就不要加到concurrent_js_run_07,会导致跑多次
 cat >/tmp/jd_tmp/ccr_run <<EOF
 	jd_connoisseur.js		#内容鉴赏官
 	jd_jdzz.js			#京东赚赚长期活动
@@ -579,6 +575,7 @@ cat >/tmp/jd_tmp/ccr_run <<EOF
 	jx_sign.js			#京喜签到
 	jd_travel.js			#双十一开奖
 	jd_superBrand.js		#特务Ｚ
+	jd_syj.js 			#赚京豆
 EOF
 	for i in `cat /tmp/jd_tmp/ccr_run | grep -v "#.*js" | awk '{print $1}'`
 	do
@@ -587,12 +584,12 @@ EOF
 		$run_sleep
 	}&
 	done
+	$python3  $openwrt_script/JD_Script/js/jd_zjd.py
 }
 
 concurrent_js_run_07() {
-#这里的也不会并发
+#这里不会并发
 cat >/tmp/jd_tmp/concurrent_js_run_07 <<EOF
-	jd_xtgsign.js 			#星推官
 	jd_dreamFactory.js 		#京喜工厂
 EOF
 	for i in `cat /tmp/jd_tmp/concurrent_js_run_07 | grep -v "#.*js" | awk '{print $1}'`
@@ -610,15 +607,12 @@ EOF
 
 run_0() {
 cat >/tmp/jd_tmp/run_0 <<EOF
-	jd_xtgsign.js 			#星推官
 	jd_car.js 			#京东汽车，签到满500赛点可兑换500京豆，一天运行一次即可
 	jd_cash.js 			#签到领现金，每日2毛～5毛长期
 	jd_sgmh.js 			#闪购盲盒长期活动
-	jd_syj.js 			#十元街签到,一天一次即可，一周30豆子
 	jd_market_lottery.js 		#幸运大转盘
 	jd_jin_tie_xh.js  		#领金贴
 	jd_dreamFactory.js 		#京喜工厂
-	jd_qjd.js			#抢京豆
 	jd_ddnc_farmpark.js		#东东乐园
 	jd_sign_graphics.js		#京东签到图形验证
 	jd_dpqd.js			#店铺签到
@@ -626,7 +620,6 @@ cat >/tmp/jd_tmp/run_0 <<EOF
 	jd_unsubscribe.js 		#取关店铺，没时间要求
 	jd_ljd_xh.js			#领京豆
 	jd_wish.js			#众筹许愿池
-	jd_jump.js			#跳跳乐瓜分京豆脚本
 	jd_fanli.js			#京东饭粒
 EOF
 	echo -e "$green run_0$start_script_time $white"
@@ -680,13 +673,7 @@ EOF
 
 opencard() {
 cat >/tmp/jd_tmp/opencard <<EOF
-	gua_opencard53.js		#开卡默认不运行
-	gua_opencard54.js		#开卡默认不运行
-	gua_opencard56.js		#开卡默认不运行
-	gua_opencard57.js		#开卡默认不运行
-	gua_opencard59.js		#开卡默认不运行
-	gua_opencard63.js		#开卡默认不运行
-	gua_opencard65.js		#开卡默认不运行
+	#空js
 EOF
 
 	echo -e "$green opencard$start_script_time $white"
@@ -753,6 +740,7 @@ cat >/tmp/jd_tmp/run_03 <<EOF
 	jd_dianjing.js			#电竞经理
 	jd_joy_park_help.js 		#汪汪乐园助力
 	jd_qqxing.js			#QQ星系牧场
+	jd_syj.js 			#赚京豆
 EOF
 	echo -e "$green run_03$start_script_time $white"
 
@@ -829,7 +817,7 @@ EOF
 
 run_08_12_16() {
 cat >/tmp/jd_tmp/run_08_12_16 <<EOF
-	jd_syj.js 			#赚京豆
+	#jd_syj.js 			#赚京豆
 EOF
 	echo -e "$green run_08_12_16$start_script_time $white"
 
@@ -931,22 +919,24 @@ curtinlv_script_setup() {
 		ln -s $dir_file/git_clone/curtinlv_script/getFollowGifts/jd_getFollowGift.py  $dir_file_js/jd_getFollowGift.py
 	fi
 
-	#抢京豆
-	cat $openwrt_script_config/js_cookie.txt > $dir_file/git_clone/curtinlv_script/JDCookies.txt
-	if [ ! -L "$dir_file_js/jd_qjd.py" ]; then
-		rm -rf $dir_file_js/jd_qjd.py
-		ln -s $dir_file/git_clone/curtinlv_script/jd_qjd.py  $dir_file_js/jd_qjd.py
-	fi
-
 	#软连接
 	if [ ! -L "$dir_file_js/JDCookies.txt" ]; then
 		rm -rf $dir_file_js/JDCookies.txt
 		ln -s $dir_file/git_clone/curtinlv_script/JDCookies.txt  $dir_file_js/JDCookies.txt
 	fi
 
+	#赚京豆
+	cat $openwrt_script_config/js_cookie.txt > $dir_file/git_clone/curtinlv_script/JDCookies.txt
+	if [ ! -L "$dir_file_js/jd_zjd.py" ]; then
+		rm -rf $dir_file_js/jd_zjd.py
+		ln -s $dir_file/git_clone/curtinlv_script/jd_zjd.py  $dir_file_js/jd_zjd.py
+	fi
 
 	#东东超市商品兑换
-	cp $dir_file/git_clone/curtinlv_script/jd_blueCoin.py $dir_file_js/jd_blueCoin.py
+	if [ ! -L "$dir_file_js/jd_blueCoin.py" ]; then
+		rm -rf $dir_file_js/jd_blueCoin.py
+		ln -s $dir_file/git_clone/curtinlv_script/jd_blueCoin.py  $dir_file_js/jd_blueCoin.py
+	fi
 }
 
 script_name() {
@@ -2851,11 +2841,9 @@ time() {
 npm_install() {
 	echo -e "$green 开始安装npm模块$white"
 	#安装js模块
-	cp $dir_file/git_clone/lxk0301_back/package.json $openwrt_script/package.json
-	cd $openwrt_script && npm -g install
-	npm install -g request http stream zlib vm png-js fs got tough-cookie audit date-fns ts-md5 md5 jsdom
+	cd $openwrt_script
+	npm install -g audit crypto crypto-js date-fns dotenv download fs got http js-base64 jsdom md5 png-js request requests set-cookie-parser stream tough-cookie ts-md5 vm zlib
 	npm install --save axios
-	cd $dir_file/cookies_web && npm -g install
 
 	#安装python模块
 	python_install
@@ -2865,7 +2853,7 @@ npm_install() {
 python_install() {
 	echo -e "$green 开始安装python模块$white"
 	python3 $dir_file/get-pip.py
-	pip3 install requests rsa
+	pip3 install -i https://pypi.tuna.tsinghua.edu.cn/simple jieba requests rsa
 	echo -e "$green命令执行完成，如果一直报错我建议你重置系统或者重新编译重新刷$white"
 }
 
@@ -2881,16 +2869,6 @@ system_variable() {
 
 	if [[ ! -d "/tmp/jd_tmp" ]]; then
 		mkdir  /tmp/jd_tmp
-	fi
-
-	#判断参数
-	if [ ! -f /root/.ssh/test1 ];then
-		rm -rf /root/.ssh
-		cp -r $dir_file/.ssh /root/.ssh
-		chmod 600 /root/.ssh/lxk0301
-		sed -i "s/#   StrictHostKeyChecking ask/StrictHostKeyChecking no/g" /etc/ssh/ssh_config
-		echo > /root/.ssh/test1
-		update
 	fi
 
 	if [ "$dir_file" == "$openwrt_script/JD_Script" ];then

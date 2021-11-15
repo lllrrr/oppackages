@@ -269,7 +269,6 @@ cat >$dir_file/config/tmp/zero205_url.txt <<EOF
 	jd_bean_sign.js			#京东多合一签到
 	JDSignValidator.js		#京东多合一签到依赖1
 	JDJRValidator_Aaron.js		#京东多合一签到依赖2
-	jd_joy_park_newtask.js		# 汪汪乐园过新手任务，有火爆账号的可以手动运行一次（默认不运行）
 	jd_superMarket.js		#东东超市
 	jd_try.js 			#京东试用（默认不启用）
 	jd_qqxing.js			#QQ星系牧场
@@ -374,23 +373,6 @@ do
 	update_if
 done
 
-#cdle
-cdle_url="https://raw.githubusercontent.com/cdle/jd_study/main"
-cat >$dir_file/config/tmp/cdle_url.txt <<EOF
-	jd_morningSc.js			#早起赢现金
-	jd_angryKoi.js			#愤怒的锦鲤
-	jd_goodMorning.js		#早起福利
-	jd_joy_park_help.js 		#汪汪乐园助力
-	jd_cash_exchange.js		#签到领现金兑换
-EOF
-
-for script_name in `cat $dir_file/config/tmp/cdle_url.txt | grep -v "#.*js" | awk '{print $1}'`
-do
-	url="$cdle_url"
-	#wget $cdle_url/$script_name -O $dir_file_js/$script_name
-	#update_if
-done
-
 #cdle_carry
 cdle_carry_url="https://raw.githubusercontent.com/cdle/carry/main"
 cat >$dir_file/config/tmp/cdle_carry_url.txt <<EOF
@@ -445,13 +427,14 @@ done
 
 	wget https://raw.githubusercontent.com/jiulan/platypus/main/scripts/jd_all_bean_change.js -O $dir_file_js/jd_all_bean_change.js #京东月资产变动通知
 	wget https://raw.githubusercontent.com/whyour/hundun/master/quanx/jx_products_detail.js -O $dir_file_js/jx_products_detail.js #京喜工厂商品列表详情
-	wget https://raw.githubusercontent.com/shufflewzc/faker3/main/jd_jxmc_hb.js -O $dir_file_js/jd_jxmc_hb.js #京喜牧场助力
+	wget https://raw.githubusercontent.com/shufflewzc/faker3/0bc2fef31fbb3a39de0c2613fdb66d3ae2e7d48a/jd_jxmc_hb.js -O $dir_file_js/jd_jxmc_hb.js #京喜牧场助力
 	wget https://raw.githubusercontent.com/Aaron-lv/sync/jd_scripts/utils/JDJRValidator_Pure.js -O $dir_file_js/JDJRValidator_Pure.js #因为路径不同单独下载.
 	wget https://raw.githubusercontent.com/curtinlv/JD-Script/main/jd_cookie.py -O $dir_file_js/jd_cookie.py
 	wget https://raw.githubusercontent.com/curtinlv/JD-Script/main/msg.py -O $dir_file_js/msg.py
 	wget https://raw.githubusercontent.com/curtinlv/JD-Script/main/sendNotify.py -O $dir_file_js/sendNotify.py
 
 	wget https://raw.githubusercontent.com/qiu-lzsnmb/jd_lzsnmb/jd/Evaluation.py -O $dir_file_js/Evaluation.py #自动评价
+	wget https://raw.githubusercontent.com/ccwav/QLScript2/main/jd_bean_change.js -O $dir_file_js/jd_bean_change_ccwav.js		#资产变化强化版by-ccwav
 
 #将所有文本汇总
 echo > $dir_file/config/collect_script.txt
@@ -461,14 +444,11 @@ do
 done
 
 cat >>$dir_file/config/collect_script.txt <<EOF
+	jd_goodMorning.js		#早起福利
 	Evaluation.py 			#自动评价
 	jd_syj.js			#赚京豆
 	jd_jxlhb.js			#京喜领红包
 	jd_jxmc_hb.js 			#京喜牧场助力
-	rush_wxCollectionActivity.js 	#加购物车抽奖
-	jd_fission.js			#东东超市限时抢京豆
-	gua_UnknownTask2.js		#关注频道、抽奖(默认不运行)
-	jd_dianjing.js			#电竞经理
 	star_dreamFactory_tuan.js 	#京喜开团　star261脚本
 	jd_OpenCard.py 			#开卡程序
 	jd_getFollowGift.py 		#关注有礼
@@ -486,6 +466,7 @@ EOF
 
 #删掉过期脚本
 cat >/tmp/del_js.txt <<EOF
+	jd_joy_park_newtask.js		# 汪汪乐园过新手任务，有火爆账号的可以手动运行一次（默认不运行）
 	jd_jump.js			#跳跳乐瓜分京豆脚本
 	gua_opencard53.js		#开卡默认不运行
 	gua_opencard54.js		#开卡默认不运行
@@ -565,15 +546,11 @@ cat >/tmp/jd_tmp/ccr_run <<EOF
 	jd_connoisseur.js		#内容鉴赏官
 	jd_jdzz.js			#京东赚赚长期活动
 	jd_ddworld.js			#东东世界
-	jd_fission.js			#东东超市限时抢京豆
-	jd_fission.js			#东东超市限时抢京豆(多加一次领奖励)
-	jd_carnivalcity_help.js		#京东手机狂欢城助力
 	jd_jxlhb.js			#京喜领红包
 	jd_jxmc_hb.js 			#京喜牧场助力
 	jd_nnfls.js			#牛牛福利
 	jd_vivo.js			#热血心跳,狂解压
 	jx_sign.js			#京喜签到
-	jd_travel.js			#双十一开奖
 	jd_superBrand.js		#特务Ｚ
 	jd_syj.js 			#赚京豆
 EOF
@@ -632,7 +609,6 @@ EOF
 		$node $dir_file_js/$i
 		$run_sleep
 	done
-	$node $dir_file_js/rush_wxCollectionActivity.js & #加购物车抽奖
 	run_08_12_16
 	run_06_18
 	run_10_15_20
@@ -737,8 +713,6 @@ cat >/tmp/jd_tmp/run_03 <<EOF
 	jd_speed.js 			#天天加速 3小时运行一次，打卡时间间隔是6小时
 	jd_health.js			#健康社区
 	jd_mohe.js			#5G超级盲盒
-	jd_dianjing.js			#电竞经理
-	jd_joy_park_help.js 		#汪汪乐园助力
 	jd_qqxing.js			#QQ星系牧场
 	jd_syj.js 			#赚京豆
 EOF
@@ -786,7 +760,6 @@ EOF
 
 run_07() {
 cat >/tmp/jd_tmp/run_07 <<EOF
-	jd_morningSc.js			#早起赢现金
 	jd_ddnc_farmpark.js		#东东乐园
 	jd_kd.js 			#京东快递签到 一天运行一次即可
 	jd_club_lottery.js 		#摇京豆，没时间要求
@@ -855,13 +828,12 @@ EOF
 
 run_jd_cash() {
 cat >/tmp/jd_tmp/run_jd_cash <<EOF
-	jd_cash_exchange.js #领现金兑换
 	jd_car_exchange_xh.js #京东汽车兑换
 EOF
-	jd_cash_num="30"
+	jd_cash_num="5"
 	while [[ ${jd_cash_num} -gt 0 ]]; do
-		$node $dir_file_js/jd_cash_exchange.js &
-		sleep 1
+		$node $dir_file_js/jd_car_exchange_xh.js &
+		sleep 2
 		jd_cash_num=$(($jd_cash_num - 1))
 	done
 }
@@ -2704,6 +2676,9 @@ additional_settings() {
 		sed -i "$healthcode_rows a \ '$new_health_set', " $dir_file_js/jd_health.js
 		js_amount=$(($js_amount - 1))
 	done
+
+	#资产变化强化版by-ccwav
+	sed -i "s/.\/sendNotify/.\/sendNotify_ccwav.js/g"  $dir_file_js/jd_bean_change_ccwav.js
 }
 
 del_jxdr() {
@@ -2896,6 +2871,32 @@ system_variable() {
 		if [ ! -L "$dir_file_js/sendNotify.js" ]; then
 			rm -rf $dir_file_js/sendNotify.js  #临时删除，解决最近不推送问题
 			ln -s $openwrt_script_config/sendNotify.js $dir_file_js/sendNotify.js
+		fi
+
+		#sendNotify_ccwav.js
+		if [ ! -f "$openwrt_script_config/sendNotify_ccwav.js" ]; then
+			cp  $dir_file/JSON/sendNotify_ccwav.js $openwrt_script_config/sendNotify_ccwav.js
+			rm -rf $dir_file_js/sendNotify_ccwav.js  #用于删除旧的链接
+			ln -s $openwrt_script_config/sendNotify_ccwav.js $dir_file_js/sendNotify_ccwav.js
+		fi
+
+		#sendNotify_ccwav.js用于升级以后恢复链接
+		if [ ! -L "$dir_file_js/sendNotify_ccwav.js" ]; then
+			rm -rf $dir_file_js/sendNotify_ccwav.js  #临时删除，解决最近不推送问题
+			ln -s $openwrt_script_config/sendNotify_ccwav.js $dir_file_js/sendNotify_ccwav.js
+		fi
+
+		#CK_WxPusherUid.json
+		if [ ! -f "$openwrt_script_config/CK_WxPusherUid.json" ]; then
+			cp  $dir_file/JSON/CK_WxPusherUid.json $openwrt_script_config/CK_WxPusherUid.json
+			rm -rf $dir_file_js/CK_WxPusherUid.json  #用于删除旧的链接
+			ln -s $openwrt_script_config/CK_WxPusherUid.json $dir_file_js/CK_WxPusherUid.json
+		fi
+
+		#CK_WxPusherUid.json用于升级以后恢复链接
+		if [ ! -L "$dir_file_js/CK_WxPusherUid.json" ]; then
+			rm -rf $dir_file_js/CK_WxPusherUid.json  #临时删除，解决最近不推送问题
+			ln -s $openwrt_script_config/CK_WxPusherUid.json $dir_file_js/CK_WxPusherUid.json
 		fi
 
 		#USER_AGENTS.js

@@ -93,7 +93,7 @@ export guaopencard_draw="true"
 export FS_LEVEL="card开卡+加购"
 
 task() {
-	cron_version="3.74"
+	cron_version="3.77"
 	if [[ `grep -o "JD_Script的定时任务$cron_version" $cron_file |wc -l` == "0" ]]; then
 		echo "不存在计划任务开始设置"
 		task_delete
@@ -123,13 +123,14 @@ cat >>/etc/crontabs/root <<EOF
 0 9 28 */1 * $node $dir_file_js/jd_all_bean_change.js >/tmp/jd_all_bean_change.log #每个月28号推送当月京豆资产变化#100#
 10-20/5 10,12 * * * $node $dir_file_js/jd_live.js	>/tmp/jd_live.log #京东直播#100#
 0 0,7 * * * $node $dir_file_js/jd_bean_sign.js >/tmp/jd_bean_sign.log #京东多合一签到#100#
-0 */4 * * * $node $dir_file_js/star_dreamFactory_tuan.js	>/tmp/star_dreamFactory_tuan.log	#京喜开团#100#
+0 */4 * * * $node $dir_file_js/jd_dreamFactory_tuan.js	>/tmp/jd_dreamFactory_tuan.log	#京喜开团#100#
 0 10 */7 * * $node $dir_file_js/jd_price.js	>/tmp/jd_price.log	#价保脚本#100#
 0 0 * * * $python3 $dir_file/git_clone/curtinlv_script/getFollowGifts/jd_getFollowGift.py >/tmp/jd_getFollowGift.log #关注有礼#100#
 0 8,15 * * * $python3 $dir_file/git_clone/curtinlv_script/OpenCard/jd_OpenCard.py  >/tmp/jd_OpenCard.log #开卡程序#100#
 59 23 * * 0,1,2,5,6 sleep 57 && $dir_file/jd.sh run_jd_cash >/tmp/jd_cash_exchange.log	#签到领现金兑换#100#
 59 23 * * * sleep 50 && $dir_file/jd.sh run_jd_blueCoin >/tmp/jd_jd_blueCoin.log	#京东超市兑换#100#
-59 23,7,15 * * * sleep 50 && $dir_file/jd.sh run_jd_joy_reward >/tmp/jd_joy_reward.log	#汪汪兑换积分#100#
+59 23,7,15 * * * sleep 58 && $dir_file/jd.sh run_jd_joy_reward >/tmp/jd_joy_reward.log	#汪汪兑换积分#100#
+58 */1 * * * $dir_file/jd.sh jd_time >/tmp/jd_time.log	#同步京东时间#100#
 0 10 * * * $dir_file/jd.sh zcbh	>/tmp/jd_bean_change_ccwav.log	#资产变化一对一#100#
 50 6,11,15,23 * * * $dir_file/jd.sh kill_ccr #杀掉所有并发进程，为零点准备#100#
 46 23 * * * rm -rf /tmp/*.log #删掉所有log文件，为零点准备#100#
@@ -298,7 +299,6 @@ cat >$dir_file/config/tmp/Aaron_url.txt <<EOF
 	jd_cash.js			#签到领现金，每日2毛～5毛长期
 	jd_jdzz.js			#京东赚赚长期活动
 	jd_connoisseur.js		#内容鉴赏官
-	jd_joy_reward.js		#宠汪汪积分兑换奖品脚本
 	jd_ddworld.js			#东东世界
 	jd_live.js			#京东直播
 	jd_mf.js			#集魔方
@@ -337,6 +337,7 @@ done
 star261_url="https://raw.githubusercontent.com/star261/jd/main/scripts"
 cat >$dir_file/config/tmp/star261_url.txt <<EOF
 	jd_vivo.js			#热血心跳,狂解压
+	jd_dreamFactory_tuan.js 	#京喜开团　star261脚本
 EOF
 
 for script_name in `cat $dir_file/config/tmp/star261_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -377,7 +378,7 @@ done
 #cdle_carry
 cdle_carry_url="https://raw.githubusercontent.com/cdle/carry/main"
 cat >$dir_file/config/tmp/cdle_carry_url.txt <<EOF
-	#空.js
+	jd_angryKoi.js		#愤怒的锦鲤
 EOF
 
 for script_name in `cat $dir_file/config/tmp/cdle_carry_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -429,7 +430,7 @@ done
 	wget https://raw.githubusercontent.com/jiulan/platypus/main/scripts/jd_all_bean_change.js -O $dir_file_js/jd_all_bean_change.js #京东月资产变动通知
 	wget https://raw.githubusercontent.com/whyour/hundun/master/quanx/jx_products_detail.js -O $dir_file_js/jx_products_detail.js #京喜工厂商品列表详情
 	wget https://raw.githubusercontent.com/shufflewzc/faker3/0bc2fef31fbb3a39de0c2613fdb66d3ae2e7d48a/jd_jxmc_hb.js -O $dir_file_js/jd_jxmc_hb.js #京喜牧场助力
-	wget https://raw.githubusercontent.com/Aaron-lv/sync/jd_scripts/utils/JDJRValidator_Pure.js -O $dir_file_js/JDJRValidator_Pure.js #因为路径不同单独下载.
+	wget https://raw.githubusercontent.com/ccwav/QLScript2/main/utils/JDJRValidator_Pure.js -O $dir_file_js/JDJRValidator_Pure.js #因为路径不同单独下载.
 	wget https://raw.githubusercontent.com/curtinlv/JD-Script/main/jd_cookie.py -O $dir_file_js/jd_cookie.py
 	wget https://raw.githubusercontent.com/curtinlv/JD-Script/main/msg.py -O $dir_file_js/msg.py
 	wget https://raw.githubusercontent.com/curtinlv/JD-Script/main/sendNotify.py -O $dir_file_js/sendNotify.py
@@ -450,7 +451,6 @@ cat >>$dir_file/config/collect_script.txt <<EOF
 	jd_syj.js			#赚京豆
 	jd_jxlhb.js			#京喜领红包
 	jd_jxmc_hb.js 			#京喜牧场助力
-	star_dreamFactory_tuan.js 	#京喜开团　star261脚本
 	jd_OpenCard.py 			#开卡程序
 	jd_getFollowGift.py 		#关注有礼
 	jd_all_bean_change.js 		#京东月资产变动通知
@@ -467,6 +467,7 @@ EOF
 
 #删掉过期脚本
 cat >/tmp/del_js.txt <<EOF
+	jd_joy_reward.js
 	jd_joy_park_newtask.js		# 汪汪乐园过新手任务，有火爆账号的可以手动运行一次（默认不运行）
 	jd_jump.js			#跳跳乐瓜分京豆脚本
 	gua_opencard53.js		#开卡默认不运行
@@ -497,8 +498,8 @@ done
 		update
 	fi
 	chmod 755 $dir_file_js/*
-	kill_index
-	index_js
+	#kill_index
+	#index_js
 	#删除重复的文件
 	rm -rf $dir_file_js/*.js.*
 	additional_settings
@@ -554,6 +555,7 @@ cat >/tmp/jd_tmp/ccr_run <<EOF
 	jx_sign.js			#京喜签到
 	jd_superBrand.js		#特务Ｚ
 	jd_syj.js 			#赚京豆
+	jd_angryKoi.js			#愤怒的锦鲤
 EOF
 	for i in `cat /tmp/jd_tmp/ccr_run | grep -v "#.*js" | awk '{print $1}'`
 	do
@@ -840,12 +842,9 @@ EOF
 }
 
 run_jd_joy_reward() {
-cat >/tmp/jd_tmp/run_jd_joy_reward <<EOF
-	jd_joy_reward.js		#宠汪汪积分兑换奖品脚本
-EOF
-	jd_joy_reward_num="5"
+	jd_joy_reward_num="1"
 	while [[ ${jd_joy_reward_num} -gt 0 ]]; do
-		$node $dir_file_js/jd_joy_reward.js &
+		$node $dir_file_js/jd_joy_reward_Mod.js  &
 		sleep 2
 		jd_joy_reward_num=$(($jd_joy_reward_num - 1))
 	done
@@ -856,7 +855,7 @@ run_jd_blueCoin() {
 cat >/tmp/jd_tmp/run_jd_blueCoin <<EOF
 	jd_blueCoin.py	#东东超市兑换
 EOF
-	jd_blueCoin_num="30"
+	jd_blueCoin_num="5"
 	while [[ ${jd_blueCoin_num} -gt 0 ]]; do
 		$python3 $dir_file_js/jd_blueCoin.py &
 		sleep 1
@@ -869,7 +868,8 @@ EOF
 zcbh() {
 	zcbh_token=$(cat /usr/share/jd_openwrt_script/script_config/sendNotify_ccwav.js | grep "let WP_APP_TOKEN_ONE" | awk -F "\"" '{print $2}')
 	export WP_APP_TOKEN_ONE="$zcbh_token"
-	$node $dir_file_js/jd_bean_change_ccwav.js
+	cd $dir_file_js
+	$node jd_bean_change_ccwav.js
 }
 
 
@@ -1018,6 +1018,58 @@ EOF
 	else
 		echo -e "$red >> 试用脚本开关没有打开$white"
 	fi
+}
+
+jd_time()  {
+TimeError=2
+#copy SuperManito
+ local Interface="https://api.m.jd.com/client.action?functionId=queryMaterialProducts&client=wh5"
+    if [[ $(echo $(($(curl -sSL "${Interface}" | awk -F '\"' '{print$8}') - $(eval echo "$(date +%s)$(date +%N | cut -c1-3)"))) | sed "s|\-||g") -lt 10 ]]; then
+        echo -e "\n\033[32m------------ 检测到当前本地时间与京东服务器的时间差小于 10ms 因此不同步 ------------\033[0m\n"
+    else
+        echo -e "\n❖ 同步京东服务器时间"
+        echo -en "\n当前设置的允许误差时间为 ${TimeError}m，脚本将在 3s 后开始运行..."
+        sleep 3
+        echo -e ''
+        while true; do
+            ## 先同步京东服务器时间
+            date -s $(date -d @$(curl -sSL "${Interface}" | awk -F '\"' '{print$8}' | cut -c1-10) "+%H:%M:%S") >/dev/null
+            sleep 1
+            ## 定义当前系统本地时间戳
+            local LocalTimeStamp="$(date +%s)$(date +%N | cut -c1-3)"
+            ## 定义当前京东服务器时间戳
+            local JDTimeStamp="$(curl -sSL "${Interface}" | awk -F '\"' '{print$8}' | cut -c1-10)"
+            ## 定义当前时间差
+            local TimeDifference=$(echo $((${JDTimeStamp} - ${LocalTimeStamp})) | sed "s|\-||g")
+            ## 输出时间
+            echo -e "\n京东时间戳：\033[34m${JDTimeStamp}\033[0m"
+            echo -e "本地时间戳：\033[34m${LocalTimeStamp}\033[0m"
+            if [[ ${TimeDifference} -lt ${TimeError} ]]; then
+                echo -e "\n\033[32m------------ 同步完成 ------------\033[0m\n"
+                if [ -s /etc/apt/sources.list ]; then
+                    #apt-get install -y figlet toilet >/dev/null
+                    local ExitStatus=$?
+                else
+                    local ExitStatus=1
+                fi
+                if [ $ExitStatus -eq 0 ]; then
+                    echo -e "$(toilet -f slant -F border --gay SuperManito)\n"
+                else
+                    echo -e '\033[35m    _____                       __  ___            _ __       \033[0m'
+                    echo -e '\033[31m   / ___/__  ______  ___  _____/  |/  /___ _____  (_) /_____  \033[0m'
+                    echo -e '\033[33m   \__ \/ / / / __ \/ _ \/ ___/ /|_/ / __ `/ __ \/ / __/ __ \ \033[0m'
+                    echo -e '\033[32m  ___/ / /_/ / /_/ /  __/ /  / /  / / /_/ / / / / / /_/ /_/ / \033[0m'
+                    echo -e '\033[36m /____/\__,_/ .___/\___/_/  /_/  /_/\__,_/_/ /_/_/\__/\____/  \033[0m'
+                    echo -e '\033[34m           /_/                                                \033[0m\n'
+                fi
+                break
+            else
+                sleep 1s
+                echo -e "\n未达到允许误差范围设定值，继续同步..."
+            fi
+        done
+    fi
+
 }
 
 concurrent_js_update() {
@@ -2055,6 +2107,8 @@ help() {
 	echo ""
 	echo -e "$green  sh \$jd npm_install $white  			#安装 npm 模块"
 	echo ""
+	echo -e "$green  sh \$jd zcbh $white				#资产变化一对一"
+	echo ""
 	echo -e "$green  sh \$jd opencard $white  			#开卡(默认不执行，你可以执行这句跑)"
 	echo ""
 	echo -e "$green  sh \$jd jx $white 				#查询京喜商品生产使用时间"
@@ -2136,8 +2190,8 @@ additional_settings() {
 
 	#宠汪汪兑换
 	sed -i "s/..\/USER_AGENTS.js/.\/USER_AGENTS.js/g" $dir_file_js/JDJRValidator_Pure.js
-	sed -i "s/.\/utils\/JDJRValidator_Pure/.\/JDJRValidator_Pure/g" $dir_file_js/jd_joy_reward.js
-	sed -i "s/joyRewardName = 0/joyRewardName = $jd_joy_reward/g" $dir_file_js/jd_joy_reward.js
+	sed -i "s/.\/utils\/JDJRValidator_Pure/.\/JDJRValidator_Pure/g" $dir_file_js/jd_joy_reward_Mod.js
+	sed -i "s/joyRewardName = 0/joyRewardName = $jd_joy_reward/g" $dir_file_js/jd_joy_reward_Mod.js
 
 
 
@@ -2516,7 +2570,7 @@ additional_settings() {
 
 
 	#京喜开团
-	sed -i "s/helpFlag = true/helpFlag = false/g" $dir_file_js/star_dreamFactory_tuan.js
+	sed -i "s/helpFlag = true/helpFlag = false/g" $dir_file_js/jd_dreamFactory_tuan.js
 
 	#东东工厂
 	new_ddgc="T0225KkcRxoZ9AfVdB7wxvRcIQCjVWnYaS5kRrbA@T0225KkcRUhP9FCEKR79xaZYcgCjVWnYaS5kRrbA@T0205KkcH0RYsTOkY2iC8I10CjVWnYaS5kRrbA@T0205KkcJEZAjD2vYGGG4Ip0CjVWnYaS5kRrbA"
@@ -2694,16 +2748,51 @@ del_jxdr() {
 		echo "没有要删除的京喜工厂文件"
 	else
 		del_ck=$(echo $jx_dr | sed "s/@/ /g")
-		for i in `echo $del_ck`
-		do
-			jx_file=$(ls $ccr_js_file/js_$i | grep "jd_dreamFactory.js"  | wc -l)
-			if [ "$jx_file" == "1" ];then
-				echo "开始删除并发文件js_$i的京喜工厂文件"
-				rm -rf $ccr_js_file/js_$i/jd_dreamFactory.js
-			else
-				echo "并发文件js_$i的京喜工厂文件已经删除了"
-			fi
-		done
+		del_ck_if=$(echo $del_ck | awk '{print $1}')
+		case "$del_ck_if" in
+			[1-999])
+				for i in `echo $del_ck`
+				do
+					jx_file=$(ls $ccr_js_file/js_$i | grep "jd_dreamFactory.js"  | wc -l)
+					if [ "$jx_file" == "1" ];then
+						echo "开始删除并发文件js_$i的京喜工厂文件"
+						rm -rf $ccr_js_file/js_$i/jd_dreamFactory.js
+					else
+						echo "并发文件js_$i的京喜工厂文件已经删除了"
+					fi
+				done
+			;;
+			all)
+				for i in `ls $ccr_js_file`
+				do
+					jx_file=$(ls $ccr_js_file/$i | grep "jd_dreamFactory.js"  | wc -l)
+					if [ "$jx_file" == "1" ];then
+						echo "开始删除并发文件js_$i的京喜工厂文件"
+						rm -rf $ccr_js_file/$i/jd_dreamFactory.js
+					else
+						echo "并发文件$i的京喜工厂文件已经删除了"
+					fi
+				done
+			;;
+			*)
+				for i in `echo $del_ck`
+				do
+					jx_site=$(cat $openwrt_script_config/js_cookie.txt  | grep -n  "$i"  | awk '{print $1}' |sed "s/://g")
+					if [ ! $jx_site ];then
+						echo "填写的用户名找不到，不删除京喜工厂文件"
+					else
+						jx_file=$(ls $ccr_js_file/js_$jx_site | grep "jd_dreamFactory.js"  | wc -l)
+						if [ "$jx_file" == "1" ];then
+							echo "开始删除并发文件js_$jx_site的京喜工厂文件"
+							rm -rf $ccr_js_file/js_$jx_site/jd_dreamFactory.js
+						else
+							echo "并发文件js_$jx_site的京喜工厂文件已经删除了"
+						fi
+					fi
+				done
+			;;
+		esac
+
 	fi
 	clear
 }
@@ -2720,14 +2809,6 @@ close_notification() {
 	#农场和东东萌宠关闭通知
 	if [ `date +%A` == "Monday" ];then
 		echo -e "$green今天周一不关闭农场萌宠通知$white"
-		case `date +%H` in
-		22|23|00|01)
-			sed -i "s/notify.sendNotify/\/\/notify.sendNotify/g" $dir_file_js/jd_cash_exchange.js
-		;;
-		*)
-			sed -i "s/\/\/notify.sendNotify/notify.sendNotify/g" $dir_file_js/jd_cash_exchange.js
-		;;
-		esac
 	else
 		case `date +%H` in
 		22|23|00|01)
@@ -2750,8 +2831,6 @@ close_notification() {
 
 			sed -i "s/jdNotify = true/jdNotify = false/g" $dir_file_js/jd_fruit.js
 			sed -i "s/jdNotify = true/jdNotify = false/g" $dir_file_js/jd_pet.js
-
-			sed -i "s/notify.sendNotify/\/\/notify.sendNotify/g" $dir_file_js/jd_cash_exchange.js
 
 			echo -e "$green暂时不关闭农场和萌宠通知$white"
 		;;
@@ -2777,7 +2856,6 @@ close_notification() {
 			sed -i "s/jdNotify = false/jdNotify = true/g" $dir_file_js/jd_fruit.js
 			sed -i "s/jdNotify = false/jdNotify = true/g" $dir_file_js/jd_pet.js
 
-			sed -i "s/\/\/notify.sendNotify/notify.sendNotify/g" $dir_file_js/jd_cash_exchange.js
 			echo -e "$green时间大于凌晨一点开始关闭农场和萌宠通知$white"
 		;;
 		esac
@@ -2943,7 +3021,8 @@ system_variable() {
 
 	jd_openwrt_config
 
-	index_js
+	#index_js
+	index_num="$yellow 8.网页扫码功能已关闭，没人修暂时就这样了$white"
 
 	#农场萌宠关闭通知
 	close_notification
@@ -3118,7 +3197,7 @@ JD_TRY_TRIALPRICE="10"
 #这里的变量都可以自己修改，按自己的想法来
 ------------------------------------------------------------------------------------------------------------
 
-#指定账号不跑京喜工厂，默认空全跑，指定格式1@2@3，这样子123账号就不跑了，只针对并发
+#指定账号不跑京喜工厂，默认空全跑，指定格式1@2@3，这样子123账号就不跑了，只针对并发，支持数字指定账号或者用户名,all删除全部
 jx_dr=''
 
 #农场不浇水换豆 false关闭 true打开
@@ -3150,7 +3229,7 @@ else
 		run_0|run_01|run_06_18|run_10_15_20|run_02|run_03|opencard|run_08_12_16|run_07|run_030|run_020)
 		concurrent_js_if
 		;;
-		system_variable|update|update_script|task|jx|additional_settings|jd_sharecode|ds_setup|checklog|that_day|stop_script|script_black|script_name|backnas|npm_install|checktool|concurrent_js_clean|if_ps|getcookie|addcookie|delcookie|check_cookie_push|python_install|concurrent_js_update|kill_index|run_jd_cash|run_jd_blueCoin|run_jd_joy_reward|del_expired_cookie|jd_try|ss_if|zcbh)
+		system_variable|update|update_script|task|jx|additional_settings|jd_sharecode|ds_setup|checklog|that_day|stop_script|script_black|script_name|backnas|npm_install|checktool|concurrent_js_clean|if_ps|getcookie|addcookie|delcookie|check_cookie_push|python_install|concurrent_js_update|kill_index|run_jd_cash|run_jd_blueCoin|run_jd_joy_reward|del_expired_cookie|jd_try|ss_if|zcbh|jd_time)
 		$action1
 		;;
 		kill_ccr)
@@ -3169,7 +3248,7 @@ else
 		run_0|run_01|run_06_18|run_10_15_20|run_02|run_03|opencard|run_08_12_16|run_07|run_030|run_020)
 		concurrent_js_if
 		;;
-		system_variable|update|update_script|task|jx|additional_settings|jd_sharecode|ds_setup|checklog|that_day|stop_script|script_black|script_name|backnas|npm_install|checktool|concurrent_js_clean|if_ps|getcookie|addcookie|delcookie|check_cookie_push|python_install|concurrent_js_update|kill_index|run_jd_cash|run_jd_blueCoin|run_jd_joy_reward|del_expired_cookie|jd_try|ss_if|zcbh)
+		system_variable|update|update_script|task|jx|additional_settings|jd_sharecode|ds_setup|checklog|that_day|stop_script|script_black|script_name|backnas|npm_install|checktool|concurrent_js_clean|if_ps|getcookie|addcookie|delcookie|check_cookie_push|python_install|concurrent_js_update|kill_index|run_jd_cash|run_jd_blueCoin|run_jd_joy_reward|del_expired_cookie|jd_try|ss_if|zcbh|jd_time)
 		$action2
 		;;
 		kill_ccr)

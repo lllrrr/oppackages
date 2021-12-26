@@ -10,9 +10,16 @@ on:
   push:
     paths:
       - '.github/workflows/upstream.yml'
+      - '.gitignore'
       - 'diy/**'
   schedule:
     - cron: 0 */12 * * *
+  workflow_dispatch:
+    inputs:
+      ssh:
+        description: 'ssh'
+        required: false
+        default: 'true'
   watch:
     types: started
   repository_dispatch:
@@ -24,7 +31,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@main
+      uses: actions/checkout@v2
       with:
         fetch-depth: 0
 
@@ -56,132 +63,137 @@ jobs:
         rm -rf $1
         }
         (
-        git clone --depth 1 https://github.com/kiddin9/openwrt-bypass && mvdir openwrt-bypass
-        git clone --depth 1 https://github.com/kiddin9/luci-app-dnsfilter
-        git clone --depth 1 https://github.com/kiddin9/luci-theme-edge
-        git clone --depth 1 https://github.com/tuanqing/install-program
-        git clone --depth 1 https://github.com/tuanqing/mknop
-        git clone -b main --depth 1 https://github.com/ITdesk01/JD_Script
+        #git clone --depth 1 https://github.com/kiddin9/openwrt-bypass && mvdir openwrt-bypass
+        #git clone --depth 1 https://github.com/kiddin9/luci-app-dnsfilter
+        #git clone --depth 1 https://github.com/kiddin9/luci-theme-edge
+        #git clone --depth 1 https://github.com/tuanqing/install-program
+        #git clone --depth 1 https://github.com/tuanqing/mknop
+        #git clone -b main --depth 1 https://github.com/ITdesk01/JD_Script
         git clone --depth 1 https://github.com/lllrrr/mysmartdns && mvdir mysmartdns
         ) &
         (
-        git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall
-        git clone --depth 1 https://github.com/Lienol/openwrt-package
+        #git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall
+        #git clone --depth 1 https://github.com/Lienol/openwrt-package
         git clone --depth 1 https://github.com/small-5/luci-app-adblock-plus
         git clone --depth 1 https://github.com/tty228/luci-app-serverchan
-        git clone --depth 1 https://github.com/zzsj0928/luci-app-pushbot
-        git clone --depth 1 https://github.com/ITdesk01/jd_openwrt_script
-        git clone --depth 1 https://github.com/rufengsuixing/luci-app-autoipsetadder
-        git clone --depth 1 https://github.com/rufengsuixing/luci-app-onliner
-        git clone --depth 1 https://github.com/rufengsuixing/luci-app-zerotier
-        git clone --depth 1 https://github.com/rufengsuixing/luci-app-syncdial
-        git clone --depth 1 https://github.com/rufengsuixing/luci-app-onliner
-        git clone --depth 1 https://github.com/rufengsuixing/luci-app-usb3disable        
+        #git clone --depth 1 https://github.com/zzsj0928/luci-app-pushbot
+        #git clone --depth 1 https://github.com/ITdesk01/jd_openwrt_script
+        #git clone --depth 1 https://github.com/rufengsuixing/luci-app-autoipsetadder
+        #git clone --depth 1 https://github.com/rufengsuixing/luci-app-onliner
+        #git clone --depth 1 https://github.com/rufengsuixing/luci-app-zerotier
+        #git clone --depth 1 https://github.com/rufengsuixing/luci-app-syncdial
+        #git clone --depth 1 https://github.com/rufengsuixing/luci-app-onliner
+        #git clone --depth 1 https://github.com/rufengsuixing/luci-app-usb3disable        
         ) &
         (
         git clone --depth 1 https://github.com/jerrykuku/luci-theme-argon
-        git clone --depth 1 https://github.com/jerrykuku/luci-app-argon-config
-        git clone --depth 1 https://github.com/jerrykuku/luci-app-vssr
-        git clone --depth 1 https://github.com/jerrykuku/luci-app-ttnode
+        #git clone --depth 1 https://github.com/jerrykuku/luci-app-argon-config
+        #git clone --depth 1 https://github.com/jerrykuku/luci-app-vssr
+        #git clone --depth 1 https://github.com/jerrykuku/luci-app-ttnode
         git clone --depth 1 https://github.com/jerrykuku/luci-app-jd-dailybonus
-        git clone --depth 1 https://github.com/sirpdboy/luci-app-advanced
-        git clone --depth 1 https://github.com/sirpdboy/luci-app-netdata
-        git clone --depth 1 https://github.com/sirpdboy/luci-app-poweroffdevice
-        git clone --depth 1 https://github.com/sirpdboy/luci-app-autotimeset
+        #git clone --depth 1 https://github.com/sirpdboy/luci-app-advanced
+        #git clone --depth 1 https://github.com/sirpdboy/luci-app-netdata
+        #git clone --depth 1 https://github.com/sirpdboy/luci-app-poweroffdevice
+        #git clone --depth 1 https://github.com/sirpdboy/luci-app-autotimeset
         ) &
         (
-        git clone --depth 1 https://github.com/destan19/OpenAppFilter && mvdir OpenAppFilter
-        git clone --depth 1 https://github.com/NateLol/luci-app-beardropper
-        git clone --depth 1 https://github.com/immortalwrt/luci-app-unblockneteasemusic
-        git clone --depth 1 https://github.com/peter-tank/luci-app-fullconenat
-        git clone --depth 1 https://github.com/llccd/openwrt-fullconenat
-        git clone --depth 1 https://github.com/esirplayground/luci-app-poweroff
-        git clone --depth 1 https://github.com/lvqier/luci-app-dnsmasq-ipset
-        git clone --depth 1 https://github.com/walkingsky/luci-wifidog luci-app-wifidog
-        git clone --depth 1 https://github.com/peter-tank/luci-app-autorepeater
+        #git clone --depth 1 https://github.com/destan19/OpenAppFilter && mvdir OpenAppFilter
+        #git clone --depth 1 https://github.com/NateLol/luci-app-beardropper
+        #git clone --depth 1 https://github.com/immortalwrt/luci-app-unblockneteasemusic
+        #git clone --depth 1 https://github.com/peter-tank/luci-app-fullconenat
+        #git clone --depth 1 https://github.com/llccd/openwrt-fullconenat
+        #git clone --depth 1 https://github.com/esirplayground/luci-app-poweroff
+        #git clone --depth 1 https://github.com/lvqier/luci-app-dnsmasq-ipset
+        #git clone --depth 1 https://github.com/walkingsky/luci-wifidog luci-app-wifidog
+        #git clone --depth 1 https://github.com/peter-tank/luci-app-autorepeater
         #git clone --depth 1 https://github.com/linkease/ddnsto-openwrt && mvdir ddnsto-openwrt
-        git clone --depth 1 https://github.com/wujunze/luci-app-autoshutdown
-        git clone --depth 1 https://github.com/dazhaolear/luci-app-autorebootnew
+        #git clone --depth 1 https://github.com/wujunze/luci-app-autoshutdown
+        #git clone --depth 1 https://github.com/dazhaolear/luci-app-autorebootnew
         ) &
         #svn export https://github.com/coolsnowwolf/lede/trunk/package/lean ledelean &
         svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/adbyby
-        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/ddns-scripts_aliyun
-        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/ddns-scripts_dnspod
+        #svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/ddns-scripts_aliyun
+        #svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/ddns-scripts_dnspod
         svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-adbyby-plus
-        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-arpbind
-        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-docker
+        #svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-arpbind
+        #svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-docker
         svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/frp
-        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-filetransfer
-        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-lib-fs
+        #svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-filetransfer
+        #svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-lib-fs
         svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-frpc
-        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-frps
-        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-ipsec-vpnd
-        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-qbittorrent
-        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-usb-printer
-        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-v2ray-server
-        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/qBittorrent
-        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/qBittorrent-static
-        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/qtbase
-        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/qttools
-        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/rblibtorrent
-        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/redsocks2
+        #svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-frps
+        #svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-ipsec-vpnd
+        #svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-qbittorrent
+        #svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-usb-printer
+        #svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-v2ray-server
+        #svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/qBittorrent
+        #svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/qBittorrent-static
+        #svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/qtbase
+        #svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/qttools
+        #svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/rblibtorrent
+        #svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/redsocks2
         #svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/srelay
         #svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/tcpping
         (
-        svn export https://github.com/Lienol/openwrt/trunk/package/lean/luci-app-autoreboot
-        svn export https://github.com/lienol/openwrt-luci/trunk/themes/luci-theme-argon-dark-mod
-        svn export https://github.com/lienol/openwrt-luci/trunk/themes/luci-theme-argon-light-mod
-        svn export https://github.com/lienol/openwrt-luci/trunk/themes/luci-theme-bootstrap-mod
-        svn export https://github.com/fw876/helloworld/trunk/luci-app-ssr-plus
-        svn export https://github.com/Tencent-Cloud-Plugins/tencentcloud-openwrt-plugin-ddns/trunk/tencentcloud_ddns luci-app-tencentddns
+        #svn export https://github.com/Lienol/openwrt/trunk/package/lean/luci-app-autoreboot
+        #svn export https://github.com/lienol/openwrt-luci/trunk/themes/luci-theme-argon-dark-mod
+        #svn export https://github.com/lienol/openwrt-luci/trunk/themes/luci-theme-argon-light-mod
+        #svn export https://github.com/lienol/openwrt-luci/trunk/themes/luci-theme-bootstrap-mod
+        #svn export https://github.com/fw876/helloworld/trunk/luci-app-ssr-plus
+        #svn export https://github.com/Tencent-Cloud-Plugins/tencentcloud-openwrt-plugin-ddns/trunk/tencentcloud_ddns luci-app-tencentddns
         #svn export https://github.com/coolsnowwolf/lede/trunk/package/network/services/shellsync
         #svn export https://github.com/coolsnowwolf/packages/trunk/net/miniupnpd
         #svn export https://github.com/coolsnowwolf/packages/trunk/net/mwan3
-        svn export https://github.com/vernesong/OpenClash/trunk/luci-app-openclash
+        #svn export https://github.com/vernesong/OpenClash/trunk/luci-app-openclash
         svn export https://github.com/lisaac/luci-app-dockerman/trunk/applications/luci-app-dockerman
         svn export https://github.com/lisaac/luci-app-diskman/trunk/applications/luci-app-diskman
         svn export https://github.com/lisaac/luci-lib-docker/trunk/collections/luci-lib-docker
-        svn export https://github.com/linkease/nas-packages/trunk/network/services/ddnsto
-        svn export https://github.com/linkease/nas-packages/trunk/network/services/linkease
-        svn export https://github.com/linkease/nas-packages-luci/trunk/luci/luci-app-ddnsto
-        svn export https://github.com/linkease/nas-packages-luci/trunk/luci/luci-app-linkease
+        #svn export https://github.com/linkease/nas-packages/trunk/network/services/ddnsto
+        #svn export https://github.com/linkease/nas-packages/trunk/network/services/linkease
+        #svn export https://github.com/linkease/nas-packages-luci/trunk/luci/luci-app-ddnsto
+        #svn export https://github.com/linkease/nas-packages-luci/trunk/luci/luci-app-linkease
         ) &
         (
-        svn export https://github.com/hong0980/build/trunk/luci-app-cowb-speedlimit
-        svn export https://github.com/hong0980/build/trunk/luci-app-cowbbonding
-        svn export https://github.com/hong0980/build/trunk/luci-app-cowbping
-        svn export https://github.com/hong0980/build/trunk/luci-app-Network-settings
-        svn export https://github.com/hong0980/build/trunk/luci-app-pwdHackDeny
-        svn export https://github.com/doushang/luci-app-shortcutmenu/trunk/luci-app-shortcutmenu
+        #svn export https://github.com/hong0980/build/trunk/luci-app-cowb-speedlimit
+        #svn export https://github.com/hong0980/build/trunk/luci-app-cowbbonding
+        #svn export https://github.com/hong0980/build/trunk/luci-app-cowbping
+        #svn export https://github.com/hong0980/build/trunk/luci-app-Network-settings
+        #svn export https://github.com/hong0980/build/trunk/luci-app-pwdHackDeny
+        #svn export https://github.com/doushang/luci-app-shortcutmenu/trunk/luci-app-shortcutmenu
         #svn export https://github.com/sundaqiang/openwrt-packages/trunk/luci-app-services-wolplus
-        svn export https://github.com/Ysurac/openmptcprouter-feeds/trunk/luci-app-iperf
-        svn export https://github.com/sirpdboy/netspeedtest/trunk/luci-app-netspeedtest
-        svn export https://github.com/sirpdboy/sirpdboy-package/trunk/luci-app-control-speedlimit
-        svn export https://github.com/sirpdboy/sirpdboy-package/trunk/luci-app-rebootschedule
-        svn export https://github.com/sirpdboy/sirpdboy-package/trunk/luci-app-wolplus
-        svn export https://github.com/messense/aliyundrive-webdav/trunk/openwrt aliyundrive && mvdir aliyundrive
+        #svn export https://github.com/Ysurac/openmptcprouter-feeds/trunk/luci-app-iperf
+        #svn export https://github.com/sirpdboy/netspeedtest/trunk/luci-app-netspeedtest
+        #svn export https://github.com/sirpdboy/sirpdboy-package/trunk/luci-app-control-speedlimit
+        #svn export https://github.com/sirpdboy/sirpdboy-package/trunk/luci-app-rebootschedule
+        #svn export https://github.com/sirpdboy/sirpdboy-package/trunk/luci-app-wolplus
+        #svn export https://github.com/messense/aliyundrive-webdav/trunk/openwrt aliyundrive && mvdir aliyundrive
         ) &
         
+
+        for ipk in $(ls applications); do
+        	if [[ $(ls -l applications/$ipk/po | wc -l) -gt 3 ]]; then
+        		rm -rf applications/$ipk
+        	fi
+        done
+
     - name: Delete duplicated packages
       run: |
         shopt -s extglob
         mv -n openwrt-passwall/* ./ ; rm -Rf openwrt-passwall
+        mv -n applications/!(luci-app-turboacc|luci-app-vlmcsd) ./ ; rm -Rf applications
+        mv -n ledelean/* ./ ; rm -Rf ledelean
         mv -n openwrt-package/* ./ ; rm -Rf openwrt-package
-        #mv -n ledelean/* ./ ; rm -Rf ledelean
         #cp -rf diy/.packages/* ./ || true
-        rm -Rf */.git qt5 openwrt-{chinadns*,simple-obfs,v2ray-plugin,dnsforwarder} subweb wget autosamba \
-        mt-drivers coremark npc luci-app-{flowoffload,sfe,appfilter,advancedsetting,chinadns,smstool,cifs-mount,cifsd} \
-        fcgiwrap ddns-scripts_{aliyun,dnspod} ipv6-helper ChinaDNS luci-theme-netgear csstidy samba4 UnblockNeteaseMusic* k3*
-        #mv mt/drivers mt/mt-drivers
+        rm -Rf */.git
+        mv -f mt/drivers mt-drivers && cp -rf mt/* ./ && rm -Rf mt
+
+    - name: SSH connection to Actions
+      uses: kiddin9/debugger-action@master
+      if: github.event.inputs.ssh == 'true'
 
     - name: Apply patches
       run: |
-        #sed -i "s/\r//g" open-app-filter/src/appfilter_ubus.c
         #find "diy/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 -E --forward --no-backup-if-mismatch"
-
-    - name: SSH connection to Actions
-      uses: lllrrr/debugger-action@master
-      if: 1 == 0
 
     - name: Modify
       run: |
@@ -192,7 +204,7 @@ jobs:
              -H "Authorization: Bearer ${{ secrets.REPO_TOKEN }}" \
              -X POST -d '{ "query": "query {repository(owner: \"'"$1"'\", name: \"'"$2"'\"){refs(refPrefix:\"refs/tags/\",last:1,orderBy:{field:TAG_COMMIT_DATE,direction:ASC}){edges{node{name target{commitUrl}}}}defaultBranchRef{target{...on Commit {oid}}}}}"}' https://api.github.com/graphql)
         }
-        for pkg in $(ls !(luci-*|natflow|ps3netsrv|rblibtorrent|shadowsocksr-libev|n2n_v2|rtl8821cu)/Makefile); do
+        for pkg in $(ls !(luci-*|natflow|ps3netsrv|rblibtorrent|shadowsocksr-libev|n2n_v2|rtl8821cu|rtl8188eu|rtl8812au-ac|quickjspp)/Makefile); do
           repo="$(grep PKG_SOURCE_URL $pkg | grep github | cut -f 4-5 -d '/' | sed -e 's/.git//' | grep -E '[0-9a-zA-Z_-]+$')" || true
           if [ "$repo" ]; then
             owner="$(echo $repo | cut -f 1 -d '/')"
@@ -221,6 +233,8 @@ jobs:
         bash diy/convert_translation.sh -a >/dev/null 2>&1 || true
         
         #cp -rf diy/.packages/* ./ || true
+        sed -i 's/+dockerd/+dockerd \\\n\t+cgroupfs-mount/' luci-app-dockerman/Makefile
+        sed -i 's/+dockerd/+dockerd +cgroupfs-mount/' luci-app-docker/Makefile
         #sed -i 's/+libcap /+libcap +libcap-bin /' luci-app-openclash/Makefile
         #sed -i 's/\(+luci-compat\)/\1 +luci-theme-argon/' luci-app-argon-config/Makefile
         
@@ -257,7 +271,7 @@ jobs:
         git reset --soft HEAD^
         git add .
         git commit -m "${Emoji[$[$RANDOM % ${#Emoji[@]}]]} Sync $(date +%Y-%m-%d" "%H:%M:%S)" || true
-        git push
+        git push -f
 
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@main

@@ -61,6 +61,18 @@ get_enabled_anonymous_secs() {
 	uci -q show "${CONFIG}" | grep "${1}\[.*\.enabled='1'" | cut -d '.' -sf2
 }
 
+convert_ip_port_format() {
+	local ip=$1
+	local ip_port=
+	local result=$(echo $ip | grep "#")
+	if [ -z "$result" ]; then
+		ip_port=$(echo $ip | sed -E 's/\:([^:]+)$/#\1/g')
+	else
+		ip_port=$result
+	fi
+	echo $ip_port
+}
+
 get_host_ip() {
 	local host=$2
 	local count=$3
@@ -301,7 +313,7 @@ load_config() {
 	chnlist=$(echo "${TCP_PROXY_MODE}${LOCALHOST_TCP_PROXY_MODE}${UDP_PROXY_MODE}${LOCALHOST_UDP_PROXY_MODE}" | grep "chnroute")
 	gfwlist=$(echo "${TCP_PROXY_MODE}${LOCALHOST_TCP_PROXY_MODE}${UDP_PROXY_MODE}${LOCALHOST_UDP_PROXY_MODE}" | grep "gfwlist")
 	DNS_MODE=$(config_t_get global dns_mode pdnsd)
-	DNS_FORWARD=$(config_t_get global dns_forward 1.1.1.1:53 | sed 's/:/#/g')
+	DNS_FORWARD=$(convert_ip_port_format $(config_t_get global dns_forward 1.1.1.1:53))
 	DNS_CACHE=$(config_t_get global dns_cache 0)
 	CHINADNS_NG=$(config_t_get global chinadns_ng 1)
 	dns_listen_port=${DNS_PORT}
@@ -312,7 +324,7 @@ load_config() {
 
 	PROXY_IPV6=$(config_t_get global_forwarding ipv6_tproxy 0)
 
-	export V2RAY_LOCATION_ASSET=$(config_t_get global_rules v2ray_location_asset "/usr/share/xray/")
+	export V2RAY_LOCATION_ASSET=$(config_t_get global_rules v2ray_location_asset "/usr/share/v2ray/")
 	export XRAY_LOCATION_ASSET=$V2RAY_LOCATION_ASSET
 	mkdir -p /tmp/etc $TMP_PATH $TMP_BIN_PATH $TMP_ID_PATH $TMP_PORT_PATH $TMP_ROUTE_PATH $TMP_ACL_PATH $TMP_PATH2
 }
@@ -510,7 +522,7 @@ run_socks() {
 	;;
 	ssr)
 		lua $API_GEN_SS -node $node -local_addr "0.0.0.0" -local_port $socks_port -server_host $server_host -server_port $port > $config_file
-		ln_start_bin "$(first_type ssr-local)" "ssr-local" $log_file -c "$config_file" -v
+		ln_start_bin "$(first_type ssr-local)" "ssr-local" $log_file -c "$config_file" -v -u
 	;;
 	ss)
 		lua $API_GEN_SS -node $node -local_addr "0.0.0.0" -local_port $socks_port -server_host $server_host -server_port $port -mode tcp_and_udp > $config_file
@@ -1150,7 +1162,7 @@ start_dns() {
 	;;
 	custom)
 		custom_dns=$(config_t_get global custom_dns)
-		TUN_DNS="$(echo ${custom_dns} | sed 's/:/#/g')"
+		TUN_DNS="$(convert_ip_port_format $(echo ${custom_dns}))"
 		echolog "  - 域名解析：使用UDP协议自定义DNS（$TUN_DNS）解析..."
 	;;
 	esac
@@ -1171,11 +1183,11 @@ start_dns() {
 		[ -s "${RULES_PATH}/chnlist" ] && cp -a "${RULES_PATH}/chnlist" "${chnlist_param}"
 
 		[ -s "${RULES_PATH}/proxy_host" ] && {
-			cat "${RULES_PATH}/proxy_host" >> "${gfwlist_param}"
+			cat "${RULES_PATH}/proxy_host" | tr -s '\n' | grep -v "^#" | sort -u >> "${gfwlist_param}"
 			echolog "  | - [$?](chinadns-ng) 代理域名表合并到防火墙域名表"
 		}
 		[ -s "${RULES_PATH}/direct_host" ] && {
-			cat "${RULES_PATH}/direct_host" >> "${chnlist_param}"
+			cat "${RULES_PATH}/direct_host" | tr -s '\n' | grep -v "^#" | sort -u >> "${chnlist_param}"
 			echolog "  | - [$?](chinadns-ng) 域名白名单合并到中国域名表"
 		}
 		chnlist_param=${chnlist_param:+-m "${chnlist_param}" -M}
@@ -1465,6 +1477,9 @@ run_redir)
 	;;
 node_switch)
 	node_switch $@
+	;;
+echolog)
+	echolog $@
 	;;
 stop)
 	[ "$1" = "force" ] && force_stop

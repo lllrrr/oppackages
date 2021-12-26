@@ -110,7 +110,6 @@ jobs:
         #git clone --depth 1 https://github.com/wujunze/luci-app-autoshutdown
         #git clone --depth 1 https://github.com/dazhaolear/luci-app-autorebootnew
         ) &
-	(
         #svn export https://github.com/coolsnowwolf/lede/trunk/package/lean ledelean &
         svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/adbyby
         #svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/ddns-scripts_aliyun
@@ -135,7 +134,6 @@ jobs:
         #svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/redsocks2
         #svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/srelay
         #svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/tcpping
-	) &
         (
         #svn export https://github.com/Lienol/openwrt/trunk/package/lean/luci-app-autoreboot
         #svn export https://github.com/lienol/openwrt-luci/trunk/themes/luci-theme-argon-dark-mod

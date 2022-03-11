@@ -35,7 +35,7 @@ jobs:
         sudo timedatectl set-timezone "Asia/Shanghai"
 
     - name: Syn upstream
-      run: |
+      run : |
         git rm -r --cache * >/dev/null 2>&1 &
         rm -rf `find ./* -maxdepth 0 -type d ! -name "diy"` >/dev/null 2>&1
         function git_clone() (
@@ -56,7 +56,6 @@ jobs:
         rm -rf $1
         }
         (
-        git clone https://github.com/kiddin9/my-packages && mvdir my-packages
         git clone --depth 1 https://github.com/kiddin9/openwrt-bypass && mvdir openwrt-bypass
         git clone --depth 1 https://github.com/kiddin9/luci-app-dnsfilter
         git clone --depth 1 https://github.com/kiddin9/luci-theme-edge
@@ -140,7 +139,7 @@ jobs:
         svn export https://github.com/lienol/openwrt-luci/trunk/themes/luci-theme-bootstrap-mod
         svn export https://github.com/fw876/helloworld/trunk/luci-app-ssr-plus
         svn export https://github.com/Tencent-Cloud-Plugins/tencentcloud-openwrt-plugin-ddns/trunk/tencentcloud_ddns luci-app-tencentddns
-	svn export https://github.com/Tencent-Cloud-Plugins/tencentcloud-openwrt-plugin-cos/trunk/tencentcloud_cos luci-app-tencentcloud-cos
+        svn export https://github.com/Tencent-Cloud-Plugins/tencentcloud-openwrt-plugin-cos/trunk/tencentcloud_cos luci-app-tencentcloud-cos
         #svn export https://github.com/coolsnowwolf/lede/trunk/package/network/services/shellsync
         #svn export https://github.com/coolsnowwolf/packages/trunk/net/miniupnpd
         #svn export https://github.com/coolsnowwolf/packages/trunk/net/mwan3

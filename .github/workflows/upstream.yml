@@ -56,6 +56,7 @@ jobs:
         rm -rf $1
         }
         (
+        git clone https://github.com/kiddin9/my-packages && mvdir my-packages
         git clone --depth 1 https://github.com/kiddin9/openwrt-bypass && mvdir openwrt-bypass
         git clone --depth 1 https://github.com/kiddin9/luci-app-dnsfilter
         git clone --depth 1 https://github.com/kiddin9/luci-theme-edge
@@ -139,6 +140,7 @@ jobs:
         svn export https://github.com/lienol/openwrt-luci/trunk/themes/luci-theme-bootstrap-mod
         svn export https://github.com/fw876/helloworld/trunk/luci-app-ssr-plus
         svn export https://github.com/Tencent-Cloud-Plugins/tencentcloud-openwrt-plugin-ddns/trunk/tencentcloud_ddns luci-app-tencentddns
+	svn export https://github.com/Tencent-Cloud-Plugins/tencentcloud-openwrt-plugin-cos/trunk/tencentcloud_cos luci-app-tencentcloud-cos
         #svn export https://github.com/coolsnowwolf/lede/trunk/package/network/services/shellsync
         #svn export https://github.com/coolsnowwolf/packages/trunk/net/miniupnpd
         #svn export https://github.com/coolsnowwolf/packages/trunk/net/mwan3
@@ -150,6 +152,7 @@ jobs:
         svn export https://github.com/linkease/nas-packages/trunk/network/services/linkease
         svn export https://github.com/linkease/nas-packages-luci/trunk/luci/luci-app-ddnsto
         svn export https://github.com/linkease/nas-packages-luci/trunk/luci/luci-app-linkease
+	svn export https://github.com/mingxiaoyu/luci-app-cloudflarespeedtest/trunk/applications/luci-app-cloudflarespeedtest
         ) &
         (
         svn export https://github.com/hong0980/build/trunk/luci-app-cowb-speedlimit

@@ -59,18 +59,23 @@ jobs:
         git clone --depth 1 https://github.com/kiddin9/openwrt-bypass && mvdir openwrt-bypass
         git clone --depth 1 https://github.com/kiddin9/luci-app-dnsfilter
         git clone --depth 1 https://github.com/kiddin9/luci-theme-edge
-        git clone --depth 1 https://github.com/tuanqing/install-program
-        git clone --depth 1 https://github.com/tuanqing/mknop
+        #git clone --depth 1 https://github.com/tuanqing/install-program
+        #git clone --depth 1 https://github.com/tuanqing/mknop
         git clone -b main --depth 1 https://github.com/ITdesk01/JD_Script
+        git clone -b main --depth 1 https://github.com/xdhgsq/xdh
         git clone --depth 1 https://github.com/lllrrr/mysmartdns && mvdir mysmartdns
         ) &
         (
         git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall
+        git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall2
+        git clone -b luci --depth 1 https://github.com/xiaorouji/openwrt-passwall
         git clone --depth 1 https://github.com/Lienol/openwrt-package
+        git clone -b other --depth 1 https://github.com/Lienol/openwrt-package
         git clone --depth 1 https://github.com/small-5/luci-app-adblock-plus
         git clone --depth 1 https://github.com/tty228/luci-app-serverchan
         git clone --depth 1 https://github.com/zzsj0928/luci-app-pushbot
-        git clone --depth 1 https://github.com/ITdesk01/jd_openwrt_script
+        #git clone --depth 1 https://github.com/ITdesk01/jd_openwrt_script
+        git clone --depth 1 https://github.com/xdhgsq/xdh_plug
         git clone --depth 1 https://github.com/rufengsuixing/luci-app-autoipsetadder
         git clone --depth 1 https://github.com/rufengsuixing/luci-app-onliner
         git clone --depth 1 https://github.com/rufengsuixing/luci-app-zerotier
@@ -107,28 +112,28 @@ jobs:
         svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/adbyby
         svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/ddns-scripts_aliyun
         svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/ddns-scripts_dnspod
-        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-adbyby-plus
-        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-arpbind
-        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-docker
-        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/frp
-        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-filetransfer
-        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-lib-fs
-        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-frpc
-        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-frps
-        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-ipsec-vpnd
-        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-qbittorrent
-        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-usb-printer
-        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-v2ray-server
-        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/qBittorrent
-        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/qBittorrent-static
-        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/qtbase
-        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/qttools
-        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/rblibtorrent
-        svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/redsocks2
+        svn export https://github.com/coolsnowwolf/luci/trunk/applications/luci-app-adbyby-plus
+        svn export https://github.com/coolsnowwolf/luci/trunk/applications/luci-app-arpbind
+        svn export https://github.com/coolsnowwolf/luci/trunk/applications/luci-app-docker
+        svn export https://github.com/coolsnowwolf/packages/trunk/net/frp
+        svn export https://github.com/coolsnowwolf/luci/trunk/applications/luci-app-filetransfer
+        svn export https://github.com/coolsnowwolf/luci/trunk/libs/luci-lib-fs
+        svn export https://github.com/coolsnowwolf/luci/trunk/applications/luci-app-frpc
+        svn export https://github.com/coolsnowwolf/luci/trunk/applications/luci-app-frps
+        svn export https://github.com/coolsnowwolf/luci/trunk/applications/luci-app-ipsec-vpnd
+        svn export https://github.com/coolsnowwolf/luci/trunk/applications/luci-app-qbittorrent
+        svn export https://github.com/coolsnowwolf/luci/trunk/applications/luci-app-usb-printer
+        svn export https://github.com/coolsnowwolf/luci/trunk/applications/luci-app-v2ray-server
+        svn export https://github.com/coolsnowwolf/packages/trunk/net/qBittorrent
+        svn export https://github.com/coolsnowwolf/packages/trunk/net/qBittorrent-static
+        svn export https://github.com/coolsnowwolf/packages/trunk/libs/qtbase
+        svn export https://github.com/coolsnowwolf/packages/trunk/libs/qttools
+        svn export https://github.com/coolsnowwolf/packages/trunk/libs/rblibtorrent
+        svn export https://github.com/coolsnowwolf/packages/trunk/net/redsocks2
         #svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/srelay
-        #svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/tcpping
+        #svn export https://github.com/coolsnowwolf/packages/trunk/net/tcpping
         (
-        svn export https://github.com/Lienol/openwrt/trunk/package/lean/luci-app-autoreboot
+        svn export https://github.com/Lienol/openwrt-package/branch/other/lean/luci-app-autoreboot
         svn export https://github.com/lienol/openwrt-luci/trunk/themes/luci-theme-argon-dark-mod
         svn export https://github.com/lienol/openwrt-luci/trunk/themes/luci-theme-argon-light-mod
         svn export https://github.com/lienol/openwrt-luci/trunk/themes/luci-theme-bootstrap-mod

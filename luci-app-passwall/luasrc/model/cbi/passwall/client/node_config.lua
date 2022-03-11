@@ -2,6 +2,10 @@ local api = require "luci.model.cbi.passwall.api.api"
 local appname = api.appname
 local uci = api.uci
 
+if not arg[1] or not uci:get(appname, arg[1]) then
+    luci.http.redirect(api.url("node_list"))
+end
+
 local ss_encrypt_method_list = {
     "rc4-md5", "aes-128-cfb", "aes-192-cfb", "aes-256-cfb", "aes-128-ctr",
     "aes-192-ctr", "aes-256-ctr", "bf-cfb", "salsa20", "chacha20", "chacha20-ietf",
@@ -137,23 +141,25 @@ balancing_node:depends("protocol", "_balancing")
 
 -- 分流
 uci:foreach(appname, "shunt_rules", function(e)
-    o = s:option(ListValue, e[".name"], string.format('* <a href="%s" target="_blank">%s</a>', api.url("shunt_rules", e[".name"]), translate(e.remarks)))
-    o:value("nil", translate("Close"))
-    o:value("_default", translate("Default"))
-    o:value("_direct", translate("Direct Connection"))
-    o:value("_blackhole", translate("Blackhole"))
-    o:depends("protocol", "_shunt")
+    if e[".name"] and e.remarks then
+        o = s:option(ListValue, e[".name"], string.format('* <a href="%s" target="_blank">%s</a>', api.url("shunt_rules", e[".name"]), e.remarks))
+        o:value("nil", translate("Close"))
+        o:value("_default", translate("Default"))
+        o:value("_direct", translate("Direct Connection"))
+        o:value("_blackhole", translate("Blackhole"))
+        o:depends("protocol", "_shunt")
 
-    if #nodes_table > 0 then
-        _proxy_tag = s:option(ListValue, e[".name"] .. "_proxy_tag", string.format('* <a style="color:red">%s</a>', translate(e.remarks) .. " " .. translate("Preproxy")))
-        _proxy_tag:value("nil", translate("Close"))
-        _proxy_tag:value("default", translate("Default"))
-        _proxy_tag:value("main", translate("Default Preproxy"))
-        _proxy_tag.default = "nil"
+        if #nodes_table > 0 then
+            _proxy_tag = s:option(ListValue, e[".name"] .. "_proxy_tag", string.format('* <a style="color:red">%s</a>', e.remarks .. " " .. translate("Preproxy")))
+            _proxy_tag:value("nil", translate("Close"))
+            _proxy_tag:value("default", translate("Default"))
+            _proxy_tag:value("main", translate("Default Preproxy"))
+            _proxy_tag.default = "nil"
 
-        for k, v in pairs(nodes_table) do
-            o:value(v.id, v.remarks)
-            _proxy_tag:depends(e[".name"], v.id)
+            for k, v in pairs(nodes_table) do
+                o:value(v.id, v.remarks)
+                _proxy_tag:depends(e[".name"], v.id)
+            end
         end
     end
 end)
@@ -486,25 +492,6 @@ end
 function ss_plugin_opts.write(self, section, value)
 	m:set(section, "plugin_opts", value)
 end
-
-use_kcp = s:option(Flag, "use_kcp", translate("Use") .. "Kcptun",
-                   "<span style='color:red'>" .. translate("Please confirm whether the Kcptun is installed. If not, please go to Rule Update download installation.") .. "</span>")
-use_kcp.default = 0
-use_kcp:depends("type", "SS")
-use_kcp:depends("type", "SS-Rust")
-use_kcp:depends("type", "SSR")
-
-kcp_server = s:option(Value, "kcp_server", translate("Kcptun Server"))
-kcp_server.placeholder = translate("Default:Current Server")
-kcp_server:depends("use_kcp", "1")
-
-kcp_port = s:option(Value, "kcp_port", translate("Kcptun Port"))
-kcp_port.datatype = "port"
-kcp_port:depends("use_kcp", "1")
-
-kcp_opts = s:option(TextValue, "kcp_opts", translate("Kcptun Config"), translate("--crypt aes192 --key abc123 --mtu 1350 --sndwnd 128 --rcvwnd 1024 --mode fast"))
-kcp_opts.placeholder = "--crypt aes192 --key abc123 --mtu 1350 --sndwnd 128 --rcvwnd 1024 --mode fast"
-kcp_opts:depends("use_kcp", "1")
 
 uuid = s:option(Value, "uuid", translate("ID"))
 uuid.password = true

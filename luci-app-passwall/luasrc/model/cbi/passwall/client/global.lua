@@ -71,12 +71,7 @@ local redir_mode_validate = function(self, value, t)
     return value
 end
 
-local status = m:get("@global_other[0]", "status") or ""
-if status:find("big_icon") then
-    m:append(Template(appname .. "/global/status"))
-else
-    m:append(Template(appname .. "/global/status2"))
-end
+m:append(Template(appname .. "/global/status"))
 
 s = m:section(TypedSection, "global")
 s.anonymous = true
@@ -121,20 +116,22 @@ if (has_v2ray or has_xray) and #nodes_table > 0 then
     for k, v in pairs(shunt_list) do
         uci:foreach(appname, "shunt_rules", function(e)
             local id = e[".name"]
-            o = s:taboption("Main", ListValue, v.id .. "." .. id .. "_node", string.format('* <a href="%s" target="_blank">%s</a>', api.url("shunt_rules", id), translate(e.remarks)))
-            o:depends("tcp_node", v.id)
-            o:value("nil", translate("Close"))
-            o:value("_default", translate("Default"))
-            o:value("_direct", translate("Direct Connection"))
-            o:value("_blackhole", translate("Blackhole"))
-            for k1, v1 in pairs(normal_list) do
-                o:value(v1.id, v1["remark"])
-            end
-            o.cfgvalue = function(self, section)
-                return m:get(v.id, id) or "nil"
-            end
-            o.write = function(self, section, value)
-                m:set(v.id, id, value)
+            if id and e.remarks then
+                o = s:taboption("Main", ListValue, v.id .. "." .. id .. "_node", string.format('* <a href="%s" target="_blank">%s</a>', api.url("shunt_rules", id), e.remarks))
+                o:depends("tcp_node", v.id)
+                o:value("nil", translate("Close"))
+                o:value("_default", translate("Default"))
+                o:value("_direct", translate("Direct Connection"))
+                o:value("_blackhole", translate("Blackhole"))
+                for k1, v1 in pairs(normal_list) do
+                    o:value(v1.id, v1["remark"])
+                end
+                o.cfgvalue = function(self, section)
+                    return m:get(v.id, id) or "nil"
+                end
+                o.write = function(self, section, value)
+                    m:set(v.id, id, value)
+                end
             end
         end)
 
@@ -171,7 +168,7 @@ end
 
 udp_node = s:taboption("Main", ListValue, "udp_node", "<a style='color: red'>" .. translate("UDP Node") .. "</a>")
 udp_node:value("nil", translate("Close"))
---udp_node.description = translate("For proxy game network, DNS hijack etc.") .. "<br />" .. translate("The selected server will not use Kcptun.")
+--udp_node.description = translate("For proxy game network.")
 udp_node:value("tcp", translate("Same as the tcp node"))
 
 s:tab("DNS", translate("DNS"))
@@ -225,12 +222,6 @@ o.validate = function(self, value, t)
     return value
 end
 
-o = s:taboption("DNS", ListValue, "dns_by", translate("Resolver For The List Proxied"))
-o:value("tcp", translatef("Requery DNS By %s", translate("TCP Node")))
-o:value("socks", translatef("Requery DNS By %s", translate("Socks Node")))
-o:depends("v2ray_dns_mode", "tcp")
-o:depends("v2ray_dns_mode", "doh")
-
 o = s:taboption("DNS", Value, "socks_server", translate("Socks Server"), translate("Make sure socks service is available on this address."))
 for k, v in pairs(socks_table) do o:value(v.id, v.remarks) end
 o.validate = function(self, value, t)
@@ -240,7 +231,6 @@ o.validate = function(self, value, t)
     return value
 end
 o:depends({dns_mode = "dns2socks"})
-o:depends({dns_by = "socks"})
 
 ---- DoH
 o = s:taboption("DNS", Value, "up_trust_doh", translate("DoH request address"))
@@ -278,16 +268,6 @@ o.description = translate("Notify the DNS server when the DNS query is notified,
 o.datatype = "ipaddr"
 o:depends("v2ray_dns_mode", "tcp")
 o:depends("v2ray_dns_mode", "doh")
-
-o = s:taboption("DNS", ListValue, "dns_query_strategy", translate("Query Strategy"))
-o.default = "UseIPv4"
-o:value("UseIPv4")
-o:value("UseIPv6")
-o:value("UseIP")
-o:depends({dns_mode = "v2ray", v2ray_dns_mode = "tcp"})
-o:depends({dns_mode = "v2ray", v2ray_dns_mode = "doh"})
-o:depends({dns_mode = "xray", v2ray_dns_mode = "tcp"})
-o:depends({dns_mode = "xray", v2ray_dns_mode = "doh"})
 
 o = s:taboption("DNS", Flag, "dns_cache", translate("Cache Resolved"))
 o.default = "1"

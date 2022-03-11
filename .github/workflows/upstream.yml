@@ -67,10 +67,10 @@ jobs:
         ) &
         (
         git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall
-        git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall2
-        git clone -b luci --depth 1 https://github.com/xiaorouji/openwrt-passwall
+        git clone -b luci --depth 1 https://github.com/xiaorouji/openwrt-passwall openwrt-passwall-luci && mvdir openwrt-passwall-luci
+        git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall2 && mvdir openwrt-passwall2
         git clone --depth 1 https://github.com/Lienol/openwrt-package
-        git clone -b other --depth 1 https://github.com/Lienol/openwrt-package
+        #git clone -b other --depth 1 https://github.com/Lienol/openwrt-package openwrt-package-other && mvdir openwrt-package-other
         git clone --depth 1 https://github.com/small-5/luci-app-adblock-plus
         git clone --depth 1 https://github.com/tty228/luci-app-serverchan
         git clone --depth 1 https://github.com/zzsj0928/luci-app-pushbot

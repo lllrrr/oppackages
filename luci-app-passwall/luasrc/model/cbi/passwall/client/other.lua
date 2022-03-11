@@ -68,6 +68,17 @@ o.default = "disable"
 o:value("disable", translate("No patterns are used"))
 o:value("1:65535", translate("All"))
 
+---- TCP Proxy Drop Ports
+o = s:option(Value, "tcp_proxy_drop_ports", translate("TCP Proxy Drop Ports"))
+o.default = "disable"
+o:value("disable", translate("No patterns are used"))
+
+---- UDP Proxy Drop Ports
+o = s:option(Value, "udp_proxy_drop_ports", translate("UDP Proxy Drop Ports"))
+o.default = "80,443"
+o:value("disable", translate("No patterns are used"))
+o:value("80,443", translate("QUIC"))
+
 ---- TCP Redir Ports
 o = s:option(Value, "tcp_redir_ports", translate("TCP Redir Ports"))
 o.default = "22,25,53,143,465,587,853,993,995,80,443"
@@ -98,13 +109,15 @@ if os.execute("lsmod | grep -i REDIRECT >/dev/null") == 0 and os.execute("lsmod 
         return self.map:set(section, "tcp_proxy_way", value)
     end
 
-    ---- IPv6 TProxy
-    o = s:option(Flag, "ipv6_tproxy", translate("IPv6 TProxy"),
-                 "<font color='red'>" .. translate(
-                     "Experimental feature. Make sure that your node supports IPv6.") ..
-                     "</font>")
-    o.default = 0
-    o.rmempty = false
+    if os.execute("lsmod | grep -i ip6table_mangle >/dev/null") == 0 then
+        ---- IPv6 TProxy
+        o = s:option(Flag, "ipv6_tproxy", translate("IPv6 TProxy"),
+                    "<font color='red'>" .. translate(
+                        "Experimental feature. Make sure that your node supports IPv6.") ..
+                        "</font>")
+        o.default = 0
+        o.rmempty = false
+    end
 end
 
 o = s:option(Flag, "accept_icmp", translate("Hijacking ICMP (PING)"))
@@ -114,37 +127,12 @@ o = s:option(Flag, "accept_icmpv6", translate("Hijacking ICMPv6 (IPv6 PING)"))
 o:depends("ipv6_tproxy", true)
 o.default = 0
 
-o = s:option(Flag, "route_only", translate("Sniffing Route Only (V2Ray/Xray)"))
-o.default = "1"
+o = s:option(Flag, "sniffing", translate("Sniffing (V2Ray/Xray)"), translate("When using the V2ray/Xray shunt, must be enabled, otherwise the shunt will invalid."))
+o.default = 1
+o.rmempty = false
 
---[[
----- TCP Redir Port
-o = s:option(Value, "tcp_redir_port", translate("TCP Redir Port"))
-o.datatype = "port"
-o.default = 1041
-o.rmempty = true
-
----- UDP Redir Port
-o = s:option(Value, "udp_redir_port", translate("UDP Redir Port"))
-o.datatype = "port"
-o.default = 1051
-o.rmempty = true
-
----- Kcptun Port
-o = s:option(Value, "kcptun_port", translate("Kcptun Port"))
-o.datatype = "port"
-o.default = 12948
-o.rmempty = true
---]]
-
--- [[ Other Settings ]]--
-s = m:section(TypedSection, "global_other", translate("Other Settings"))
-s.anonymous = true
-s.addremove = false
-
-o = s:option(MultiValue, "status", translate("Status info"))
-o:value("big_icon", translate("Big icon")) -- 大图标
-o:value("show_check_port", translate("Show node check")) -- 显示节点检测
-o:value("show_ip111", translate("Show Show IP111")) -- 显示IP111
+o = s:option(Flag, "route_only", translate("Sniffing Route Only (Xray)"), translate("When enabled, the server not will resolve the domain name again."))
+o.default = 0
+o:depends("sniffing", true)
 
 return m

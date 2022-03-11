@@ -9,9 +9,11 @@ include $(TOPDIR)/rules.mk
 LUCI_TITLE:=ARP Binding
 LUCI_DEPENDS:=+ip
 LUCI_PKGARCH:=all
+
+PKG_NAME:=luci-app-arpbind
 PKG_VERSION:=1
 PKG_RELEASE:=3
 
-include $(TOPDIR)/feeds/luci/luci.mk
+include ../../luci.mk
 
 # call BuildPackage - OpenWrt buildroot signature

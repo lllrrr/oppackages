@@ -216,7 +216,6 @@ cat >$dir_file/config/tmp/zero205_url.txt <<EOF
 	jd_get_share_code.js		#获取jd所有助力码脚本
 	jd_joy_park_task.js		#汪汪乐园
 	jd_nnfls.js			#牛牛福利
-	jd_fanli.js			#京东饭粒
 	jd_gold_creator.js		#金榜创造营
 	jd_cfd_pearl_ex.js 		#财富岛珍珠兑换
 	jd_jdzz.js			#京东赚赚
@@ -243,12 +242,10 @@ cat >$dir_file/config/tmp/Aaron_url.txt <<EOF
 	jd_jxmc.js			#京喜牧场
 	jx_sign.js			#京喜签到
 	jd_club_lottery.js		#摇京豆
-	jd_shop.js			#进店领豆
 	jd_kd.js			#京东快递签到 一天运行一次即可
 	jd_speed_sign.js		#京东极速版签到+赚现金任务
 	jd_exchangejxbeans.js		#过期京豆兑换为喜豆
 	jd_plantBean.js			#种豆得豆
-	jd_sendBeans.js			#来客有礼
 	jd_jxlhb.js			#惊喜领红包
 EOF
 
@@ -296,7 +293,6 @@ done
 #okyyds
 okyyds_url="https://raw.githubusercontent.com/okyyds/yyds/master"
 cat >$dir_file/config/tmp/okyyds_url.txt <<EOF
-	jd_xinruimz.js 			#颜究种植园(需要手动选择种植小样)
 	jd_wq_wxsign.js 		#微信签到领红包
 	jd_health_plant.py		#京东健康社区-种植园
 	gua_cleancart_ddo.js		#清空购物车(需要设置)
@@ -319,17 +315,12 @@ cat >$dir_file/config/tmp/KingRan_url.txt <<EOF
 	jd_zdjr.js			#组队瓜分
 	jd_29_8.js			#极速版抢29-8优惠券
 	jd_5_2.js			#极速版抢5-2优惠券
+	jd_19_6.js			#极速版抢19-6优惠券
 	jd_nzmh.js			#女装盲盒
-	jd_EsportsManager.js 		#东东电竞经理
-	jd_ghnsjd.js			#个护女神价到抽奖机活
 	jd_mpdzcar.js			#头文字Ｊ
 	jd_mpdzcar_game.js		#头文字Ｊ游戏
 	jd_mpdzcar_help.js		#头文字Ｊ助力
-	jd_opencardL85.js
-	jd_opencardL86.js
-	jd_opencardL87.js
-	jd_opencardL88.js
-	jd_opencardL89.js
+	jd_fanli.js			#京东饭粒
 EOF
 
 for script_name in `cat $dir_file/config/tmp/KingRan_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -448,9 +439,17 @@ EOF
 
 #删掉过期脚本
 cat >/tmp/del_js.txt <<EOF
-	jd_productZ4Brand.js		#特务Z
-	jd_syj.js
-	jd_opencardL84.js
+	jd_xinruimz.js			#颜究种植园(需要手动选择种植小样)
+	jd_ghnsjd.js			#个护女神价到抽奖机活
+	jd_opencardL85.js
+	jd_opencardL86.js
+	jd_opencardL87.js
+	jd_opencardL88.js
+	jd_opencardL89.js
+	jd_EsportsManager.js 		#东东电竞经理
+	jd_sendBeans.js			#来客有礼
+	jd_shop.js 			#进店领豆，早点领，一天也可以执行两次以上
+	jd_fanli.js
 EOF
 
 for script_name in `cat /tmp/del_js.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -532,7 +531,6 @@ export JD_SYJ=true
 
 #这里不会并发
 cat >/tmp/jd_tmp/ccr_run <<EOF
-	jd_EsportsManager.js 		#东东电竞经理
 	jd_connoisseur.js		#内容鉴赏官
 	jd_nnfls.js			#牛牛福利
 	jx_sign.js			#京喜签到
@@ -543,9 +541,9 @@ cat >/tmp/jd_tmp/ccr_run <<EOF
 	jd_babel_sign.js		#通天塔签到
 	jd_wq_wxsign.js 		#微信签到领红包
 	jd_fan.js			#粉丝互动
-	jd_sendBeans.js			#来客有礼
 	jd_nzmh.js			#女装盲盒
 	jd_plusdraw.js			#PLUS转盘抽豆
+	jd_fanli.js			#京东饭粒
 EOF
 	for i in `cat /tmp/jd_tmp/ccr_run | grep -v "#.*js" | awk '{print $1}'`
 	do
@@ -570,8 +568,6 @@ cat >/tmp/jd_tmp/concurrent_js_run_07 <<EOF
 	＃jd_angryKoi.js			#愤怒的锦鲤
 	jd_club_lottery.js 		#摇京豆，没时间要求
 	jd_price.js 			#京东价保
-	jd_29_8.js			#极速版抢29-8优惠券
-	jd_5_2.js			#极速版抢5-2优惠券
 EOF
 	for i in `cat /tmp/jd_tmp/concurrent_js_run_07 | grep -v "#.*js" | awk '{print $1}'`
 	do
@@ -590,10 +586,8 @@ run_0() {
 cat >/tmp/jd_tmp/run_0 <<EOF
 	jd_jin_tie_xh.js  		#领金贴
 	jd_ddnc_farmpark.js		#东东乐园
-	jd_fanli.js			#京东饭粒
 	jd_club_lottery.js 		#摇京豆，没时间要求
 	jd_computer.js			#电脑配件ID任务
-	jd_ghnsjd.js			#个护女神价到抽奖机活
 EOF
 	echo -e "${green} run_0$start_script_time ${white}"
 
@@ -678,7 +672,9 @@ cat >/tmp/jd_tmp/run_01 <<EOF
 	raw_main_jd_super_redrain.js	#整点红包雨
 	jd_dreamFactory.js 		#京喜工厂
 	gua_wealth_island.js		#京东财富岛
-	jd_xinruimz.js			#颜究种植园(需要手动选择种植小样)
+	jd_29_8.js			#极速版抢29-8优惠券
+	jd_5_2.js			#极速版抢5-2优惠券
+	jd_19_6.js			#极速版抢19-6优惠券
 EOF
 	echo -e "${green} run_01$start_script_time ${white}"
 	for i in `cat /tmp/jd_tmp/run_01 | grep -v "#.*js" | awk '{print $1}'`
@@ -695,7 +691,7 @@ EOF
 
 run_02() {
 cat >/tmp/jd_tmp/run_02 <<EOF
-	jd_EsportsManager.js 		#东东电竞经理
+	#空.js
 EOF
 	echo -e "${green} run_02$start_script_time ${white}"
 
@@ -741,7 +737,6 @@ run_06_18() {
 export exjxbeans="true"
 cat >/tmp/jd_tmp/run_06_18 <<EOF
 	jd_exchangejxbeans.js		#过期京豆兑换为喜豆
-	jd_shop.js 			#进店领豆，早点领，一天也可以执行两次以上
 	jd_fruit.js 			#东东水果，6-9点 11-14点 17-21点可以领水滴
 	jd_pet.js 			#东东萌宠，跟手机商城同一时间
 	jd_goodMorning.js		#早起福利

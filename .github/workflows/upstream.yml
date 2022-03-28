@@ -122,7 +122,7 @@ jobs:
         svn export https://github.com/coolsnowwolf/packages/trunk/net/redsocks2
         ) &
         (
-        svn export https://github.com/Lienol/openwrt-package/branch/other/lean/luci-app-autoreboot
+        svn export https://github.com/Lienol/openwrt-package/branches/other/lean/luci-app-autoreboot
         svn export https://github.com/lienol/openwrt-luci/trunk/themes/luci-theme-argon-dark-mod
         svn export https://github.com/lienol/openwrt-luci/trunk/themes/luci-theme-argon-light-mod
         svn export https://github.com/lienol/openwrt-luci/trunk/themes/luci-theme-bootstrap-mod

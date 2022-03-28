@@ -97,6 +97,11 @@ jobs:
         git clone --depth 1 https://github.com/Scyllaly/luci-app-wifidog
         git clone --depth 1 https://github.com/wujunze/luci-app-autoshutdown
         git clone --depth 1 https://github.com/dazhaolear/luci-app-autorebootnew
+        git clone --depth 1 https://github.com/frainzy1477/luci-app-clash
+        git clone --depth 1 https://github.com/frainzy1477/luci-app-trojan
+        git clone --depth 1 https://github.com/yichya/luci-app-xray
+        git clone --depth 1 https://github.com/yichya/openwrt-xray
+        git clone --depth 1 https://github.com/yichya/openwrt-cloudflared
         ) &
         (
         svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/adbyby

@@ -59,16 +59,25 @@ jobs:
         git clone --depth 1 https://github.com/kiddin9/openwrt-bypass && mvdir openwrt-bypass
         git clone --depth 1 https://github.com/kiddin9/luci-app-dnsfilter
         git clone --depth 1 https://github.com/kiddin9/luci-theme-edge
+        #git clone --depth 1 https://github.com/tuanqing/install-program
+        #git clone --depth 1 https://github.com/tuanqing/mknop
+        #git clone -b main --depth 1 https://github.com/ITdesk01/JD_Script
+        git clone -b main --depth 1 https://github.com/xdhgsq/xdh
+        git clone --depth 1 https://github.com/lllrrr/mysmartdns && mvdir mysmartdns
+        ) &
+        (
         git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall
         git clone -b luci --depth 1 https://github.com/xiaorouji/openwrt-passwall openwrt-passwall-luci && mvdir openwrt-passwall-luci
         git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall2 && mvdir openwrt-passwall2
         git clone --depth 1 https://github.com/Lienol/openwrt-package
-        ) &
-        (
+        #git clone -b other --depth 1 https://github.com/Lienol/openwrt-package openwrt-package-other && mvdir openwrt-package-other
+        git clone --depth 1 https://github.com/small-5/luci-app-adblock-plus
         git clone --depth 1 https://github.com/tty228/luci-app-serverchan
         git clone --depth 1 https://github.com/zzsj0928/luci-app-pushbot
+        #git clone --depth 1 https://github.com/ITdesk01/jd_openwrt_script
+        git clone --depth 1 https://github.com/xdhgsq/xdh_plug
         git clone --depth 1 https://github.com/rufengsuixing/luci-app-autoipsetadder
-        git clone --depth 1 https://github.com/rufengsuixing/luci-app-adguardhome
+        git clone --depth 1 https://github.com/rufengsuixing/luci-app-onliner
         git clone --depth 1 https://github.com/rufengsuixing/luci-app-zerotier
         git clone --depth 1 https://github.com/rufengsuixing/luci-app-syncdial
         git clone --depth 1 https://github.com/rufengsuixing/luci-app-onliner
@@ -88,16 +97,18 @@ jobs:
         (
         git clone --depth 1 https://github.com/destan19/OpenAppFilter && mvdir OpenAppFilter
         git clone --depth 1 https://github.com/NateLol/luci-app-beardropper
-        git clone --depth 1 https://github.com/UnblockNeteaseMusic/luci-app-unblockneteasemusic
+        git clone --depth 1 https://github.com/immortalwrt/luci-app-unblockneteasemusic
         git clone --depth 1 https://github.com/peter-tank/luci-app-fullconenat
-        git clone --depth 1 https://github.com/peter-tank/luci-app-autorepeater
         git clone --depth 1 https://github.com/llccd/openwrt-fullconenat
         git clone --depth 1 https://github.com/esirplayground/luci-app-poweroff
         git clone --depth 1 https://github.com/lvqier/luci-app-dnsmasq-ipset
-        git clone --depth 1 https://github.com/Scyllaly/luci-app-wifidog
+        git clone --depth 1 https://github.com/walkingsky/luci-wifidog luci-app-wifidog
+        git clone --depth 1 https://github.com/peter-tank/luci-app-autorepeater
+        #git clone --depth 1 https://github.com/linkease/ddnsto-openwrt && mvdir ddnsto-openwrt
         git clone --depth 1 https://github.com/wujunze/luci-app-autoshutdown
         git clone --depth 1 https://github.com/dazhaolear/luci-app-autorebootnew
         ) &
+        #svn export https://github.com/coolsnowwolf/lede/trunk/package/lean ledelean &
         svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/adbyby
         svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/ddns-scripts_aliyun
         svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/ddns-scripts_dnspod
@@ -119,6 +130,8 @@ jobs:
         svn export https://github.com/coolsnowwolf/packages/trunk/libs/qttools
         svn export https://github.com/coolsnowwolf/packages/trunk/libs/rblibtorrent
         svn export https://github.com/coolsnowwolf/packages/trunk/net/redsocks2
+        #svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/srelay
+        #svn export https://github.com/coolsnowwolf/packages/trunk/net/tcpping
         (
         svn export https://github.com/Lienol/openwrt-package/branch/other/lean/luci-app-autoreboot
         svn export https://github.com/lienol/openwrt-luci/trunk/themes/luci-theme-argon-dark-mod
@@ -127,12 +140,17 @@ jobs:
         svn export https://github.com/fw876/helloworld/trunk/luci-app-ssr-plus
         svn export https://github.com/Tencent-Cloud-Plugins/tencentcloud-openwrt-plugin-ddns/trunk/tencentcloud_ddns luci-app-tencentddns
         svn export https://github.com/Tencent-Cloud-Plugins/tencentcloud-openwrt-plugin-cos/trunk/tencentcloud_cos luci-app-tencentcloud-cos
+        #svn export https://github.com/coolsnowwolf/lede/trunk/package/network/services/shellsync
+        #svn export https://github.com/coolsnowwolf/packages/trunk/net/miniupnpd
+        #svn export https://github.com/coolsnowwolf/packages/trunk/net/mwan3
         svn export https://github.com/vernesong/OpenClash/trunk/luci-app-openclash
         svn export https://github.com/lisaac/luci-app-dockerman/trunk/applications/luci-app-dockerman
         svn export https://github.com/lisaac/luci-app-diskman/trunk/applications/luci-app-diskman
         svn export https://github.com/lisaac/luci-lib-docker/trunk/collections/luci-lib-docker
-        svn export https://github.com/linkease/nas-packages/trunk/network/services nas-packages && mvdir nas-packages
-        svn export https://github.com/linkease/nas-packages-luci/trunk/luci nas-packages-luci && mvdir nas-packages-luci
+        svn export https://github.com/linkease/nas-packages/trunk/network/services/ddnsto
+        svn export https://github.com/linkease/nas-packages/trunk/network/services/linkease
+        svn export https://github.com/linkease/nas-packages-luci/trunk/luci/luci-app-ddnsto
+        svn export https://github.com/linkease/nas-packages-luci/trunk/luci/luci-app-linkease
         svn export https://github.com/mingxiaoyu/luci-app-cloudflarespeedtest/trunk/applications/luci-app-cloudflarespeedtest
         svn export https://github.com/immortalwrt-collections/openwrt-cdnspeedtest/trunk/cdnspeedtest
         ) &
@@ -143,14 +161,12 @@ jobs:
         svn export https://github.com/hong0980/build/trunk/luci-app-Network-settings
         svn export https://github.com/hong0980/build/trunk/luci-app-pwdHackDeny
         svn export https://github.com/doushang/luci-app-shortcutmenu/trunk/luci-app-shortcutmenu
-        svn export https://github.com/sundaqiang/openwrt-packages/trunk/luci-app-easyupdate
-        svn export https://github.com/sundaqiang/openwrt-packages/trunk/luci-app-nginx-manager
-        svn export https://github.com/sundaqiang/openwrt-packages/trunk/luci-app-supervisord
-        svn export https://github.com/sundaqiang/openwrt-packages/trunk/luci-app-wolplus
+        #svn export https://github.com/sundaqiang/openwrt-packages/trunk/luci-app-services-wolplus
         svn export https://github.com/Ysurac/openmptcprouter-feeds/trunk/luci-app-iperf
         svn export https://github.com/sirpdboy/netspeedtest/trunk/luci-app-netspeedtest
         svn export https://github.com/sirpdboy/sirpdboy-package/trunk/luci-app-control-speedlimit
         svn export https://github.com/sirpdboy/sirpdboy-package/trunk/luci-app-rebootschedule
+        svn export https://github.com/sirpdboy/sirpdboy-package/trunk/luci-app-wolplus
         svn export https://github.com/messense/aliyundrive-webdav/trunk/openwrt aliyundrive && mvdir aliyundrive
         ) &
         

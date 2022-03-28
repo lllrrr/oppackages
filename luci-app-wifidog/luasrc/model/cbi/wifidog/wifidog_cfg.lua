@@ -1,116 +1,120 @@
---[[
-	walkingsky
-	tangxn_1@163.com
-]]--
-
 local sys = require "luci.sys"
-local fs = require "nixio.fs"
 local uci = require "luci.model.uci".cursor()
+local wan = luci.util.exec("uci get network.wan.ifname")
+local lan = luci.util.exec("uci get network.lan.ifname")
 
-m = Map("wifidog", "wifidog执行参数配置","")
+-- 开始
+m = Map("wifidog", "WifiDog配置")
+s = m:section(TypedSection, "wifidog")
+s.anonymous = true
+s.addremove = false
 
---if fs.access("/usr/bin/wifidog") then
+-- 初始化菜单
+s:tab("general", translate("通用配置"))
+s:tab("servers", translate("认证配置"))
+s:tab("advanced", translate("高级配置"))
 
-	s = m:section(TypedSection, "wifidog", "wifidog配置")
-	s.anonymous = true
-	s.addremove = false
-	
-	
-	s:tab("general", "通用配置")
-	s:tab("servers", "认证服务器配置")
-	s:tab("advanced", "高级配置")
-	
-	
-	--通用配置
-	wifi_enable = s:taboption("general",Flag, "wifidog_enable", translate("是否启用wifidog"),"打开或关闭wifidog")
+-- 通用配置
+wifi_enable = s:taboption("general", Flag, "wifidog_enable", translate("启用插件"))
 
-	local t = io.popen("ifconfig | grep HWaddr | awk -F\" \" '{print $5}' | awk '$1~//{print;exit}' | sed 's/://g'")
-	local temp = t:read("*all")	
-	gatewayID = s:taboption("general",Value,"gateway_id","设备id（GatewayID）","默认为路由器MAC地址")
-	gatewayID.default=temp
-	
-	gateway_interface = s:taboption("general",Value,"gateway_interface","内网接口","设置内网接口，默认'br-lan'")
-	externalinterface = s:taboption("general",Value,"externalinterface","外网接口","WAN口接口，默认eth0.2")
-	externalinterface.default = "eth0.2"
-	
-	
-	
-	--服务器配置项	
+local t = io.popen("ifconfig | grep HWaddr | awk -F\" \" '{print $5}' | awk '$1~//{print;exit}' | sed 's/://g'")
+local temp = t:read("*all")
+gatewayID = s:taboption("general", Value, "gateway_id", translate("设备号"), "")
+gatewayID.default = temp
 
-	server_hostname = s:taboption("servers",Value,"server_hostname","认证服务器：主机名","域名或ip")	
-	server_httpport = s:taboption("servers",Value,"server_httpport","认证服务器：web服务端口","默认80端口")	
-	server_path = s:taboption("servers",Value,"server_path","认证服务器：url路径","最后要加/，例如：'/'，'/wifidog/'；默认'/wifidog/'")
-	server_sslAvailable = s:taboption("servers",Flag,"server_sslAvailable","启用SSL","默认不打开")
-	server_sslport = s:taboption("servers",Value,"server_sslport","SSL端口","默认'443'")
-	server_LoginScriptPathFragment = s:taboption("servers",Value,"server_LoginScriptPathFragment","服务器login接口脚本url路径段","默认'login/?'")
-	server_PortalScriptPathFragment = s:taboption("servers",Value,"server_PortalScriptPathFragment","服务器portal接口脚本url路径段","默认'portal/?'")
-	server_PingScriptPathFragment = s:taboption("servers",Value,"server_PingScriptPathFragment","服务器ping接口脚本url路径段","默认'ping/?'")
-	server_AuthScriptPathFragment = s:taboption("servers",Value,"server_AuthScriptPathFragment","服务器auth接口脚本url路径段","默认'auth/?'")
-	server_MsgScriptPathFragment = s:taboption("servers",Value,"server_MsgScriptPathFragment","服务器消息接口脚本url路径段","默认'gw_message.php?'")
+gateway_interface = s:taboption("general", Value, "gateway_interface", translate("内网接口"), "LAN接口")
+gateway_interface.default = "br-lan"
+gateway_interface:value(lan, lan .."")
 
-	--gateway_hostname.default = "www.test.com"
-	server_httpport.default = "80"
-	server_path.default = "/wifidog/"
-	server_sslAvailable.default = server_sslAvailable.disabled
-	server_sslport.default = "443"
-	server_LoginScriptPathFragment.default = "login/?"
-	server_PortalScriptPathFragment.default = "portal/?"
-	server_PingScriptPathFragment.default = "ping/?"
-	server_AuthScriptPathFragment.default = "auth/?"
-	server_MsgScriptPathFragment.default = "gw_message.php?"	
-	
-	--高级配置		
-	
-	--deamo_enable = s:taboption("advanced",Flag, "deamo_enable", "是否启用监护功能","检测wifidog意外退出后，重启wifidog")
-	--deamo_enable:depends("wifidog_enable","1")
-	gateway_port = s:taboption("advanced",Value, "gateway_port", "wifidog监听端口","默认'2060'")
-	gateway_port.default = "2060"
-	
-	check_interval = s:taboption("advanced",Value, "check_interval", "和服务器通讯间隔，单位秒","默认'60'")
-	check_interval.default = "60"
-		
-	client_timeout = s:taboption("advanced",Value, "client_timeout", "客户端掉线超时时间倍数，（通讯间隔的倍数）","默认'5'，即5倍的服务器通讯时间间隔后，仍然检测不到客户端，则自动下线该客户端")
-	client_timeout.default = "5"
-	
-	s = m:section(TypedSection, "trustedmaclist", "MAC白名单列表","")
-	s.anonymous = true
-	s.addremove = true
-	s.template = "cbi/tblsection"
-	
-	mac = s:option(Value, "mac", "mac地址")
-	mac.rmempty  = false
-	mac.datatype = "list(macaddr)"
-	
-	--sys.net.arptable(function(entry)
-	ip.neighbors(function(entry)
-		mac:value(
-			entry["HW address"],
-			entry["HW address"] .. " (" .. entry["IP address"] .. ")"
-		)
-	end)
-	
-	s = m:section(TypedSection, "allowrule", "默认允许访问的服务","")
-	s.anonymous = true
-	s.addremove = true
-	s.template = "cbi/tblsection"
-	
-	udp_tcp = s:option(ListValue, "protocol","协议")
-	udp_tcp:value('tcp')
-	udp_tcp:value('udp')
-	--udp_tcp:value('icmp')
-	
-	ip = s:option(Value, "ip", "IP地址")
-	ip.datatype = "ip4addr"
-	ip.rmempty  = false
-	
-	port = s:option(Value,"port","端口号")
-	port.rmempty = false
-	port.datatype = "range(1,65535)"
-	
---else
---	m.pageaction = false
---end
+external_interface = s:taboption("general", Value, "external_interface", translate("外网接口"), "WAN接口")
+external_interface:value(wan, wan .."")
+
+for _, e in ipairs(sys.net.devices()) do
+    if e ~= "lo" then gateway_interface:value(e) end
+    if e ~= "lo" then external_interface:value(e) end
+end
 
 
-return m 
+-- 认证配置
+server_hostname = s:taboption("servers", Value, "server_hostname", translate("地址"), "认证服务器的域名或IP")
+server_hostname.datatype = 'host'
+server_hostname.default = "portal.wifidog.net"
 
+server_httpport = s:taboption("servers", Value, "server_httpport", translate("端口"), "认证服务器的端口")
+server_httpport.default = "80"
+
+server_path = s:taboption("servers", Value, "server_path", translate("URL路径"))
+server_path.default = "/"
+
+server_sslAvailable = s:taboption("servers", Flag, "server_sslAvailable", translate("SSL"))
+server_sslAvailable.default = server_sslAvailable.disabled
+
+server_sslport = s:taboption("servers", Value, "server_sslport", translate("SSL端口"))
+server_sslport.default = "443"
+
+server_LoginScriptPathFragment = s:taboption("servers", Value, "server_LoginScriptPathFragment", translate("登陆API"))
+server_LoginScriptPathFragment.default = "login?"
+
+server_PortalScriptPathFragment = s:taboption("servers", Value, "server_PortalScriptPathFragment", translate("门户API"))
+server_PortalScriptPathFragment.default = "portal?"
+
+server_PingScriptPathFragment = s:taboption("servers", Value, "server_PingScriptPathFragment", translate("心跳API"))
+server_PingScriptPathFragment.default = "ping?"
+
+server_AuthScriptPathFragment = s:taboption("servers", Value, "server_AuthScriptPathFragment", translate("授权API"))
+server_AuthScriptPathFragment.default = "auth?"
+
+server_MsgScriptPathFragment = s:taboption("servers", Value, "server_MsgScriptPathFragment", translate("消息API"))
+server_MsgScriptPathFragment.default = "message?"
+
+-- 高级配置
+daemon_enable = s:taboption("advanced", Flag, "daemon_enable", translate("进程守护"))
+daemon_enable:depends("wifidog_enable", "1")
+
+gateway_port = s:taboption("advanced", Value, "gateway_port", translate("监听端口"))
+gateway_port.default = "2060"
+
+check_interval = s:taboption("advanced", Value, "check_interval", translate("心跳"), "客户端与本机的心跳，单位：秒")
+check_interval.default = "60"
+
+client_timeout = s:taboption("advanced", Value, "client_timeout", translate("超时"), "大于[心跳*超时]秒则踢客户端下线")
+client_timeout.default = "5"
+
+popular_servers = s:taboption("advanced", Value, "popular_servers", translate("DNS域名"), "用于检测DNS健康程度的域名，以,号分隔")
+popular_servers.default = "www.google.com,www.baidu.com"
+
+-- Mac白名单
+mac = s:taboption("advanced", DynamicList, "trustedmaclist", translate("Mac白名单"), translate("无需授权即可访问网络"))
+mac.datatype = "list(macaddr)"
+mac.rmempty = true
+
+luci.ip.neighbors({family = 4}, function(n)
+    if n.mac and n.dest then
+        mac:value(n.mac, "%s (%s)" %{n.mac, n.dest:string()})
+    end
+end)
+
+-- 访问白名单
+s = m:section(TypedSection, "allowrule", translate("访问白名单"))
+s.template = "cbi/tblsection"
+s.anonymous = true
+s.addremove = true
+s.sortable = false
+s.rmempty = true
+
+protocol = s:option(ListValue, "protocol", translate("协议"))
+protocol:value('tcp')
+protocol:value('udp')
+protocol:value('icmp')
+protocol.default = "tcp"
+protocol.rmempty = false
+
+ip = s:option(Value, "ip", translate("IP"))
+ip.datatype = "ip4addr"
+ip.rmempty  = true
+
+port = s:option(Value, "port", translate("端口号"))
+port.datatype = "port"
+port.rmempty = true
+
+return m

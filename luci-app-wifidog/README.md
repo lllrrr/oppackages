@@ -1,40 +1,40 @@
-luci-wifidog
-===========
-
-wifidog的luci管理界面，基于lede的可编译package
-
-
----
-## 安装方法
-
-克隆本项目到本地
-将目录名称由 luci-wifidog 改名成 luci-app-wifidog
-复制 luci-app-wifidog 目录到本地lede的目录树中，目录结构如下：lede/package/feeds/luci/luci-app-wifidog
-
-注意：里面的脚本要注意文件格式及可执行属性，到了linux系统里要用chmod及dos2unix命令作适当调整  
-/etc/init.d/wifidog  
-/etc/uci-defaults/luci-wifidog
-
+# luci-app-wifidog
 
 ## 编译
-
-编译是sdk环境中要有wifidog选项：
-1. 执行make menuconfig，在LuCI -》3. Applications-》luci-app-wifidog 找到该包，勾选上。
-2. 编译整个sdk
-
----
-## 使用方法 for wifidog v1.3.0
-
-首先需要安装wifidog
-```bash
-opkg update
-opkg install wifidog
+```
+git clone https://github.com/Scyllaly/luci-app-wifidog.git
+cp -r luci-app-wifidog/ lede/package/feeds/luci/luci-app-wifidog
+cd lede/
+make menuconfig
+LuCI -> Applications -> luci-app-wifidog
 ```
 
 
-拷贝各文件到相应文件夹中替换原文件, __注意：__  
-/etc/uci-defaults 
-/etc/init.d/wifidog 替换源文件， 并使用 chmod +x wifidog 增加可执行权限.
+## 过白&拉黑
+参考防火墙配置：https://github.com/wifidog/wifidog-gateway/blob/master/wifidog.conf
 
-在LUCI中就可以看见出现wifidog配置菜单了，填写相应参数，保存+应用;  
-LUCI -> System -> Startup  找到Wiifidog 启用之，重启路由器即可自动执行脚本运行wifidog，并生效配置。
+vim /etc/wifidog.conf
+修改：`FirewallRuleSet global` 部分，例如：
+
+```
+FirewallRuleSet global {
+    FirewallRule block tcp port 25 #禁止发邮件
+    FirewallRule allow tcp to www.facebook.com
+    FirewallRule allow tcp to m.facebook.com
+    FirewallRule allow tcp to static.xx.fbcdn.net
+}
+```
+
+## 配置
+- `/etc/init.d/wifidog` wifidog启动脚本
+- `/etc/init.d/wdctl` wifidog监控脚本
+- `/etc/wifidog.conf` wifidog启动时加载的配置文件，保存配置后文件将被覆盖
+- `/etc/config/wifidog` luci-app-wifidog保存的配置
+
+## 接口
+以6网口x86硬件为例：
+- 接口 -> br-lan的物理网口改为：eth0～eth4
+- 接口 -> wan和wan6的物理网口改为：eth5
+- LAN口设置为：br-lan
+- WAN口设置为：eth5
+- 网络接入线插在eth5上，AP接在eth0～eth4任意一个网口上

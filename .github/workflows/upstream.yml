@@ -98,6 +98,7 @@ jobs:
         git clone --depth 1 https://github.com/wujunze/luci-app-autoshutdown
         git clone --depth 1 https://github.com/dazhaolear/luci-app-autorebootnew
         ) &
+        (
         svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/adbyby
         svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/ddns-scripts_aliyun
         svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/ddns-scripts_dnspod
@@ -119,7 +120,6 @@ jobs:
         svn export https://github.com/coolsnowwolf/packages/trunk/libs/qttools
         svn export https://github.com/coolsnowwolf/packages/trunk/libs/rblibtorrent
         svn export https://github.com/coolsnowwolf/packages/trunk/net/redsocks2
-        (
         svn export https://github.com/Lienol/openwrt-package/branch/other/lean/luci-app-autoreboot
         svn export https://github.com/lienol/openwrt-luci/trunk/themes/luci-theme-argon-dark-mod
         svn export https://github.com/lienol/openwrt-luci/trunk/themes/luci-theme-argon-light-mod
@@ -135,8 +135,6 @@ jobs:
         svn export https://github.com/linkease/nas-packages-luci/trunk/luci nas-packages-luci && mvdir nas-packages-luci
         svn export https://github.com/mingxiaoyu/luci-app-cloudflarespeedtest/trunk/applications/luci-app-cloudflarespeedtest
         svn export https://github.com/immortalwrt-collections/openwrt-cdnspeedtest/trunk/cdnspeedtest
-        ) &
-        (
         svn export https://github.com/hong0980/build/trunk/luci-app-cowb-speedlimit
         svn export https://github.com/hong0980/build/trunk/luci-app-cowbbonding
         svn export https://github.com/hong0980/build/trunk/luci-app-cowbping

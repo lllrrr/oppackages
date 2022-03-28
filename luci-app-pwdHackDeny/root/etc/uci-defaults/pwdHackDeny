@@ -1,0 +1,20 @@
+#!/bin/sh
+
+uci -q batch <<-EOF >/dev/null
+	delete ucitrack.@pwdHackDeny[-1]
+	add ucitrack pwdHackDeny
+	set ucitrack.@pwdHackDeny[-1].init=pwdHackDeny
+	commit ucitrack
+EOF
+echo "/etc/WEBbadip.log" >>/etc/sysupgrade.conf
+echo "/etc/SSHbadip.log" >>/etc/sysupgrade.conf
+echo "/etc/pwdHackDeny/" >>/etc/sysupgrade.conf
+
+uci delete firewall.pwdHackDeny
+uci set firewall.pwdHackDeny=include
+uci set firewall.pwdHackDeny.type=script
+uci set firewall.pwdHackDeny.path=/etc/pwdHackDenysh.include
+uci commit firewall
+
+rm -f /tmp/luci-indexcache
+exit 0

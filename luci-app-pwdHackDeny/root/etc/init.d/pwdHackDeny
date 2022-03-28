@@ -1,0 +1,142 @@
+#!/bin/sh /etc/rc.common
+# wulishui 20200120-20200130-20200215-20200923 v4.2.4 20201004 v4.2.5 20201007 v5.0.6 20201010 v6.0.0 20201117 v6.0.1 20210227 v6.0.2 20210310 v6.0.3 20210314 v6.0.4
+# Author: wulishui <wulishui@gmail.com>
+
+START=92
+USE_PROCD=1
+
+start_instance() {
+	procd_open_instance
+	procd_set_param command /etc/pwdHackDeny.sh
+	procd_set_param respawn
+	procd_set_param stderr 1
+	procd_close_instance
+}
+
+chk_logfile() {
+	echo "## 每行一条，可手动添加或删除，内网MAC或IPV4/IPV4段(如192.168.18.10-20)、外网IPV4/IPV6，或包含此内容的文本、日志。内网MAC外网IP行首加#将不拦截。Author: wulishui" > /tmp/pwdHackDeny/${filename}.log.bak
+	cat /etc/${filename}.log 2>/dev/null | grep -v '^## ' | grep '^[#/!]' >> /tmp/pwdHackDeny/${filename}.log.bak && echo "----------- 以上客户端不拦截 -----------" >> /tmp/pwdHackDeny/${filename}.log.bak
+	sshlog=$(cat /etc/${filename}.log 2>/dev/null | sed '/^----/d' | sed '/^'[#!/]'/d' | sed 's/  */ /g' | sed 's/^ *//g' | sort -n | uniq -i | awk NF)
+	if [ -n "$sshlog" ]; then
+		echo "$sshlog" | while read line; do
+			MAC=$(echo "$line" | egrep -o "([A-Fa-f0-9]{2}[:-]){5}[A-Fa-f0-9]{2}" | sed 's/-/:/g' | head -1)
+			[ -z "$MAC" ] && IPR=$(echo "$line" | egrep -o "(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])-([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-5][0-4])$" | head -1) && IPRANGE=$(echo "$IPR" | awk -F '[.-]' '{if ($5=="") print $1"."$2"."$3"."$4 ; else if ($8=="" && $4<$5) print $1"."$2"."$3"."$4"-"$1"."$2"."$3"."$5 ; else if ($8=="" && $4>$5) print $1"."$2"."$3"."$5"-"$1"."$2"."$3"."$4 ; else if ($8>$4) print $1"."$2"."$3"."$4"-"$1"."$2"."$3"."$8 ; else if ($8<$4) print $1"."$2"."$3"."$8"-"$1"."$2"."$3"."$4  }' | awk -F '[.-]' '{if ($8=="") print $1"."$2"."$3"."$4 ; else if ($8<255) print $1"."$2"."$3"."$4"-"$1"."$2"."$3"."$8 ; else if ($8>254) print $1"."$2"."$3"."$4"-"$1"."$2"."$3".""254"}')
+			[ -z "$MAC" -a -z "$IPR" ] && IP4=$(echo "$line" | egrep -o "(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])" | head -1)
+			[ -z "$MAC" -a -z "$IPR" -a -z "$IP4" ] && IP6=$(echo "$line" | egrep -o "(s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*)")
+			if [ -n "$MAC" ]; then
+				[ -z "$(grep -w "$MAC" /tmp/pwdHackDeny/${filename}.log.bak 2>/dev/null)" ] && {
+					echo "${MAC}" >> /tmp/pwdHackDeny/${filename}.log.bak
+					iptables -w -A ${iptname} -m mac --mac-source ${MAC} -j DROP 2>/dev/null
+					ip6tables -w -A ${iptname} -m mac --mac-source ${MAC} -j DROP 2>/dev/null
+				}
+			elif [ -n "$IPR" ]; then
+				[ -z "$(grep -w "$IPR" /tmp/pwdHackDeny/${filename}.log.bak 2>/dev/null)" ] && {
+					echo "${IPR}" >> /tmp/pwdHackDeny/${filename}.log.bak
+					iptables -w -A ${iptname} -m iprange --src-range ${IPRANGE} -j DROP 2>/dev/null
+				}
+			elif [ -n "$IP4" ]; then
+				[ -z "$(grep -w "$IP4" /tmp/pwdHackDeny/${filename}.log.bak 2>/dev/null)" ] && {
+					echo "${IP4}" >> /tmp/pwdHackDeny/${filename}.log.bak
+					iptables -w -A ${iptname} -s ${IP4} -j DROP 2>/dev/null
+				}
+			elif [ -n "$IP6" ]; then
+				[ -z "$(grep -w "$IP6" /tmp/pwdHackDeny/${filename}.log.bak 2>/dev/null)" ] && {
+					echo "${IP6}" >> /tmp/pwdHackDeny/${filename}.log.bak
+					ip6tables -w -A ${iptname} -s ${IP6} -j DROP 2>/dev/null
+				}
+			fi
+			unset IPRANGE
+		done
+	fi
+	[ -s /tmp/pwdHackDeny/${filename}.log.bak ] && cat /tmp/pwdHackDeny/${filename}.log.bak > /etc/${filename}.log
+}
+
+start_service() {
+	kill -9 $(busybox ps -w | grep 'pwdHackDeny.sh' | grep -v 'grep' | awk '{print $1}') > /dev/null 2>&1
+	sh /tmp/log/pwdHackDeny.ipt.cls 2>/dev/null
+
+	enabled=$(uci get pwdHackDeny.pwdHackDeny.enabled 2>/dev/null)
+	[ "$enabled" != 1 -a -d /etc/pwdHackDeny ] && touch /etc/pwdHackDeny/logclear
+
+	if [ "$enabled" == 1 ]; then
+		if [ -e /etc/pwdHackDeny/logclear ]; then
+			[ -s /etc/pwdHackDeny/badip.log.web ] && cat /etc/pwdHackDeny/badip.log.web | grep -v '^----' >> /etc/pwdHackDeny/bak.log.web && echo "--------"$(date +"%Y-%m-%d %H:%M:%S")" : Logs has been moved to /etc/pwdHackDeny/bak.log.web .--------" > /etc/pwdHackDeny/badip.log.web
+			[ -s /etc/pwdHackDeny/badip.log.ssh ] && cat /etc/pwdHackDeny/badip.log.ssh | grep -v '^----' >> /etc/pwdHackDeny/bak.log.ssh && echo "--------"$(date +"%Y-%m-%d %H:%M:%S")" : Logs has been moved to /etc/pwdHackDeny/bak.log.ssh .--------" > /etc/pwdHackDeny/badip.log.ssh
+			rm -f /etc/pwdHackDeny/logclear 2>/dev/null
+		fi
+
+		mkdir /etc/pwdHackDeny /tmp/pwdHackDeny 2>/dev/null
+		touch /etc/pwdHackDeny/badip.log.web /etc/pwdHackDeny/badip.log.ssh /etc/pwdHackDeny/badhosts.web /etc/pwdHackDeny/badhosts.ssh
+
+		redirect_https=$(uci get uhttpd.main.redirect_https)
+		port1=$(uci get dropbear.@dropbear[0].Port) || port1=22
+		port2=$(uci get uhttpd.main.listen_http | egrep -o "(:[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]{1}|6553[0-5])" | sed 's/://g' | sort -n | uniq -i | awk NF) || port2=80
+		port2s=$(uci get uhttpd.main.listen_https | egrep -o "(:[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]{1}|6553[0-5])" | sed 's/://g' | sort -n | uniq -i | awk NF) || port2s=443
+		#configip4=$(uci get network.lan.ipaddr 2>/dev/null)
+		#configip6=$(uci get network.globals.ula_prefix 2>/dev/null)
+
+		iptables -w -N pwdHackDenySSH 2>/dev/null || iptables -w -F pwdHackDenySSH 2>/dev/null
+		ip6tables -w -N pwdHackDenySSH 2>/dev/null || ip6tables -w -F pwdHackDenySSH 2>/dev/null
+		iptables -w -N pwdHackDenyWEB 2>/dev/null || iptables -w -F pwdHackDenyWEB 2>/dev/null
+		ip6tables -w -N pwdHackDenyWEB 2>/dev/null || ip6tables -w -F pwdHackDenyWEB 2>/dev/null
+
+		iptables -w -C INPUT -p tcp --dport "$port1" -j pwdHackDenySSH 2>/dev/null || iptables -w -I INPUT -p tcp --dport "$port1" -j pwdHackDenySSH 2>/dev/null
+		ip6tables -w -C INPUT -p tcp --dport "$port1" -j pwdHackDenySSH 2>/dev/null || ip6tables -w -I INPUT -p tcp --dport "$port1" -j pwdHackDenySSH 2>/dev/null
+
+		echo "$port2" | while read line; do
+			iptables -w -C INPUT -p tcp --dport "$line" -j pwdHackDenyWEB 2>/dev/null || iptables -w -I INPUT -p tcp --dport "$line" -j pwdHackDenyWEB 2>/dev/null
+			ip6tables -w -C INPUT -p tcp --dport "$line" -j pwdHackDenyWEB 2>/dev/null || ip6tables -w -I INPUT -p tcp --dport "$line" -j pwdHackDenyWEB 2>/dev/null
+		done
+
+		if [ "$redirect_https" == 1 ]; then
+			echo "$port2s" | while read line; do
+				iptables -w -C INPUT -p tcp --dport "$line" -j pwdHackDenyWEB 2>/dev/null || iptables -w -I INPUT -p tcp --dport "$line" -j pwdHackDenyWEB 2>/dev/null
+				ip6tables -w -C INPUT -p tcp --dport "$line" -j pwdHackDenyWEB 2>/dev/null || ip6tables -w -I INPUT -p tcp --dport "$line" -j pwdHackDenyWEB 2>/dev/null
+			done
+		fi
+
+		filename="SSHbadip"
+		iptname="pwdHackDenySSH"
+		chk_logfile
+
+		filename="WEBbadip"
+		iptname="pwdHackDenyWEB"
+		chk_logfile
+
+		cat > /tmp/log/pwdHackDeny.ipt.cls <<EOF
+iptables  -w -D INPUT -p tcp --dport "$port1"  -j pwdHackDenySSH 2>/dev/null
+ip6tables -w -D INPUT -p tcp --dport "$port1"  -j pwdHackDenySSH 2>/dev/null
+iptables  -w -D INPUT -p tcp --dport "$PTV4"  -j pwdHackDenyWEB 2>/dev/null
+ip6tables -w -D INPUT -p tcp --dport "$PTV6"  -j pwdHackDenyWEB 2>/dev/null
+iptables  -w -D INPUT -p tcp --dport "$PTSV4" -j pwdHackDenyWEB 2>/dev/null
+ip6tables -w -D INPUT -p tcp --dport "$PTSV6" -j pwdHackDenyWEB 2>/dev/null
+iptables  -w -F pwdHackDenySSH 2>/dev/null
+iptables  -w -X pwdHackDenySSH 2>/dev/null
+ip6tables -w -F pwdHackDenySSH 2>/dev/null
+ip6tables -w -X pwdHackDenySSH 2>/dev/null
+iptables  -w -F pwdHackDenyWEB 2>/dev/null
+iptables  -w -X pwdHackDenyWEB 2>/dev/null
+ip6tables -w -F pwdHackDenyWEB 2>/dev/null
+ip6tables -w -X pwdHackDenyWEB 2>/dev/null
+rm -f /tmp/log/pwdHackDeny.ipt.cls 2>/dev/null
+EOF
+
+		rm -f /tmp/pwdHackDeny/*.log.bak
+		touch /tmp/pwdHackDeny/syslog
+		start_instance
+	fi
+}
+
+service_triggers() {
+	procd_add_reload_trigger 'pwdHackDeny'
+}
+
+stop_service() {
+	sh /tmp/log/pwdHackDeny.ipt.cls 2>/dev/null
+	# rm -rf /tmp/pwdHackDeny 2>/dev/null
+}
+
+restart() {
+	stop
+	start
+}

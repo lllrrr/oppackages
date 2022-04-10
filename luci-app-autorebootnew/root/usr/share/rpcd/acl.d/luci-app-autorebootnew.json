@@ -1,0 +1,11 @@
+{
+	"luci-app-autorebootnew": {
+		"description": "Grant UCI access for luci-app-autorebootnew",
+		"read": {
+			"uci": [ "autoreboot" ]
+		},
+		"write": {
+			"uci": [ "autoreboot" ]
+		}
+	}
+}

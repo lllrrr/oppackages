@@ -14,26 +14,26 @@ L_L() {
 }
 
 P_G() {
-	FAIL=0
-	PING1=$(ping -c "$CYL" "$ADDR1") || Err1=1
-	PING2=$(ping -c "$CYL" "$ADDR2") || Err2=1
-	[ "$Err1" == 1 -a "$Err2" == 1 ] && { FAIL=1; st="网络不通 ！！！"; }
-	if [ "$FAIL" != 1 -a "$pkglost" != 0 ]; then
-		loss1=`echo "$PING1" | grep -o '[0-9.]*%'| awk -F '[%.]' '{print $1}'`
+	fail=0
+	ping1=$(ping -c "$CYL" "$ADDR1") || err1=1
+	ping2=$(ping -c "$CYL" "$ADDR2") || err2=1
+	[ "$err1" == 1 -a "$err2" == 1 ] && { fail=1; st="网络不通 ！！！"; }
+	if [ "$fail" == 0 -a "$pkglost" != 0 ]; then
+		loss1=`echo $ping1 | sed -rne 's|^[^/]+received, ([^ ]+)% .+$$|\1|p'`
 		[ -z "$loss1" ] && loss1=100
-		loss2=`echo "$PING2" | grep -o '[0-9.]*%'| awk -F '[%.]' '{print $1}'`
+		loss2=`echo $ping2 | sed -rne 's|^[^/]+received, ([^ ]+)% .+$$|\1|p'`
 		[ -z "$loss2" ] && loss2=100
-		[ "$loss1" -ge "$pkglost" -a "$loss2" -ge "$pkglost" ] && FAIL=1 && st="丢包率过高：$(((loss1+loss2)/2))%"
+		[ "$loss1" -ge "$pkglost" -a "$loss2" -ge "$pkglost" ] && fail=1 && st="丢包率过高：$(((loss1+loss2)/2))%"
 	fi
-	if [ "$FAIL" != 1 -a "$pkgdelay" != 0 ]; then
-		delay1=`echo "$PING1" | grep -o 'time=[0-9.]*' | awk -F '[=]' '{sum+=$2} END {print sum/NR}' | awk -F '.' '{print $1}'`
+	if [ "$fail" == 0 -a "$pkgdelay" != 0 ]; then
+		delay1=`echo $ping1 | awk -F/ '/round-trip/{print $4}' | cut -d'.' -f1`
 		[ -z "$delay1" ] && delay1=10000
-		delay2=`echo "$PING2" | grep -o 'time=[0-9.]*' | awk -F '[=]' '{sum+=$2} END {print sum/NR}' | awk -F '.' '{print $1}'`
+		delay2=`echo $ping2 | awk -F/ '/round-trip/{print $4}' | cut -d'.' -f1`
 		[ -z "$delay2" ] && delay2=10000
-		[ "$delay1" -ge "$pkgdelay" -a "$delay2" -ge "$pkgdelay" ] && FAIL=1 && st="延迟过高：$(((delay1+delay2)/2))ms"
+		[ "$delay1" -ge "$pkgdelay" -a "$delay2" -ge "$pkgdelay" ] && fail=1 && st="延迟过高：$(((delay1+delay2)/2))ms"
 	fi
-	unset PING1 PING2 Err1 Err2 delay1 delay2 loss1 loss2
-	[ "$FAIL" == 1 ] || return
+	unset ping1 ping2 err1 err2 delay1 delay2 loss1 loss2
+	[ "$fail" == 0 ] && return
 	L_L
 	case "$work_mode" in
 	1)
@@ -58,7 +58,7 @@ P_G() {
 	5)
 		kill -9 $(pgrep 'cbp_cmd') 2>/dev/null
 		[ -s /etc/config/cbp_cmd ] && bash /etc/config/cbp_cmd 2>/dev/null &
-		f="自定义命令---`cat /etc/config/cbp_cmd`---"
+		f="自定义命令< `cat /etc/config/cbp_cmd` >"
 		;;
 	6)
 		wifi down
@@ -88,8 +88,6 @@ G_E() {
 
 [ "$(uci get cowbping.cowbping.enabled 2>/dev/null)" == 1 ] || exit
 G_E
-ERRS=0
-CYLS=0
 while :; do
 	P_G
 	sleep ${time}m

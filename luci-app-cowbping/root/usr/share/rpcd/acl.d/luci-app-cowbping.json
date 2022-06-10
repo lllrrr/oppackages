@@ -1,0 +1,11 @@
+{
+	"luci-app-cowbping": {
+		"description": "Grant UCI access for luci-app-cowbping",
+		"read": {
+			"uci": [ "cowbping" ]
+		},
+		"write": {
+			"uci": [ "cowbping" ]
+		}
+	}
+}

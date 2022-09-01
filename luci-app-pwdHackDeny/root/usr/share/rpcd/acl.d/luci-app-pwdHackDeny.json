@@ -1,0 +1,11 @@
+{
+	"luci-app-pwdHackDeny": {
+		"description": "Grant UCI access for luci-app-pwdHackDeny",
+		"read": {
+			"uci": [ "pwdHackDeny" ]
+		},
+		"write": {
+			"uci": [ "pwdHackDeny" ]
+		}
+	}
+}
